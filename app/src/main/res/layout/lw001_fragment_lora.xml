@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lw001_white_ffffff"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="onLoraSetting"
+            android:text="@string/lora_setting"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_lora_info"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:drawableRight="@drawable/lw001_ic_arrow_right"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_lora_info" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="onNetworkCheck"
+            android:text="Network Check"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_network_check"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_network_check"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/lw001_ic_arrow_right"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_lora_info" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_network_check" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:onClick="onMulticastSetting"
+            android:text="Multicast Setting"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/tv_multicast_setting"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_multicast_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/lw001_ic_arrow_right"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text=""
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_network_check" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_multicast_setting" />
+
+        <EditText
+            android:id="@+id/et_time_sync_interval"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:gravity="center"
+            android:hint="0~240"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_multicast_setting" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="H"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/et_time_sync_interval"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Time Sync Interval"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/et_time_sync_interval"
+            app:layout_constraintLeft_toLeftOf="parent" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_time_sync_interval" />
+
+        <TextView
+            android:id="@+id/tv_uplink_payload"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:onClick="onUplinkPayload"
+            android:drawableRight="@drawable/lw001_ic_arrow_right"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+            android:text="Uplink Payload"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_time_sync_interval" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_uplink_payload" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

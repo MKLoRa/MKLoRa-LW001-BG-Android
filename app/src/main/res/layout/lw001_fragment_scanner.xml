@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lw001_white_ffffff"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Scan Switch"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/cb_scan_switch"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cb_scan_switch" />
+
+        <CheckBox
+            android:id="@+id/cb_scan_switch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/lw001_selector_cb_btn"
+            android:padding="6dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cb_scan_switch" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_scan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cb_scan_switch">
+
+            <EditText
+                android:id="@+id/et_scan_window"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="50dp"
+                android:gravity="center"
+                android:hint="1~16"
+                android:inputType="number"
+                android:maxLength="2"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="x5ms"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/et_scan_window"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Scan Window"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/et_scan_window"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_scan_window_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="*Scan window time can not be more than scan interval time. When the scan window time is equal to scan interval, BLE scan always on."
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_scan_window" />
+
+            <View
+                style="@style/lw001_divider_line"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_scan_window_tips" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="Over-limit Indication"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/cb_over_limit_indication"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/cb_over_limit_indication" />
+
+        <CheckBox
+            android:id="@+id/cb_over_limit_indication"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:button="@null"
+            android:checked="false"
+            android:drawableRight="@drawable/lw001_selector_cb_btn"
+            android:padding="6dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_scan" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cb_over_limit_indication" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_over_limit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cb_over_limit_indication">
+
+            <TextView
+                android:id="@+id/over_limit_rssi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Over-limit RSSI"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/sb_over_limit_rssi"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <!--<TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="(-127~0dBm)"
+                android:textColor="@color/lw001_grey_b3b3b3"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toTopOf="@id/sb_over_limit_rssi"
+                app:layout_constraintLeft_toRightOf="@id/over_limit_rssi" />-->
+
+            <SeekBar
+                android:id="@+id/sb_over_limit_rssi"
+                style="@style/LW001CustomSeekbarStyle"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="70dp"
+                android:layout_marginTop="30dp"
+                android:max="127"
+                android:maxHeight="2dp"
+                android:minHeight="2dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="0dp"
+                android:progress="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/tv_over_limit_rssi_value"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_over_limit_rssi_value"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="0dBm"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/sb_over_limit_rssi"
+                app:layout_constraintLeft_toRightOf="@id/sb_over_limit_rssi"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/sb_over_limit_rssi" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/lw001_ic_wifi"
+                android:drawablePadding="10dp"
+                android:text="RSSI:"
+                app:layout_constraintBottom_toBottomOf="@id/sb_over_limit_rssi"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/sb_over_limit_rssi" />
+
+            <View
+                style="@style/lw001_divider_line"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sb_over_limit_rssi" />
+
+            <EditText
+                android:id="@+id/et_over_limit_mac_qty"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:hint="1~255"
+                android:inputType="number"
+                android:maxLength="3"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/sb_over_limit_rssi" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Over-limit MAC Quantities"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/et_over_limit_mac_qty"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <View
+                style="@style/lw001_divider_line"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_over_limit_mac_qty" />
+
+            <EditText
+                android:id="@+id/et_over_limit_duration"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:hint="1~600"
+                android:inputType="number"
+                android:maxLength="3"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_over_limit_mac_qty" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="s"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                app:layout_constraintBaseline_toBaselineOf="@id/et_over_limit_duration"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Duration"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBaseline_toBaselineOf="@id/et_over_limit_duration"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_over_limit_duration_tips"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="*The duration for trigger MAC and RSSI."
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="12sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_over_limit_duration" />
+
+            <View
+                style="@style/lw001_divider_line"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_over_limit_duration_tips" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/tv_filter_options"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:clickable="true"
+            android:drawableRight="@drawable/lw001_ic_arrow_right"
+            android:gravity="center_vertical"
+            android:onClick="onFilterOptions"
+            android:text="Filter Options"
+            android:textColor="@color/lw001_black_333333"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_over_limit" />
+
+        <View
+            style="@style/lw001_divider_line"
+            android:layout_width="0dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_filter_options" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
