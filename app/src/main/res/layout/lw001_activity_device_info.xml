@@ -83,32 +83,32 @@
 
 
             <RadioButton
-                android:id="@+id/radioBtn_scanner"
+                android:id="@+id/radioBtn_position"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/lw001_selector_scanner"
+                android:drawableTop="@drawable/lw001_selector_pos"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="@string/title_scanner"
+                android:text="@string/title_position"
                 android:textColor="@drawable/lw001_selector_option_radiobtn_color"
                 android:textSize="12sp" />
 
             <RadioButton
-                android:id="@+id/radioBtn_setting"
+                android:id="@+id/radioBtn_general"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:button="@null"
-                android:drawableTop="@drawable/lw001_selector_setting"
+                android:drawableTop="@drawable/lw001_selector_general"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="@string/title_setting"
+                android:text="@string/title_general"
                 android:textColor="@drawable/lw001_selector_option_radiobtn_color"
                 android:textSize="12sp" />
 

@@ -9,16 +9,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.dialog.AlertMessageDialog;
@@ -34,45 +31,43 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NetworkCheckActivity extends BaseActivity {
+public class AxisSettingActivity extends BaseActivity {
 
-
-    @BindView(R2.id.cb_network_check)
-    CheckBox cbNetworkCheck;
-    @BindView(R2.id.et_network_check_interval)
-    EditText etNetworkCheckInterval;
-    @BindView(R2.id.tv_network_status)
-    TextView tvNetworkStatus;
-    @BindView(R2.id.cl_network_check_interval)
-    ConstraintLayout clNetworkCheckInterval;
+    @BindView(R2.id.et_wakeup_threshold)
+    EditText etWakeupThreshold;
+    @BindView(R2.id.et_wakeup_duration)
+    EditText etWakeupDuration;
+    @BindView(R2.id.et_motion_threshold)
+    EditText etMotionThreshold;
+    @BindView(R2.id.et_motion_duration)
+    EditText etMotionDuration;
+    @BindView(R2.id.et_vibration_thresholds)
+    EditText etVibrationThresholds;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_network_check);
+        setContentView(R.layout.lw001_activity_axis_setting);
         ButterKnife.bind(this);
+
         EventBus.getDefault().register(this);
-        cbNetworkCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            clNetworkCheckInterval.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.getNetworkInterval());
-        orderTasks.add(OrderTaskAssembler.getLoRaConnectable());
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.getWakeupCondition());
+        orderTasks.add(OrderTaskAssembler.getMotionDetection());
+        orderTasks.add(OrderTaskAssembler.getVibrationThreshold());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
@@ -118,12 +113,18 @@ public class NetworkCheckActivity extends BaseActivity {
                                 // write
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
-                                    case KEY_NETWORK_CHECK_INTERVAL:
+                                    case KEY_WAKEUP_CONDITION:
+                                    case KEY_MOTION_DETECTION:
+                                        if (result != 1) {
+                                            savedParamsError = true;
+                                        }
+                                        break;
+                                    case KEY_VIBRATION_THRESHOLD:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         if (savedParamsError) {
-                                            ToastUtils.showToast(NetworkCheckActivity.this, "Opps！Save failed. Please check the input characters and try again.");
+                                            ToastUtils.showToast(AxisSettingActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             AlertMessageDialog dialog = new AlertMessageDialog();
                                             dialog.setMessage("Saved Successfully！");
@@ -137,30 +138,27 @@ public class NetworkCheckActivity extends BaseActivity {
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
-                                    case KEY_NETWORK_CHECK_INTERVAL:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            int interval = MokoUtils.toInt(rawDataBytes);
-                                            cbNetworkCheck.setChecked(interval > 0);
-                                            etNetworkCheckInterval.setText(String.valueOf(interval));
+                                    case KEY_WAKEUP_CONDITION:
+                                        if (length > 1) {
+                                            int threshold = value[4] & 0xFF;
+                                            etWakeupThreshold.setText(String.valueOf(threshold));
+                                            int duration = value[5] & 0xFF;
+                                            etWakeupDuration.setText(String.valueOf(duration));
                                         }
                                         break;
-                                    case KEY_NETWORK_STATUS:
+                                    case KEY_MOTION_DETECTION:
+                                        if (length > 1) {
+                                            int threshold = value[4] & 0xFF;
+                                            etMotionThreshold.setText(String.valueOf(threshold));
+                                            int duration = value[5] & 0xFF;
+                                            etMotionDuration.setText(String.valueOf(duration));
+                                        }
+                                        break;
+                                    case KEY_VIBRATION_THRESHOLD:
                                         if (length > 0) {
-                                            int connectable = value[4];
-                                            String networkCheckDisPlay = "";
-                                            switch (connectable) {
-                                                case 0:
-                                                    networkCheckDisPlay = "Disconnected";
-                                                    break;
-                                                case 1:
-                                                    networkCheckDisPlay = "Connecting";
-                                                    break;
-                                                case 2:
-                                                    networkCheckDisPlay = "Connected";
-                                                    break;
-                                            }
-                                            tvNetworkStatus.setText(networkCheckDisPlay);
+                                            int threshold = value[4] & 0xFF;
+                                            etVibrationThresholds.setText(String.valueOf(threshold));
+
                                         }
                                         break;
                                 }
@@ -170,48 +168,6 @@ public class NetworkCheckActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    public void onSave(View view) {
-        if (isWindowLocked())
-            return;
-        if (isValid()) {
-            showSyncingProgressDialog();
-            saveParams();
-        } else {
-            ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-        }
-    }
-
-    private boolean isValid() {
-        if (cbNetworkCheck.isChecked()) {
-            final String intervalStr = etNetworkCheckInterval.getText().toString();
-            if (TextUtils.isEmpty(intervalStr))
-                return false;
-            final int interval = Integer.parseInt(intervalStr);
-            if (interval == 0) {
-                cbNetworkCheck.setChecked(false);
-                return true;
-            }
-            if (interval > 720)
-                return false;
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-
-    private void saveParams() {
-        if (cbNetworkCheck.isChecked()) {
-            final String intervalStr = etNetworkCheckInterval.getText().toString();
-            final int interval = Integer.parseInt(intervalStr);
-            LoRaLW001MokoSupport.getInstance().sendOrder(
-                    OrderTaskAssembler.setNetworkCheckInterval(interval));
-        } else {
-            LoRaLW001MokoSupport.getInstance().sendOrder(
-                    OrderTaskAssembler.setNetworkCheckInterval(0));
-        }
     }
 
 
@@ -273,5 +229,70 @@ public class NetworkCheckActivity extends BaseActivity {
     private void backHome() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    public void onSave(View view) {
+        if (isWindowLocked())
+            return;
+        if (isValid()) {
+            showSyncingProgressDialog();
+            saveParams();
+        } else {
+            ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
+        }
+    }
+
+    private boolean isValid() {
+        final String wakeUpThresholdStr = etWakeupThreshold.getText().toString();
+        if (TextUtils.isEmpty(wakeUpThresholdStr))
+            return false;
+        final int wakeUpThreshold = Integer.parseInt(wakeUpThresholdStr);
+        if (wakeUpThreshold < 1 || wakeUpThreshold > 20)
+            return false;
+        final String wakeUpDurationStr = etWakeupDuration.getText().toString();
+        if (TextUtils.isEmpty(wakeUpDurationStr))
+            return false;
+        final int wakeUpDuration = Integer.parseInt(wakeUpDurationStr);
+        if (wakeUpDuration < 1 || wakeUpDuration > 10)
+            return false;
+        final String motionThresholdStr = etMotionThreshold.getText().toString();
+        if (TextUtils.isEmpty(motionThresholdStr))
+            return false;
+        final int motionThreshold = Integer.parseInt(motionThresholdStr);
+        if (motionThreshold < 10 || motionThreshold > 250)
+            return false;
+        final String motionDurationStr = etMotionDuration.getText().toString();
+        if (TextUtils.isEmpty(motionDurationStr))
+            return false;
+        final int motionDuration = Integer.parseInt(motionDurationStr);
+        if (motionDuration < 1 || motionDuration > 15)
+            return false;
+        final String vibrationThresholdStr = etVibrationThresholds.getText().toString();
+        if (TextUtils.isEmpty(vibrationThresholdStr))
+            return false;
+        final int vibrationThreshold = Integer.parseInt(vibrationThresholdStr);
+        if (vibrationThreshold < 10 || vibrationThreshold > 255)
+            return false;
+        return true;
+
+    }
+
+    private void saveParams() {
+        final String wakeUpThresholdStr = etWakeupThreshold.getText().toString();
+        final int wakeUpThreshold = Integer.parseInt(wakeUpThresholdStr);
+        final String wakeUpDurationStr = etWakeupDuration.getText().toString();
+        final int wakeUpDuration = Integer.parseInt(wakeUpDurationStr);
+        final String motionThresholdStr = etMotionThreshold.getText().toString();
+        final int motionThreshold = Integer.parseInt(motionThresholdStr);
+        final String motionDurationStr = etMotionDuration.getText().toString();
+        final int motionDuration = Integer.parseInt(motionDurationStr);
+        final String vibrationThresholdStr = etVibrationThresholds.getText().toString();
+        final int vibrationThreshold = Integer.parseInt(vibrationThresholdStr);
+        showSyncingProgressDialog();
+        List<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setWakeupCondition(wakeUpThreshold, wakeUpDuration));
+        orderTasks.add(OrderTaskAssembler.setMotionDetection(motionThreshold, motionDuration));
+        orderTasks.add(OrderTaskAssembler.setVibrationThreshold(vibrationThreshold));
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

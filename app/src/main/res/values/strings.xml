@@ -30,12 +30,33 @@
     <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow LW001 use the Location and Storage permission</string>
     <string name="permission_location_need_title">Turn on Location permission</string>
     <string name="permission_location_need_content">After that, LW001 could search and connect with the device</string>
-    <string name="title_lora">LORA</string>
-    <string name="title_scanner">SCANNER</string>
-    <string name="title_setting">SETTINGS</string>
+    <string name="title_lora">LoRa</string>
+    <string name="title_position">POSITION</string>
+    <string name="title_general">GENERAL</string>
     <string name="title_device">DEVICE</string>
-    <string name="lora_setting">LoRa Setting</string>
+    <string name="connection_setting">Connection Settings</string>
+    <string name="application_setting">Application Settings</string>
     <string name="condition_tips">*Turn on the Filter Condition %s ,all filtration of this page will take effect.Turn off the Filter Condition %s, all filtration of this page will not take effect.</string>
+    <string name="wifi_fix">WIFI Fix</string>
+    <string name="bluetooth_fix">Bluetooth Fix</string>
+    <string name="gps_fix">GPS Fix</string>
+    <string name="general_device_mode">Device Mode</string>
+    <string name="general_auxiliary_operation">Auxiliary Operation</string>
+    <string name="general_heartbeat_interval">Heartbeat Interval</string>
+    <string name="general_ble_settings">Bluetooth Settings</string>
+    <string name="general_axis_setting">3-Axis Setting</string>
+    <string name="timing_mode">Timing Mode</string>
+    <string name="periodic_mode">Periodic Mode</string>
+    <string name="motion_mode">Motion Mode</string>
+    <string name="downlink_for_position">Downlink For Position</string>
+    <string name="vibration_detection">Vibration Detection</string>
+    <string name="man_down_detection">ManDown Detection</string>
+    <string name="active_state_count">Active State Count</string>
+    <string name="broadcast_content">Broadcast Content</string>
+    <string name="local_data_sync">Local Data Sync</string>
+    <string name="indicator_settings">Indicator Settings</string>
+    <string name="on_off">On/Off</string>
+    <string name="device_information">Device Information</string>
 
     <string-array name="lw001_region">
         <item>AS923</item>

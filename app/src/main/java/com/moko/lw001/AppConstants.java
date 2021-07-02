@@ -44,11 +44,11 @@ public class AppConstants {
     public static final int REQUEST_CODE_SET_PASSWORD = 111;
     public static final int REQUEST_CODE_SET_SYSTEM_INFO = 112;
     public static final int REQUEST_CODE_SET_THREE_AXIS = 113;
-    public static final int REQUEST_CODE_LORA_SETTING = 115;
-    public static final int REQUEST_CODE_NETWORK_CHECK_SETTING = 116;
+    public static final int REQUEST_CODE_LORA_CONN_SETTING = 115;
+    public static final int REQUEST_CODE_LORA_APP_SETTING = 116;
     public static final int REQUEST_CODE_MULTICAST_SETTING = 117;
     public static final int REQUEST_CODE_FILTER = 118;
-    public static final int REQUEST_CODE_ADV = 119;
+    public static final int REQUEST_CODE_SYSTEM_INFO = 119;
 
     public static final int REQUEST_CODE_PERMISSION = 120;
     public static final int REQUEST_CODE_PERMISSION_2 = 121;

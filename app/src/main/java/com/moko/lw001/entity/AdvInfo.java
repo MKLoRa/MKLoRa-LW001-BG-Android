@@ -1,13 +1,17 @@
 package com.moko.lw001.entity;
 
-public class BeaconInfo {
+public class AdvInfo {
     public String name;
     public int deviceType;
     public int rssi;
     public String mac;
     public int battery;
+    public int powerState;
     public long scanTime;
     public long intervalTime;
-    public String temp;
-    public String humi;
+    public int txPower;
+    public String uuid;
+    public int major;
+    public int minor;
+    public int measurePower;
 }

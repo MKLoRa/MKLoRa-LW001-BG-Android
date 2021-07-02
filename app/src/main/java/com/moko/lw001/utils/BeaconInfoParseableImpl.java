@@ -5,7 +5,7 @@ import android.os.SystemClock;
 import android.util.SparseArray;
 
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw001.entity.BeaconInfo;
+import com.moko.lw001.entity.AdvInfo;
 import com.moko.support.lw001.entity.DeviceInfo;
 import com.moko.support.lw001.service.DeviceInfoParseable;
 
@@ -17,15 +17,15 @@ import java.util.Map;
 import no.nordicsemi.android.support.v18.scanner.ScanRecord;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 
-public class BeaconInfoParseableImpl implements DeviceInfoParseable<BeaconInfo> {
-    private HashMap<String, BeaconInfo> beaconInfoHashMap;
+public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
+    private HashMap<String, AdvInfo> advInfoHashMap;
 
     public BeaconInfoParseableImpl() {
-        this.beaconInfoHashMap = new HashMap<>();
+        this.advInfoHashMap = new HashMap<>();
     }
 
     @Override
-    public BeaconInfo parseDeviceInfo(DeviceInfo deviceInfo) {
+    public AdvInfo parseDeviceInfo(DeviceInfo deviceInfo) {
         ScanResult result = deviceInfo.scanResult;
         ScanRecord record = result.getScanRecord();
         Map<ParcelUuid, byte[]> map = record.getServiceData();
@@ -35,55 +35,81 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<BeaconInfo> 
         if (manufacturer == null || manufacturer.size() == 0)
             return null;
         byte[] manufacturerSpecificDataByte = record.getManufacturerSpecificData(manufacturer.keyAt(0));
-        if (manufacturerSpecificDataByte.length != 11)
+        if (manufacturerSpecificDataByte.length != 21)
             return null;
-        int battery = 0;
-        int deviceType = 0;
-        String tempStr = "";
-        String humiStr = "";
+        int battery = -1;
+        int powerState = -1;
+        int deviceType = -1;
+        int txPower = 0;
+        int measurePower = 0;
+        String uuid = "";
+        int major = 0;
+        int minor = 0;
+        byte[] uuidBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 0, 16);
+        uuid = MokoUtils.bytesToHexString(uuidBytes).toLowerCase();
+        StringBuffer sb = new StringBuffer(uuid);
+        sb.insert(8, "-");
+        sb.insert(13, "-");
+        sb.insert(18, "-");
+        sb.insert(23, "-");
+        uuid = sb.toString();
+        byte[] majorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 16, 18);
+        byte[] minorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 18, 20);
+        measurePower = manufacturerSpecificDataByte[20];
+        major = MokoUtils.toInt(majorBytes);
+        minor = MokoUtils.toInt(minorBytes);
         Iterator iterator = map.keySet().iterator();
-        if (iterator.hasNext()) {
+        while (iterator.hasNext()) {
             ParcelUuid parcelUuid = (ParcelUuid) iterator.next();
-            if (parcelUuid.toString().startsWith("0000aa00")) {
+            if (parcelUuid.toString().startsWith("0000aa02")) {
                 byte[] bytes = map.get(parcelUuid);
                 if (bytes != null) {
                     deviceType = bytes[0] & 0xFF;
+                    txPower = bytes[1];
+                    String binary = MokoUtils.hexString2binaryString(MokoUtils.byte2HexString(bytes[2]));
+                    powerState = Integer.parseInt(binary.substring(5, 6));
+                    battery = MokoUtils.toInt(Arrays.copyOfRange(bytes, 3, 5));
                 }
-            } else {
-                return null;
             }
         }
-        battery = manufacturerSpecificDataByte[6] & 0xFF;
-        byte[] tempBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 7, 9);
-        byte[] humiBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 9, 11);
-        tempStr = MokoUtils.getDecimalFormat("#.##").format(MokoUtils.toIntSigned(tempBytes) * 0.01);
-        humiStr = MokoUtils.getDecimalFormat("#.##").format(MokoUtils.toInt(humiBytes) * 0.01);
-        BeaconInfo beaconInfo;
-        if (beaconInfoHashMap.containsKey(deviceInfo.mac)) {
-            beaconInfo = beaconInfoHashMap.get(deviceInfo.mac);
-            beaconInfo.name = deviceInfo.name;
-            beaconInfo.rssi = deviceInfo.rssi;
-            beaconInfo.battery = battery;
-            beaconInfo.deviceType = deviceType;
-            beaconInfo.temp = tempStr;
-            beaconInfo.humi = humiStr;
+        if (deviceType == -1)
+            return null;
+
+        AdvInfo advInfo;
+        if (advInfoHashMap.containsKey(deviceInfo.mac)) {
+            advInfo = advInfoHashMap.get(deviceInfo.mac);
+            advInfo.name = deviceInfo.name;
+            advInfo.rssi = deviceInfo.rssi;
+            advInfo.battery = battery;
+            advInfo.deviceType = deviceType;
             long currentTime = SystemClock.elapsedRealtime();
-            long intervalTime = currentTime - beaconInfo.scanTime;
-            beaconInfo.intervalTime = intervalTime;
-            beaconInfo.scanTime = currentTime;
+            long intervalTime = currentTime - advInfo.scanTime;
+            advInfo.intervalTime = intervalTime;
+            advInfo.scanTime = currentTime;
+            advInfo.powerState = powerState;
+            advInfo.txPower = txPower;
+            advInfo.uuid = uuid;
+            advInfo.measurePower = measurePower;
+            advInfo.major = major;
+            advInfo.minor = minor;
         } else {
-            beaconInfo = new BeaconInfo();
-            beaconInfo.name = deviceInfo.name;
-            beaconInfo.mac = deviceInfo.mac;
-            beaconInfo.rssi = deviceInfo.rssi;
-            beaconInfo.battery = battery;
-            beaconInfo.deviceType = deviceType;
-            beaconInfo.temp = tempStr;
-            beaconInfo.humi = humiStr;
-            beaconInfo.scanTime = SystemClock.elapsedRealtime();
-            beaconInfoHashMap.put(deviceInfo.mac, beaconInfo);
+            advInfo = new AdvInfo();
+            advInfo.name = deviceInfo.name;
+            advInfo.mac = deviceInfo.mac;
+            advInfo.rssi = deviceInfo.rssi;
+            advInfo.battery = battery;
+            advInfo.powerState = powerState;
+            advInfo.deviceType = deviceType;
+            advInfo.scanTime = SystemClock.elapsedRealtime();
+            advInfo.deviceType = deviceType;
+            advInfo.txPower = txPower;
+            advInfo.uuid = uuid;
+            advInfo.measurePower = measurePower;
+            advInfo.major = major;
+            advInfo.minor = minor;
+            advInfoHashMap.put(deviceInfo.mac, advInfo);
         }
 
-        return beaconInfo;
+        return advInfo;
     }
 }

@@ -27,6 +27,7 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.dialog.AlertMessageDialog;
+import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
@@ -110,10 +111,17 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     ImageView ivCondition;
     @BindView(R2.id.tv_condition_tips)
     TextView tvConditionTips;
+    @BindView(R2.id.iv_phy)
+    ImageView ivPhy;
+    @BindView(R2.id.tv_phy)
+    TextView tvPhy;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     private ArrayList<String> filterRawDatas;
+
+    private ArrayList<String> mValues;
+    private int mSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +129,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
         setContentView(R.layout.lw001_activity_filter);
         ButterKnife.bind(this);
 
-        tvTitle.setText("FILTER Condition A");
+        tvTitle.setText("Filter Condition A");
         tvCondition.setText("Filter Condition A");
         tvConditionTips.setText(getString(R.string.condition_tips, "A", "A"));
 
@@ -134,6 +142,10 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
             return null;
         };
         etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(29), inputFilter});
+        mValues = new ArrayList<>();
+        mValues.add("1M phy");
+        mValues.add("2M phy");
+        mValues.add("Coded phy");
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -152,7 +164,8 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
             orderTasks.add(OrderTaskAssembler.getFilterUUIDA());
             orderTasks.add(OrderTaskAssembler.getFilterMajorRangeA());
             orderTasks.add(OrderTaskAssembler.getFilterMinorRangeA());
-            orderTasks.add(OrderTaskAssembler.getFilterAdvRawDataA());
+            orderTasks.add(OrderTaskAssembler.getFilterPHYA());
+            orderTasks.add(OrderTaskAssembler.getFilterRawDataA());
             LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
     }
@@ -177,7 +190,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -199,18 +211,19 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                 // write
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
-                                    case KEY_TRACKING_FILTER_SWITCH_A:
-                                    case KEY_TRACKING_FILTER_RSSI_A:
-                                    case KEY_TRACKING_FILTER_MAC_A:
-                                    case KEY_TRACKING_FILTER_ADV_NAME_A:
-                                    case KEY_TRACKING_FILTER_UUID_A:
-                                    case KEY_TRACKING_FILTER_MAJOR_RANGE_A:
-                                    case KEY_TRACKING_FILTER_MINOR_RANGE_A:
+                                    case KEY_FILTER_RSSI_A:
+                                    case KEY_FILTER_MAC_A:
+                                    case KEY_FILTER_ADV_NAME_A:
+                                    case KEY_FILTER_UUID_A:
+                                    case KEY_FILTER_MAJOR_RANGE_A:
+                                    case KEY_FILTER_MINOR_RANGE_A:
+                                    case KEY_FILTER_PHY_A:
+                                    case KEY_FILTER_ADV_RAW_DATA_A:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_ADV_RAW_DATA_A:
+                                    case KEY_FILTER_SWITCH_A:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -229,14 +242,14 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
-                                    case KEY_TRACKING_FILTER_SWITCH_A:
+                                    case KEY_FILTER_SWITCH_A:
                                         if (length == 1) {
                                             final int enable = value[4] & 0xFF;
                                             filterSwitchEnable = enable == 1;
                                             ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_RSSI_A:
+                                    case KEY_FILTER_RSSI_A:
                                         if (length == 1) {
                                             final int rssi = value[4];
                                             int progress = rssi + 127;
@@ -245,7 +258,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             tvRssiFilterTips.setText(getString(R.string.rssi_filter, rssi));
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_MAC_A:
+                                    case KEY_FILTER_MAC_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMacEnable = enable > 0;
@@ -260,7 +273,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_ADV_NAME_A:
+                                    case KEY_FILTER_ADV_NAME_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterNameEnable = enable > 0;
@@ -275,7 +288,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_UUID_A:
+                                    case KEY_FILTER_UUID_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterUUIDEnable = enable > 0;
@@ -290,7 +303,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_MAJOR_RANGE_A:
+                                    case KEY_FILTER_MAJOR_RANGE_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMajorEnable = enable > 0;
@@ -308,7 +321,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_MINOR_RANGE_A:
+                                    case KEY_FILTER_MINOR_RANGE_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMinorEnable = enable > 0;
@@ -326,7 +339,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
-                                    case KEY_TRACKING_FILTER_ADV_RAW_DATA_A:
+                                    case KEY_FILTER_ADV_RAW_DATA_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterRawAdvDataEnable = enable > 0;
@@ -363,6 +376,20 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
+                                    case KEY_FILTER_PHY_A:
+                                        if (length > 0) {
+                                            final int enable = value[4] & 0xFF;
+                                            filterPHYEnable = enable > 0;
+                                            ivPhy.setImageResource(filterPHYEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            tvPhy.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
+                                            if (length > 1) {
+                                                final int selectPhy = value[5] & 0xFF;
+                                                mSelected = selectPhy;
+                                                tvPhy.setText(mValues.get(selectPhy));
+                                            }
+                                        }
+                                        break;
+
                                 }
                             }
                         }
@@ -425,6 +452,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     private boolean filterMajorEnable;
     private boolean filterMinorEnable;
     private boolean filterRawAdvDataEnable;
+    private boolean filterPHYEnable;
 
     public void onBack(View view) {
         finish();
@@ -483,6 +511,12 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
         ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
         ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
         cbRawAdvData.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+    }
+
+    public void onPhy(View view) {
+        filterPHYEnable = !filterPHYEnable;
+        ivPhy.setImageResource(filterPHYEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        tvPhy.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onRawDataAdd(View view) {
@@ -549,10 +583,10 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                 filterMinorEnable ? Integer.parseInt(minorMin) : 0,
                 filterMinorEnable ? Integer.parseInt(minorMax) : 0,
                 cbIbeaconMinor.isChecked()));
-        orderTasks.add(OrderTaskAssembler.setFilterAdvRawDataA(filterRawAdvDataEnable ? filterRawDatas : null
+        orderTasks.add(OrderTaskAssembler.setFilterRawDataA(filterRawAdvDataEnable ? filterRawDatas : null
                 , cbRawAdvData.isChecked()));
+        orderTasks.add(OrderTaskAssembler.setFilterPHYA(filterPHYEnable ? 1 : 0, mSelected));
         orderTasks.add(OrderTaskAssembler.setFilterSwitchA(filterSwitchEnable ? 1 : 0));
-
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
@@ -684,5 +718,18 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+
+    public void onSelectPhy(View view) {
+        if (isWindowLocked())
+            return;
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(mValues, mSelected);
+        dialog.setListener(value -> {
+            tvPhy.setText(mValues.get(value));
+            mSelected = value;
+        });
+        dialog.show(getSupportFragmentManager());
     }
 }

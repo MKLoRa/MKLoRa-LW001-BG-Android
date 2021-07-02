@@ -51,13 +51,6 @@ public class MokoCharacteristicHandler {
                 mCharacteristicMap.put(OrderCHAR.CHAR_MANUFACTURER_NAME, characteristic);
             }
         }
-        if (gatt.getService(OrderServices.SERVICE_DEVICE_BATTERY.getUuid()) != null) {
-            final BluetoothGattService service = gatt.getService(OrderServices.SERVICE_DEVICE_BATTERY.getUuid());
-            if (service.getCharacteristic(OrderCHAR.CHAR_DEVICE_BATTERY.getUuid()) != null) {
-                final BluetoothGattCharacteristic characteristic = service.getCharacteristic(OrderCHAR.CHAR_DEVICE_BATTERY.getUuid());
-                mCharacteristicMap.put(OrderCHAR.CHAR_DEVICE_BATTERY, characteristic);
-            }
-        }
         if (gatt.getService(OrderServices.SERVICE_CUSTOM.getUuid()) != null) {
             final BluetoothGattService service = gatt.getService(OrderServices.SERVICE_CUSTOM.getUuid());
             if (service.getCharacteristic(OrderCHAR.CHAR_PASSWORD.getUuid()) != null) {

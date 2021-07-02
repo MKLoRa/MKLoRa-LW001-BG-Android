@@ -27,13 +27,13 @@ import com.moko.lw001.AppConstants;
 import com.moko.lw001.BuildConfig;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
-import com.moko.lw001.adapter.BeaconListAdapter;
+import com.moko.lw001.adapter.DeviceListAdapter;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.dialog.PasswordDialog;
 import com.moko.lw001.dialog.ScanFilterDialog;
-import com.moko.lw001.entity.BeaconInfo;
+import com.moko.lw001.entity.AdvInfo;
 import com.moko.lw001.utils.BeaconInfoParseableImpl;
 import com.moko.lw001.utils.SPUtiles;
 import com.moko.lw001.utils.ToastUtils;
@@ -78,9 +78,9 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
     @BindView(R2.id.tv_filter)
     TextView tv_filter;
     private boolean mReceiverTag = false;
-    private ConcurrentHashMap<String, BeaconInfo> beaconInfoHashMap;
-    private ArrayList<BeaconInfo> beaconInfos;
-    private BeaconListAdapter adapter;
+    private ConcurrentHashMap<String, AdvInfo> beaconInfoHashMap;
+    private ArrayList<AdvInfo> beaconInfos;
+    private DeviceListAdapter adapter;
     private Animation animation = null;
     private MokoBleScanner mokoBleScanner;
     public Handler mHandler;
@@ -95,7 +95,7 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
         mSavedPassword = SPUtiles.getStringValue(this, AppConstants.SP_KEY_SAVED_PASSWORD_LW001, "");
         beaconInfoHashMap = new ConcurrentHashMap<>();
         beaconInfos = new ArrayList<>();
-        adapter = new BeaconListAdapter();
+        adapter = new DeviceListAdapter();
         adapter.replaceData(beaconInfos);
         adapter.setOnItemChildClickListener(this);
         adapter.openLoadAnimation();
@@ -163,7 +163,7 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
 
     @Override
     public void onScanDevice(DeviceInfo deviceInfo) {
-        BeaconInfo beaconInfo = beaconInfoParseable.parseDeviceInfo(deviceInfo);
+        AdvInfo beaconInfo = beaconInfoParseable.parseDeviceInfo(deviceInfo);
         if (beaconInfo == null)
             return;
         beaconInfoHashMap.put(beaconInfo.mac, beaconInfo);
@@ -178,10 +178,10 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
     private void updateDevices() {
         beaconInfos.clear();
         if (!TextUtils.isEmpty(filterName) || filterRssi != -127) {
-            ArrayList<BeaconInfo> beaconInfosFilter = new ArrayList<>(beaconInfoHashMap.values());
-            Iterator<BeaconInfo> iterator = beaconInfosFilter.iterator();
+            ArrayList<AdvInfo> beaconInfosFilter = new ArrayList<>(beaconInfoHashMap.values());
+            Iterator<AdvInfo> iterator = beaconInfosFilter.iterator();
             while (iterator.hasNext()) {
-                BeaconInfo beaconInfo = iterator.next();
+                AdvInfo beaconInfo = iterator.next();
                 if (beaconInfo.rssi > filterRssi) {
                     if (TextUtils.isEmpty(filterName)) {
                         continue;
@@ -332,7 +332,7 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
             LoRaLW001MokoSupport.getInstance().enableBluetooth();
             return;
         }
-        BeaconInfo beaconInfo = (BeaconInfo) adapter.getItem(position);
+        AdvInfo beaconInfo = (AdvInfo) adapter.getItem(position);
         if (beaconInfo != null && !isFinishing()) {
             if (animation != null) {
                 mHandler.removeMessages(0);

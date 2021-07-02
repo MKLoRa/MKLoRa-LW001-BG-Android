@@ -41,7 +41,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoRaSettingActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class LoRaConnSettingActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
 
     @BindView(R2.id.et_dev_eui)
@@ -64,8 +64,6 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
     TextView tvCh1;
     @BindView(R2.id.tv_ch_2)
     TextView tvCh2;
-    @BindView(R2.id.tv_dr_1)
-    TextView tvDr1;
     @BindView(R2.id.cb_adr)
     CheckBox cbAdr;
     @BindView(R2.id.tv_upload_mode)
@@ -74,37 +72,43 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
     TextView tvRegion;
     @BindView(R2.id.tv_message_type)
     TextView tvMessageType;
-    @BindView(R2.id.tv_device_type)
-    TextView tvDeviceType;
     @BindView(R2.id.ll_advanced_setting)
     LinearLayout llAdvancedSetting;
     @BindView(R2.id.cb_advance_setting)
     CheckBox cbAdvanceSetting;
     @BindView(R2.id.cb_duty_cycle)
     CheckBox cbDutyCycle;
-    @BindView(R2.id.tv_uplink_dell_time)
-    TextView tvUplinkDellTime;
     @BindView(R2.id.rl_ch)
     RelativeLayout rlCH;
     @BindView(R2.id.ll_duty_cycle)
     LinearLayout llDutyCycle;
-    @BindView(R2.id.ll_uplink_dell_time)
-    LinearLayout llUplinkDellTime;
+    @BindView(R2.id.tv_dr)
+    TextView tvDr;
+    @BindView(R2.id.rl_dr)
+    RelativeLayout rlDr;
+    @BindView(R2.id.tv_transmissions)
+    TextView tvTransmissions;
+    @BindView(R2.id.tv_dr_1)
+    TextView tvDr1;
+    @BindView(R2.id.tv_dr_2)
+    TextView tvDr2;
+    @BindView(R2.id.ll_adr_options)
+    LinearLayout llAdrOptions;
 
     private boolean mReceiverTag = false;
     private ArrayList<String> mModeList;
     private ArrayList<String> mRegionsList;
     private ArrayList<String> mMessageTypeList;
-    private ArrayList<String> mDeviceTypeList;
-    private ArrayList<String> mUplinkDellTimeList;
+    private ArrayList<String> mTransmissionsNumberList;
     private int mSelectedMode;
     private int mSelectedRegion;
     private int mSelectedMessageType;
-    private int mSelectedDeviceType;
     private int mSelectedCh1;
     private int mSelectedCh2;
+    private int mSelectedDr;
     private int mSelectedDr1;
-    private int mSelectedUplinkDellTime;
+    private int mSelectedDr2;
+    private int mSelectedTransmissions;
     private int mMaxCH;
     private int mMaxDR;
     private boolean savedParamsError;
@@ -112,7 +116,7 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_lora_setting);
+        setContentView(R.layout.lw001_activity_conn_setting);
         ButterKnife.bind(this);
         mModeList = new ArrayList<>();
         mModeList.add("ABP");
@@ -131,15 +135,11 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
         mMessageTypeList = new ArrayList<>();
         mMessageTypeList.add("Unconfirmed");
         mMessageTypeList.add("Confirmed");
-
-        mDeviceTypeList = new ArrayList<>();
-        mDeviceTypeList.add("ClassA");
-        mDeviceTypeList.add("ClassC");
-
+        mTransmissionsNumberList = new ArrayList<>();
+        mTransmissionsNumberList.add("1");
+        mTransmissionsNumberList.add("2");
         cbAdvanceSetting.setOnCheckedChangeListener(this);
-        mUplinkDellTimeList = new ArrayList<>();
-        mUplinkDellTimeList.add("0");
-        mUplinkDellTimeList.add("1");
+        cbAdr.setOnCheckedChangeListener(this);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -151,7 +151,7 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
         } else {
             showSyncingProgressDialog();
             List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.getLoraMode());
+            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
             orderTasks.add(OrderTaskAssembler.getLoraDevEUI());
             orderTasks.add(OrderTaskAssembler.getLoraAppEUI());
             orderTasks.add(OrderTaskAssembler.getLoraAppKey());
@@ -160,12 +160,10 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
             orderTasks.add(OrderTaskAssembler.getLoraNwkSKey());
             orderTasks.add(OrderTaskAssembler.getLoraRegion());
             orderTasks.add(OrderTaskAssembler.getLoraMessageType());
-            orderTasks.add(OrderTaskAssembler.getLoraClassType());
             orderTasks.add(OrderTaskAssembler.getLoraCH());
             orderTasks.add(OrderTaskAssembler.getLoraDutyCycleEnable());
-            orderTasks.add(OrderTaskAssembler.getLoraADR());
             orderTasks.add(OrderTaskAssembler.getLoraDR());
-            orderTasks.add(OrderTaskAssembler.getLoraUplinkDellTime());
+            orderTasks.add(OrderTaskAssembler.getLoraUplinkStrategy());
             LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
     }
@@ -190,12 +188,10 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
                 byte[] value = response.responseValue;
-
                 switch (orderCHAR) {
                     case CHAR_PARAMS:
                         if (value.length >= 4) {
@@ -222,16 +218,14 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                                     case KEY_LORA_NWK_SKEY:
                                     case KEY_LORA_REGION:
                                     case KEY_LORA_MESSAGE_TYPE:
-                                    case KEY_LORA_CLASS_TYPE:
                                     case KEY_LORA_CH:
-                                    case KEY_LORA_DUTY_CYCLE_ENABLE:
                                     case KEY_LORA_DR:
-                                    case KEY_LORA_UPLINK_DELL_TIME:
+                                    case KEY_LORA_DUTYCYCLE:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_LORA_ADR:
+                                    case KEY_LORA_UPLINK_STRATEGY:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -239,10 +233,10 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                                             ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             showSyncingProgressDialog();
-                                            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setReset());
+                                            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.restart());
                                         }
                                         break;
-                                    case KEY_RESET:
+                                    case KEY_RESTART:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -314,7 +308,6 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                                             tvRegion.setText(mRegionsList.get(region));
                                             initCHDRRange();
                                             initDutyCycle();
-                                            initUplinkDellTime();
                                         }
                                         break;
                                     case KEY_LORA_MESSAGE_TYPE:
@@ -322,17 +315,6 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                                             final int messageType = value[4] & 0xFF;
                                             mSelectedMessageType = messageType;
                                             tvMessageType.setText(mMessageTypeList.get(messageType));
-                                        }
-                                        break;
-                                    case KEY_LORA_CLASS_TYPE:
-                                        if (length > 0) {
-                                            final int classType = value[4] & 0xFF;
-                                            mSelectedDeviceType = classType;
-                                            if (classType == 2) {
-                                                tvDeviceType.setText(mDeviceTypeList.get(1));
-                                                return;
-                                            }
-                                            tvDeviceType.setText(mDeviceTypeList.get(0));
                                         }
                                         break;
                                     case KEY_LORA_CH:
@@ -345,7 +327,7 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                                             tvCh2.setText(String.valueOf(ch2));
                                         }
                                         break;
-                                    case KEY_LORA_DUTY_CYCLE_ENABLE:
+                                    case KEY_LORA_DUTYCYCLE:
                                         if (length > 0) {
                                             final int dutyCycleEnable = value[4] & 0xFF;
                                             cbDutyCycle.setChecked(dutyCycleEnable == 1);
@@ -353,22 +335,24 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                                         break;
                                     case KEY_LORA_DR:
                                         if (length > 0) {
-                                            final int dr1 = value[4] & 0xFF;
-                                            mSelectedDr1 = dr1;
-                                            tvDr1.setText(String.valueOf(dr1));
+                                            final int dr = value[4] & 0xFF;
+                                            mSelectedDr = dr;
+                                            tvDr.setText(String.valueOf(dr));
                                         }
                                         break;
-                                    case KEY_LORA_ADR:
+                                    case KEY_LORA_UPLINK_STRATEGY:
                                         if (length > 0) {
                                             final int adr = value[4] & 0xFF;
                                             cbAdr.setChecked(adr == 1);
-                                        }
-                                        break;
-                                    case KEY_LORA_UPLINK_DELL_TIME:
-                                        if (length > 0) {
-                                            final int uplinkDellTime = value[4] & 0xFF;
-                                            mSelectedUplinkDellTime = uplinkDellTime;
-                                            tvUplinkDellTime.setText(mUplinkDellTimeList.get(uplinkDellTime));
+                                            final int number = value[5] & 0xFF;
+                                            tvTransmissions.setText(mTransmissionsNumberList.get(number - 1));
+                                            mSelectedTransmissions = number;
+                                            final int dr1 = value[6] & 0xFF;
+                                            mSelectedDr1 = dr1;
+                                            final int dr2 = value[7] & 0xFF;
+                                            mSelectedDr2 = dr1;
+                                            tvDr1.setText(String.valueOf(dr1));
+                                            tvDr2.setText(String.valueOf(dr2));
                                         }
                                         break;
                                 }
@@ -471,7 +455,6 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                 initCHDRRange();
                 updateCHDR();
                 initDutyCycle();
-                initUplinkDellTime();
             }
         });
         bottomDialog.show(getSupportFragmentManager());
@@ -489,18 +472,6 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
         bottomDialog.show(getSupportFragmentManager());
     }
 
-    public void selectDeviceType(View view) {
-        if (isWindowLocked())
-            return;
-        BottomDialog bottomDialog = new BottomDialog();
-        bottomDialog.setDatas(mDeviceTypeList, mSelectedDeviceType == 2 ? 1 : 0);
-        bottomDialog.setListener(value -> {
-            tvDeviceType.setText(mDeviceTypeList.get(value));
-            mSelectedDeviceType = value == 1 ? 2 : 0;
-        });
-        bottomDialog.show(getSupportFragmentManager());
-    }
-
     private void updateCHDR() {
         switch (mSelectedRegion) {
             case 3:
@@ -511,7 +482,7 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                 // CN779、EU443、EU868、KR920、IN865
                 mSelectedCh1 = 0;
                 mSelectedCh2 = 2;
-                mSelectedDr1 = 0;
+                mSelectedDr = 0;
                 break;
             case 1:
             case 2:
@@ -519,20 +490,20 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                 // AU915、CN470、US915
                 mSelectedCh1 = 0;
                 mSelectedCh2 = 7;
-                mSelectedDr1 = 0;
+                mSelectedDr = 0;
                 break;
             case 0:
             case 9:
                 // AS923、RU864
                 mSelectedCh1 = 0;
                 mSelectedCh2 = 1;
-                mSelectedDr1 = 0;
+                mSelectedDr = 0;
                 break;
         }
 
         tvCh1.setText(String.valueOf(mSelectedCh1));
         tvCh2.setText(String.valueOf(mSelectedCh2));
-        tvDr1.setText(String.valueOf(mSelectedDr1));
+        tvDr.setText(String.valueOf(mSelectedDr));
     }
 
     private ArrayList<String> mCHList;
@@ -585,6 +556,12 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
         } else {
             rlCH.setVisibility(View.GONE);
         }
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 8) {
+            // AS923,US915,AU915
+            rlDr.setVisibility(View.VISIBLE);
+        } else {
+            rlDr.setVisibility(View.GONE);
+        }
     }
 
     private void initDutyCycle() {
@@ -595,17 +572,6 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
             llDutyCycle.setVisibility(View.VISIBLE);
         } else {
             llDutyCycle.setVisibility(View.GONE);
-        }
-    }
-
-    private void initUplinkDellTime() {
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
-            mSelectedUplinkDellTime = 1;
-            tvUplinkDellTime.setText(mUplinkDellTimeList.get(1));
-            // AS923 and AU915
-            llUplinkDellTime.setVisibility(View.VISIBLE);
-        } else {
-            llUplinkDellTime.setVisibility(View.GONE);
         }
     }
 
@@ -645,26 +611,55 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
     public void selectDr1(View view) {
         if (isWindowLocked())
             return;
-        if (cbAdr.isChecked()) {
-            return;
-        }
         BottomDialog bottomDialog = new BottomDialog();
         bottomDialog.setDatas(mDRList, mSelectedDr1);
         bottomDialog.setListener(value -> {
             mSelectedDr1 = value;
             tvDr1.setText(mDRList.get(value));
+            if (mSelectedDr1 > mSelectedDr2) {
+                mSelectedDr2 = mSelectedDr1;
+                tvDr2.setText(mDRList.get(value));
+            }
         });
         bottomDialog.show(getSupportFragmentManager());
     }
 
-    public void onUplinkDellTime(View view) {
+    public void selectDr2(View view) {
+        if (isWindowLocked())
+            return;
+        final ArrayList<String> dr2List = new ArrayList<>();
+        for (int i = mSelectedDr1; i <= mMaxDR; i++) {
+            dr2List.add(i + "");
+        }
+        BottomDialog bottomDialog = new BottomDialog();
+        bottomDialog.setDatas(dr2List, mSelectedDr2 - mSelectedDr1);
+        bottomDialog.setListener(value -> {
+            mSelectedDr2 = value + mSelectedDr1;
+            tvDr2.setText(dr2List.get(value));
+        });
+        bottomDialog.show(getSupportFragmentManager());
+    }
+
+    public void selectDrForJoin(View view) {
         if (isWindowLocked())
             return;
         BottomDialog bottomDialog = new BottomDialog();
-        bottomDialog.setDatas(mUplinkDellTimeList, mSelectedUplinkDellTime);
+        bottomDialog.setDatas(mDRList, mSelectedDr);
         bottomDialog.setListener(value -> {
-            mSelectedUplinkDellTime = value;
-            tvUplinkDellTime.setText(mUplinkDellTimeList.get(value));
+            mSelectedDr = value;
+            tvDr.setText(mDRList.get(value));
+        });
+        bottomDialog.show(getSupportFragmentManager());
+    }
+
+    public void selectTransmissions(View view) {
+        if (isWindowLocked())
+            return;
+        BottomDialog bottomDialog = new BottomDialog();
+        bottomDialog.setDatas(mTransmissionsNumberList, mSelectedTransmissions);
+        bottomDialog.setListener(value -> {
+            mSelectedTransmissions = value;
+            tvTransmissions.setText(mTransmissionsNumberList.get(value));
         });
         bottomDialog.show(getSupportFragmentManager());
     }
@@ -699,8 +694,8 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                 ToastUtils.showToast(this, "data length error");
                 return;
             }
-            orderTasks.add(OrderTaskAssembler.setLoraDevEui(devEui));
-            orderTasks.add(OrderTaskAssembler.setLoraAppEui(appEui));
+            orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
+            orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
             orderTasks.add(OrderTaskAssembler.setLoraDevAddr(devAddr));
             orderTasks.add(OrderTaskAssembler.setLoraAppSKey(appSkey));
             orderTasks.add(OrderTaskAssembler.setLoraNwkSKey(nwkSkey));
@@ -721,13 +716,12 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
                 ToastUtils.showToast(this, "data length error");
                 return;
             }
-            orderTasks.add(OrderTaskAssembler.setLoraDevEui(devEui));
-            orderTasks.add(OrderTaskAssembler.setLoraAppEui(appEui));
+            orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
+            orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
             orderTasks.add(OrderTaskAssembler.setLoraAppKey(appKey));
             orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
         }
         orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
-        orderTasks.add(OrderTaskAssembler.setLoraClassType(mSelectedDeviceType));
         savedParamsError = false;
         // 保存并连接
         orderTasks.add(OrderTaskAssembler.setLoraRegion(mSelectedRegion));
@@ -737,19 +731,25 @@ public class LoRaSettingActivity extends BaseActivity implements CompoundButton.
             // CN779,EU433,EU868 and RU864
             orderTasks.add(OrderTaskAssembler.setLoraDutyCycleEnable(cbDutyCycle.isChecked() ? 1 : 0));
         }
-        if (mSelectedRegion == 0 || mSelectedRegion == 1) {
-            orderTasks.add(OrderTaskAssembler.setLoraUplinkDellTime(mSelectedUplinkDellTime));
+        if (mSelectedRegion == 0 || mSelectedRegion == 1 || mSelectedRegion == 8) {
+            // AS923,US915,AU915
+            orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr));
         }
-        if (!cbAdr.isChecked())
-            orderTasks.add(OrderTaskAssembler.setLoraDR(mSelectedDr1));
-        orderTasks.add(OrderTaskAssembler.setLoraADR(cbAdr.isChecked() ? 1 : 0));
-//        orderTasks.add(OrderTaskAssembler.setReset());
+        orderTasks.add(OrderTaskAssembler.setLoraUplinkStrategy(cbAdr.isChecked() ? 1 : 0,
+                mSelectedTransmissions, mSelectedDr1, mSelectedDr2));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         showSyncingProgressDialog();
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        llAdvancedSetting.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        switch (buttonView.getId()) {
+            case R.id.cb_advance_setting:
+                llAdvancedSetting.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                break;
+            case R.id.cb_adr:
+                llAdrOptions.setVisibility(isChecked ? View.GONE : View.VISIBLE);
+                break;
+        }
     }
 }

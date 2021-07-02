@@ -7,20 +7,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
-import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.dialog.AlertMessageDialog;
+import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
@@ -33,49 +30,37 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MulticastSettingActivity extends BaseActivity {
+public class DeviceModeActivity extends BaseActivity {
 
-    @BindView(R2.id.cb_multicast_group)
-    CheckBox cbMulticastGroup;
-    @BindView(R2.id.et_mc_addr)
-    EditText etMcAddr;
-    @BindView(R2.id.et_mc_app_skey)
-    EditText etMcAppSkey;
-    @BindView(R2.id.et_mc_nwk_skey)
-    EditText etMcNwkSkey;
-    @BindView(R2.id.cl_multicast_group)
-    ConstraintLayout clMulticastGroup;
+    @BindView(R2.id.tv_device_mode)
+    TextView tvDeviceMode;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
+    private ArrayList<String> mValues;
+    private int mSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_multicast_group);
+        setContentView(R.layout.lw001_activity_device_mode);
         ButterKnife.bind(this);
+        mValues = new ArrayList<>();
+        mValues.add("Standby Mode");
+        mValues.add("Timing Mode");
+        mValues.add("Periodic Mode");
+        mValues.add("Motion Mode");
         EventBus.getDefault().register(this);
-        cbMulticastGroup.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            clMulticastGroup.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-        });
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.getMulticastEnable());
-        orderTasks.add(OrderTaskAssembler.getMulticastAddr());
-        orderTasks.add(OrderTaskAssembler.getMulticastAppSKey());
-        orderTasks.add(OrderTaskAssembler.getMulticastNwkSkey());
-        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getDeviceModel());
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -120,19 +105,12 @@ public class MulticastSettingActivity extends BaseActivity {
                                 // write
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
-                                    case KEY_MULTICAST_ADDR:
-                                    case KEY_MULTICAST_APPSKEY:
-                                    case KEY_MULTICAST_NWKSKEY:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
-                                        break;
-                                    case KEY_MULTICAST_ENABLE:
+                                    case KEY_WORK_MODE:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         if (savedParamsError) {
-                                            ToastUtils.showToast(MulticastSettingActivity.this, "Opps！Save failed. Please check the input characters and try again.");
+                                            ToastUtils.showToast(DeviceModeActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             AlertMessageDialog dialog = new AlertMessageDialog();
                                             dialog.setMessage("Saved Successfully！");
@@ -146,31 +124,11 @@ public class MulticastSettingActivity extends BaseActivity {
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
-                                    case KEY_MULTICAST_ENABLE:
+                                    case KEY_WORK_MODE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            cbMulticastGroup.setChecked(enable == 1);
-                                        }
-                                        break;
-                                    case KEY_MULTICAST_ADDR:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            String addrStr = MokoUtils.bytesToHexString(rawDataBytes);
-                                            etMcAddr.setText(addrStr);
-                                        }
-                                        break;
-                                    case KEY_MULTICAST_APPSKEY:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            String appSkeyStr = MokoUtils.bytesToHexString(rawDataBytes);
-                                            etMcAppSkey.setText(appSkeyStr);
-                                        }
-                                        break;
-                                    case KEY_MULTICAST_NWKSKEY:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            String nwkSkey = MokoUtils.bytesToHexString(rawDataBytes);
-                                            etMcNwkSkey.setText(nwkSkey);
+                                            int mode = value[4] & 0xFF;
+                                            mSelected = mode;
+                                            tvDeviceMode.setText(mValues.get(mode));
                                         }
                                         break;
                                 }
@@ -180,61 +138,6 @@ public class MulticastSettingActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    public void onSave(View view) {
-        if (isWindowLocked())
-            return;
-        if (isValid()) {
-            showSyncingProgressDialog();
-            saveParams();
-        } else {
-            ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-        }
-    }
-
-    private boolean isValid() {
-        if (cbMulticastGroup.isChecked()) {
-            final String addrStr = etMcAddr.getText().toString();
-            if (TextUtils.isEmpty(addrStr))
-                return false;
-            if (addrStr.length() != 8) {
-                return false;
-            }
-            final String appSkeyStr = etMcAppSkey.getText().toString();
-            if (TextUtils.isEmpty(appSkeyStr))
-                return false;
-            if (appSkeyStr.length() != 32) {
-                return false;
-            }
-            final String nwkSkeyStr = etMcNwkSkey.getText().toString();
-            if (TextUtils.isEmpty(nwkSkeyStr))
-                return false;
-            if (nwkSkeyStr.length() != 32) {
-                return false;
-            }
-            return true;
-        } else {
-            return true;
-        }
-    }
-
-
-    private void saveParams() {
-        if (cbMulticastGroup.isChecked()) {
-            final String addrStr = etMcAddr.getText().toString();
-            final String appSkeyStr = etMcAppSkey.getText().toString();
-            final String nwkSkeyStr = etMcNwkSkey.getText().toString();
-            List<OrderTask> orderTasks = new ArrayList<>();
-            orderTasks.add(OrderTaskAssembler.setMulticastAddr(addrStr));
-            orderTasks.add(OrderTaskAssembler.setMulticastAppSKey(appSkeyStr));
-            orderTasks.add(OrderTaskAssembler.setMulticastNwkSKey(nwkSkeyStr));
-            orderTasks.add(OrderTaskAssembler.setMulticastEnable(1));
-            LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-        } else {
-            LoRaLW001MokoSupport.getInstance().sendOrder(
-                    OrderTaskAssembler.setMulticastEnable(0));
-        }
     }
 
 
@@ -283,9 +186,11 @@ public class MulticastSettingActivity extends BaseActivity {
             mLoadingMessageDialog.dismissAllowingStateLoss();
     }
 
+
     public void onBack(View view) {
         backHome();
     }
+
     @Override
     public void onBackPressed() {
         backHome();
@@ -294,5 +199,37 @@ public class MulticastSettingActivity extends BaseActivity {
     private void backHome() {
         setResult(RESULT_OK);
         finish();
+    }
+
+    public void selectDeviceMode(View view) {
+        if (isWindowLocked())
+            return;
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(mValues, mSelected);
+        dialog.setListener(value -> {
+            tvDeviceMode.setText(mValues.get(value));
+            mSelected = value;
+            showSyncingProgressDialog();
+            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWorkMode(value));
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+    public void onTimingMode(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, TimingModeActivity.class));
+    }
+
+    public void onPeriodicMode(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, PeriodicModeActivity.class));
+    }
+
+    public void onMotionMode(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, MotionModeActivity.class));
     }
 }

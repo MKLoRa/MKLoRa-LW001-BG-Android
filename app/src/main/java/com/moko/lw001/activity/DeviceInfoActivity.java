@@ -3,28 +3,21 @@ package com.moko.lw001.activity;
 
 import android.app.AlertDialog;
 import android.app.FragmentManager;
-import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
@@ -38,11 +31,9 @@ import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.ChangePasswordDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.fragment.DeviceFragment;
+import com.moko.lw001.fragment.GeneralFragment;
 import com.moko.lw001.fragment.LoRaFragment;
-import com.moko.lw001.fragment.ScannerFragment;
-import com.moko.lw001.fragment.SettingFragment;
-import com.moko.lw001.service.DfuService;
-import com.moko.lw001.utils.FileUtils;
+import com.moko.lw001.fragment.PositionFragment;
 import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
@@ -53,7 +44,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -61,25 +51,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.annotation.IdRes;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import no.nordicsemi.android.dfu.DfuProgressListener;
-import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
-import no.nordicsemi.android.dfu.DfuServiceInitiator;
-import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
 public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnCheckedChangeListener {
-    public static final int REQUEST_CODE_SELECT_FIRMWARE = 0x10;
 
     @BindView(R2.id.frame_container)
     FrameLayout frameContainer;
     @BindView(R2.id.radioBtn_lora)
     RadioButton radioBtnLora;
-    @BindView(R2.id.radioBtn_scanner)
-    RadioButton radioBtnScanner;
-    @BindView(R2.id.radioBtn_setting)
-    RadioButton radioBtnSetting;
+    @BindView(R2.id.radioBtn_position)
+    RadioButton radioBtnPosition;
+    @BindView(R2.id.radioBtn_general)
+    RadioButton radioBtnGeneral;
     @BindView(R2.id.radioBtn_device)
     RadioButton radioBtnDevice;
     @BindView(R2.id.rg_options)
@@ -90,13 +74,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     ImageView ivSave;
     private FragmentManager fragmentManager;
     private LoRaFragment loraFragment;
-    private ScannerFragment scannerFragment;
-    private SettingFragment settingFragment;
+    private PositionFragment posFragment;
+    private GeneralFragment generalFragment;
     private DeviceFragment deviceFragment;
-    public String mDeviceMac;
-    public String mDeviceName;
-    private String[] mUploadMode;
-    private String[] mRegions;
+    private ArrayList<String> mUploadMode;
+    private ArrayList<String> mRegions;
     private int mSelectedRegion;
     private int mSelectUploadMode;
     private boolean mReceiverTag = false;
@@ -115,8 +97,20 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         tvTitle.setText(R.string.title_lora);
         rgOptions.setOnCheckedChangeListener(this);
         EventBus.getDefault().register(this);
-        mUploadMode = getResources().getStringArray(R.array.upload_mode);
-        mRegions = getResources().getStringArray(R.array.lw001_region);
+        mUploadMode = new ArrayList<>();
+        mUploadMode.add("ABP");
+        mUploadMode.add("OTAA");
+        mRegions = new ArrayList<>();
+        mRegions.add("AS923");
+        mRegions.add("AU915");
+        mRegions.add("CN470");
+        mRegions.add("CN779");
+        mRegions.add("EU433");
+        mRegions.add("EU868");
+        mRegions.add("KR920");
+        mRegions.add("IN865");
+        mRegions.add("US915");
+        mRegions.add("RU864");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -131,28 +125,25 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             orderTasks.add(OrderTaskAssembler.setTime());
             // get lora params
             orderTasks.add(OrderTaskAssembler.getLoraRegion());
-            orderTasks.add(OrderTaskAssembler.getLoraMode());
-            orderTasks.add(OrderTaskAssembler.getLoraClassType());
-            orderTasks.add(OrderTaskAssembler.getLoRaConnectable());
-            orderTasks.add(OrderTaskAssembler.getMulticastEnable());
-            orderTasks.add(OrderTaskAssembler.getTimeSyncInterval());
+            orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
+            orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
             LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
     }
 
     private void initFragment() {
         loraFragment = LoRaFragment.newInstance();
-        scannerFragment = ScannerFragment.newInstance();
-        settingFragment = SettingFragment.newInstance();
+        posFragment = PositionFragment.newInstance();
+        generalFragment = GeneralFragment.newInstance();
         deviceFragment = DeviceFragment.newInstance();
         fragmentManager.beginTransaction()
                 .add(R.id.frame_container, loraFragment)
-                .add(R.id.frame_container, scannerFragment)
-                .add(R.id.frame_container, settingFragment)
+                .add(R.id.frame_container, posFragment)
+                .add(R.id.frame_container, generalFragment)
                 .add(R.id.frame_container, deviceFragment)
                 .show(loraFragment)
-                .hide(scannerFragment)
-                .hide(settingFragment)
+                .hide(posFragment)
+                .hide(generalFragment)
                 .hide(deviceFragment)
                 .commit();
     }
@@ -223,30 +214,6 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
-                    case CHAR_MODEL_NUMBER:
-                        String productModel = new String(value);
-                        deviceFragment.setProductModel(productModel);
-                        break;
-                    case CHAR_SOFTWARE_REVISION:
-                        String softwareVersion = new String(value);
-                        deviceFragment.setSoftwareVersion(softwareVersion);
-                        break;
-                    case CHAR_FIRMWARE_REVISION:
-                        String firmwareVersion = new String(value);
-                        deviceFragment.setFirmwareVersion(firmwareVersion);
-                        break;
-                    case CHAR_HARDWARE_REVISION:
-                        String hardwareVersion = new String(value);
-                        deviceFragment.setHardwareVersion(hardwareVersion);
-                        break;
-                    case CHAR_MANUFACTURER_NAME:
-                        String manufacture = new String(value);
-                        deviceFragment.setManufacture(manufacture);
-                        break;
-                    case CHAR_DEVICE_BATTERY:
-                        int battery = value[0] & 0xFF;
-                        deviceFragment.setBatteryValtage(battery);
-                        break;
                     case CHAR_PARAMS:
                         if (value.length >= 4) {
                             int header = value[0] & 0xFF;// 0xED
@@ -266,19 +233,13 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                     case KEY_TIME:
                                         if (result == 1)
                                             ToastUtils.showToast(DeviceInfoActivity.this, "Time sync completed!");
-                                    case KEY_SCAN_ENABLE:
-                                    case KEY_SCAN_PARAMS:
-                                    case KEY_OVER_LIMIT_RSSI:
-                                    case KEY_OVER_LIMIT_QTY:
-                                    case KEY_OVER_LIMIT_DURATION:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
                                         break;
-                                    case KEY_TIME_SYNC_INTERVAL:
-                                    case KEY_OVER_LIMIT_ENABLE:
-                                    case KEY_POWER_STATUS:
-                                    case KEY_TAMPER_DETECTION:
+                                    case KEY_OFFLINE_LOCATION:
+                                    case KEY_HEARTBEAT_INTERVAL:
+                                    case KEY_TIME_ZONE:
+                                    case KEY_SHUTDOWN_INFO_REPORT:
+                                    case KEY_LOW_POWER:
+                                    case KEY_WORK_MODE:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -307,106 +268,46 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         if (length > 0) {
                                             final int mode = value[4];
                                             mSelectUploadMode = mode;
-                                        }
-                                        break;
-                                    case KEY_LORA_CLASS_TYPE:
-                                        if (length > 0) {
-                                            final int classType = value[4];
-                                            String loraInfo = String.format("%s/%s/%s",
-                                                    mUploadMode[mSelectUploadMode - 1],
-                                                    mRegions[mSelectedRegion],
-                                                    classType == 0 ? "ClassA" : "ClassC");
+                                            String loraInfo = String.format("%s/%s/ClassA",
+                                                    mUploadMode.get(mSelectUploadMode - 1),
+                                                    mRegions.get(mSelectedRegion));
                                             loraFragment.setLoRaInfo(loraInfo);
                                         }
                                         break;
                                     case KEY_NETWORK_STATUS:
                                         if (length > 0) {
-                                            int connectable = value[4] & 0xFF;
-                                            loraFragment.setNetworkCheck(connectable);
+                                            int networkStatus = value[4] & 0xFF;
+                                            loraFragment.setLoraStatus(networkStatus);
                                         }
                                         break;
-                                    case KEY_MULTICAST_ENABLE:
+                                    case KEY_OFFLINE_LOCATION:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            loraFragment.setMulticastEnable(enable);
+                                            posFragment.setOfflineFix(enable);
                                         }
                                         break;
-                                    case KEY_TIME_SYNC_INTERVAL:
+                                    case KEY_HEARTBEAT_INTERVAL:
                                         if (length > 0) {
-                                            int interval = value[4] & 0xFF;
-                                            loraFragment.setTimeSyncInterval(interval);
+                                            byte[] intervalBytes = Arrays.copyOfRange(value, 4, 4 + length);
+                                            generalFragment.setHeartbeatInterval(MokoUtils.toInt(intervalBytes));
                                         }
                                         break;
-                                    case KEY_SCAN_ENABLE:
+                                    case KEY_TIME_ZONE:
                                         if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            scannerFragment.setScanEnable(enable);
+                                            int timeZone = value[4] & 0xFF;
+                                            deviceFragment.setTimeZone(timeZone);
                                         }
                                         break;
-                                    case KEY_SCAN_PARAMS:
-                                        if (length > 0) {
-                                            int window = value[4] & 0xFF;
-                                            scannerFragment.setScanParams(window);
-                                        }
-                                        break;
-                                    case KEY_OVER_LIMIT_ENABLE:
+                                    case KEY_SHUTDOWN_INFO_REPORT:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            scannerFragment.setOverLimitEnable(enable);
+                                            deviceFragment.setShutdownPayload(enable);
                                         }
                                         break;
-
-                                    case KEY_OVER_LIMIT_RSSI:
+                                    case KEY_LOW_POWER:
                                         if (length > 0) {
-                                            int rssi = value[4];
-                                            scannerFragment.setOverLimitRssi(rssi);
-                                        }
-                                        break;
-                                    case KEY_OVER_LIMIT_QTY:
-                                        if (length > 0) {
-                                            int qty = value[4] & 0xFF;
-                                            scannerFragment.setOverLimitQty(qty);
-                                        }
-                                        break;
-                                    case KEY_OVER_LIMIT_DURATION:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            int duration = MokoUtils.toInt(rawDataBytes);
-                                            scannerFragment.setOverLimitDuration(duration);
-                                        }
-                                        break;
-                                    case KEY_ADV_NAME:
-                                        if (length > 0) {
-                                            byte[] rawDataBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            final String deviceName = new String(rawDataBytes);
-                                            mDeviceName = deviceName;
-                                            settingFragment.setDeviceName(deviceName);
-                                        }
-                                        break;
-                                    case KEY_TAMPER_DETECTION:
-                                        if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            int triggerSensitivity = value[5] & 0xFF;
-                                            settingFragment.setTamperDetection(enable, triggerSensitivity);
-                                        }
-                                        break;
-                                    case KEY_POWER_STATUS:
-                                        if (length > 0) {
-                                            int status = value[4] & 0xFF;
-                                            settingFragment.setPowerStatus(status);
-                                        }
-                                        break;
-                                    case KEY_DEVICE_MAC:
-                                        if (length > 0) {
-                                            byte[] macBytes = Arrays.copyOfRange(value, 4, 4 + length);
-                                            StringBuffer stringBuffer = new StringBuffer();
-                                            for (int i = 0, l = macBytes.length; i < l; i++) {
-                                                stringBuffer.append(MokoUtils.byte2HexString(macBytes[i]));
-                                                if (i < (l - 1))
-                                                    stringBuffer.append(":");
-                                            }
-                                            mDeviceMac = stringBuffer.toString();
-                                            deviceFragment.setMacAddress(stringBuffer.toString());
+                                            int lowPower = value[4] & 0xFF;
+                                            deviceFragment.setLowPower(lowPower);
                                         }
                                         break;
                                 }
@@ -463,7 +364,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             });
             dialog.show(getSupportFragmentManager());
         } else {
-            if (LoRaLW001MokoSupport.getInstance().isBluetoothOpen() && !isUpgrade) {
+            if (LoRaLW001MokoSupport.getInstance().isBluetoothOpen()) {
                 AlertMessageDialog dialog = new AlertMessageDialog();
                 dialog.setTitle("Dismiss");
                 dialog.setMessage("The device disconnected!");
@@ -513,58 +414,34 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_SELECT_FIRMWARE) {
-            if (resultCode == RESULT_OK) {
-                //得到uri，后面就是将uri转化成file的过程。
-                Uri uri = data.getData();
-                String firmwareFilePath = FileUtils.getPath(this, uri);
-                if (TextUtils.isEmpty(firmwareFilePath))
-                    return;
-                final File firmwareFile = new File(firmwareFilePath);
-                if (firmwareFile.exists()) {
-                    final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
-                            .setDeviceName(mDeviceName)
-                            .setKeepBond(false)
-                            .setDisableNotification(true);
-                    starter.setZip(null, firmwareFilePath);
-                    starter.start(this, DfuService.class);
-                    showDFUProgressDialog("Waiting...");
-                } else {
-                    Toast.makeText(this, "file is not exists!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } else if (requestCode == AppConstants.REQUEST_CODE_LORA_SETTING) {
+        if (requestCode == AppConstants.REQUEST_CODE_LORA_CONN_SETTING) {
             if (resultCode == RESULT_OK) {
                 ivSave.postDelayed(() -> {
                     showSyncingProgressDialog();
                     List<OrderTask> orderTasks = new ArrayList<>();
                     // setting
                     orderTasks.add(OrderTaskAssembler.getLoraRegion());
-                    orderTasks.add(OrderTaskAssembler.getLoraMode());
-                    orderTasks.add(OrderTaskAssembler.getLoraClassType());
+                    orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
+                    orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
                     LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
                 }, 500);
             }
-        } else if (requestCode == AppConstants.REQUEST_CODE_NETWORK_CHECK_SETTING) {
+        }
+        if (requestCode == AppConstants.REQUEST_CODE_SYSTEM_INFO) {
             if (resultCode == RESULT_OK) {
-                ivSave.postDelayed(() -> {
-                    showSyncingProgressDialog();
-                    LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getLoRaConnectable());
-                }, 500);
+                AlertMessageDialog dialog = new AlertMessageDialog();
+                dialog.setTitle("Update Firmware");
+                dialog.setMessage("Update firmware successfully!\nPlease reconnect the device.");
+                dialog.setConfirm("OK");
+                dialog.setCancelGone();
+                dialog.setOnAlertConfirmListener(() -> {
+                    setResult(RESULT_OK);
+                    finish();
+                });
+                dialog.show(getSupportFragmentManager());
             }
-        } else if (requestCode == AppConstants.REQUEST_CODE_MULTICAST_SETTING) {
-            if (resultCode == RESULT_OK) {
-                ivSave.postDelayed(() -> {
-                    showSyncingProgressDialog();
-                    LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getMulticastEnable());
-                }, 500);
-            }
-        } else if (requestCode == AppConstants.REQUEST_CODE_ADV) {
-            if (resultCode == RESULT_OK) {
-                ivSave.postDelayed(() -> {
-                    showSyncingProgressDialog();
-                    LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getAdvName());
-                }, 500);
+            if (resultCode == RESULT_CANCELED) {
+                showDisconnectDialog();
             }
         }
     }
@@ -601,18 +478,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onSave(View view) {
         if (isWindowLocked())
             return;
-        if (radioBtnLora.isChecked()) {
-            if (loraFragment.isValid()) {
+        if (radioBtnGeneral.isChecked()) {
+            if (generalFragment.isValid()) {
                 showSyncingProgressDialog();
-                loraFragment.saveParams();
-            } else {
-                ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
-            }
-        }
-        if (radioBtnScanner.isChecked()) {
-            if (scannerFragment.isValid()) {
-                showSyncingProgressDialog();
-                scannerFragment.saveParams();
+                generalFragment.saveParams();
             } else {
                 ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
             }
@@ -637,10 +506,10 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
         if (checkedId == R.id.radioBtn_lora) {
             showLoRaAndGetData();
-        } else if (checkedId == R.id.radioBtn_scanner) {
-            showScannerAndGetData();
-        } else if (checkedId == R.id.radioBtn_setting) {
-            showSettingAndGetData();
+        } else if (checkedId == R.id.radioBtn_position) {
+            showPosAndGetData();
+        } else if (checkedId == R.id.radioBtn_general) {
+            showGeneralAndGetData();
         } else if (checkedId == R.id.radioBtn_device) {
             showDeviceAndGetData();
         }
@@ -651,208 +520,62 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         ivSave.setVisibility(View.GONE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)
-                .hide(scannerFragment)
-                .hide(settingFragment)
+                .hide(posFragment)
+                .hide(generalFragment)
                 .show(deviceFragment)
                 .commit();
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         // device
-        orderTasks.add(OrderTaskAssembler.getBattery());
-        orderTasks.add(OrderTaskAssembler.getMacAddress());
-        orderTasks.add(OrderTaskAssembler.getDeviceModel());
-        orderTasks.add(OrderTaskAssembler.getSoftwareVersion());
-        orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
-        orderTasks.add(OrderTaskAssembler.getHardwareVersion());
-        orderTasks.add(OrderTaskAssembler.getManufacturer());
+        orderTasks.add(OrderTaskAssembler.getTimeZone());
+        orderTasks.add(OrderTaskAssembler.getShutdownInfoReport());
+        orderTasks.add(OrderTaskAssembler.getLowPower());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
-    private void showSettingAndGetData() {
-        tvTitle.setText(R.string.title_setting);
-        ivSave.setVisibility(View.GONE);
-        fragmentManager.beginTransaction()
-                .hide(loraFragment)
-                .hide(scannerFragment)
-                .show(settingFragment)
-                .hide(deviceFragment)
-                .commit();
-        showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        // setting
-        orderTasks.add(OrderTaskAssembler.getAdvName());
-        orderTasks.add(OrderTaskAssembler.getTamperDetection());
-        orderTasks.add(OrderTaskAssembler.getDefaultPowerStatus());
-        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
-    }
-
-    private void showScannerAndGetData() {
-        tvTitle.setText(R.string.title_scanner);
+    private void showGeneralAndGetData() {
+        tvTitle.setText(R.string.title_general);
         ivSave.setVisibility(View.VISIBLE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)
-                .show(scannerFragment)
-                .hide(settingFragment)
+                .hide(posFragment)
+                .show(generalFragment)
                 .hide(deviceFragment)
                 .commit();
         showSyncingProgressDialog();
-        List<OrderTask> orderTasks = new ArrayList<>();
-        // scanner
-        orderTasks.add(OrderTaskAssembler.getScanEnable());
-        orderTasks.add(OrderTaskAssembler.getScanParams());
-        orderTasks.add(OrderTaskAssembler.getOverLimitEnable());
-        orderTasks.add(OrderTaskAssembler.getOverLimitRssi());
-        orderTasks.add(OrderTaskAssembler.getOverLimitQty());
-        orderTasks.add(OrderTaskAssembler.getOverLimitDuration());
-        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getHeartBeatInterval());
+    }
+
+    private void showPosAndGetData() {
+        tvTitle.setText(R.string.title_position);
+        ivSave.setVisibility(View.GONE);
+        fragmentManager.beginTransaction()
+                .hide(loraFragment)
+                .show(posFragment)
+                .hide(generalFragment)
+                .hide(deviceFragment)
+                .commit();
+        showSyncingProgressDialog();
+        LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getOfflineLocation());
     }
 
     private void showLoRaAndGetData() {
         tvTitle.setText(R.string.title_lora);
-        ivSave.setVisibility(View.VISIBLE);
+        ivSave.setVisibility(View.GONE);
         fragmentManager.beginTransaction()
                 .show(loraFragment)
-                .hide(scannerFragment)
-                .hide(settingFragment)
+                .hide(posFragment)
+                .hide(generalFragment)
                 .hide(deviceFragment)
                 .commit();
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         // get lora params
         orderTasks.add(OrderTaskAssembler.getLoraRegion());
-        orderTasks.add(OrderTaskAssembler.getLoraMode());
-        orderTasks.add(OrderTaskAssembler.getLoraClassType());
-        orderTasks.add(OrderTaskAssembler.getLoRaConnectable());
-        orderTasks.add(OrderTaskAssembler.getMulticastEnable());
-        orderTasks.add(OrderTaskAssembler.getTimeSyncInterval());
+        orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
+        orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
-
-    private ProgressDialog mDFUDialog;
-
-    private void showDFUProgressDialog(String tips) {
-        mDFUDialog = new ProgressDialog(DeviceInfoActivity.this);
-        mDFUDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mDFUDialog.setCanceledOnTouchOutside(false);
-        mDFUDialog.setCancelable(false);
-        mDFUDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        mDFUDialog.setMessage(tips);
-        if (!isFinishing() && mDFUDialog != null && !mDFUDialog.isShowing()) {
-            mDFUDialog.show();
-        }
-    }
-
-    private void dismissDFUProgressDialog() {
-        mDeviceConnectCount = 0;
-        if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
-            mDFUDialog.dismiss();
-        }
-        AlertDialog.Builder builder = new AlertDialog.Builder(DeviceInfoActivity.this);
-        builder.setTitle("Dismiss");
-        builder.setCancelable(false);
-        builder.setMessage("The device disconnected!");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                isUpgrade = false;
-                DeviceInfoActivity.this.setResult(RESULT_OK);
-                finish();
-            }
-        });
-        builder.show();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        DfuServiceListenerHelper.registerProgressListener(this, mDfuProgressListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        DfuServiceListenerHelper.unregisterProgressListener(this, mDfuProgressListener);
-    }
-
-    private int mDeviceConnectCount;
-    private boolean isUpgrade;
-
-    private final DfuProgressListener mDfuProgressListener = new DfuProgressListenerAdapter() {
-        @Override
-        public void onDeviceConnecting(String deviceAddress) {
-            XLog.w("onDeviceConnecting...");
-            mDeviceConnectCount++;
-            if (mDeviceConnectCount > 3) {
-                Toast.makeText(DeviceInfoActivity.this, "Error:DFU Failed", Toast.LENGTH_SHORT).show();
-                dismissDFUProgressDialog();
-                final LocalBroadcastManager manager = LocalBroadcastManager.getInstance(DeviceInfoActivity.this);
-                final Intent abortAction = new Intent(DfuService.BROADCAST_ACTION);
-                abortAction.putExtra(DfuService.EXTRA_ACTION, DfuService.ACTION_ABORT);
-                manager.sendBroadcast(abortAction);
-            }
-
-        }
-
-        @Override
-        public void onDeviceDisconnecting(String deviceAddress) {
-            XLog.w("onDeviceDisconnecting...");
-        }
-
-        @Override
-        public void onDfuProcessStarting(String deviceAddress) {
-            isUpgrade = true;
-            mDFUDialog.setMessage("DfuProcessStarting...");
-        }
-
-
-        @Override
-        public void onEnablingDfuMode(String deviceAddress) {
-            mDFUDialog.setMessage("EnablingDfuMode...");
-        }
-
-        @Override
-        public void onFirmwareValidating(String deviceAddress) {
-            mDFUDialog.setMessage("FirmwareValidating...");
-        }
-
-        @Override
-        public void onDfuCompleted(String deviceAddress) {
-            mDeviceConnectCount = 0;
-            if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
-                mDFUDialog.dismiss();
-            }
-            AlertDialog.Builder builder = new AlertDialog.Builder(DeviceInfoActivity.this);
-            builder.setTitle("Update Firmware");
-            builder.setCancelable(false);
-            builder.setMessage("Update firmware successfully!\nPlease reconnect the device.");
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    isUpgrade = false;
-                    DeviceInfoActivity.this.setResult(RESULT_OK);
-                    finish();
-                }
-            });
-            builder.show();
-        }
-
-        @Override
-        public void onDfuAborted(String deviceAddress) {
-            mDFUDialog.setMessage("DfuAborted...");
-        }
-
-        @Override
-        public void onProgressChanged(String deviceAddress, int percent, float speed, float avgSpeed, int currentPart, int partsTotal) {
-            mDFUDialog.setMessage("Progress:" + percent + "%");
-        }
-
-        @Override
-        public void onError(String deviceAddress, int error, int errorType, String message) {
-            ToastUtils.showToast(DeviceInfoActivity.this, "Opps!DFU Failed. Please try again!");
-            XLog.i("Error:" + message);
-            dismissDFUProgressDialog();
-        }
-    };
 
     public void onChangePassword(View view) {
         if (isWindowLocked())
@@ -873,79 +596,108 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         }, 200);
     }
 
-    public void onUpdateFirmware(View view) {
+    public void onLoRaConnSetting(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        try {
-            startActivityForResult(Intent.createChooser(intent, "select file first!"), REQUEST_CODE_SELECT_FIRMWARE);
-        } catch (ActivityNotFoundException ex) {
-            ToastUtils.showToast(this, "install file manager app");
-        }
+        Intent intent = new Intent(this, LoRaConnSettingActivity.class);
+        startActivityForResult(intent, AppConstants.REQUEST_CODE_LORA_CONN_SETTING);
     }
 
-    public void onLoraSetting(View view) {
+    public void onLoRaAppSetting(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, LoRaSettingActivity.class);
-        startActivityForResult(intent, AppConstants.REQUEST_CODE_LORA_SETTING);
+        Intent intent = new Intent(this, LoRaAppSettingActivity.class);
+        startActivity(intent);
     }
 
-    public void onNetworkCheck(View view) {
+    public void onWifiFix(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, NetworkCheckActivity.class);
-        startActivityForResult(intent, AppConstants.REQUEST_CODE_NETWORK_CHECK_SETTING);
+        Intent intent = new Intent(this, PosWifiFixActivity.class);
+        startActivity(intent);
     }
 
-    public void onMulticastSetting(View view) {
+    public void onBleFix(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, MulticastSettingActivity.class);
-        startActivityForResult(intent, AppConstants.REQUEST_CODE_MULTICAST_SETTING);
+        Intent intent = new Intent(this, PosBleFixActivity.class);
+        startActivity(intent);
     }
 
-    public void onUplinkPayload(View view) {
+    public void onGPSFix(View view) {
         if (isWindowLocked())
             return;
-        startActivity(new Intent(this, UplinkPayloadActivity.class));
+        Intent intent = new Intent(this, PosGpsFixActivity.class);
+        startActivity(intent);
     }
 
-    public void onFilterOptions(View view) {
+    public void onDeviceMode(View view) {
         if (isWindowLocked())
             return;
-        startActivity(new Intent(this, FilterOptionsActivity.class));
+        Intent intent = new Intent(this, DeviceModeActivity.class);
+        startActivity(intent);
     }
 
-    public void onAdvInfo(View view) {
+    public void onAuxiliaryInterval(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, AdvInfoActivity.class);
-        startActivityForResult(intent, AppConstants.REQUEST_CODE_ADV);
+        Intent intent = new Intent(this, AuxiliaryOperationActivity.class);
+        startActivity(intent);
     }
 
+    public void onBleSettings(View view) {
+        if (isWindowLocked())
+            return;
+        Intent intent = new Intent(this, BleSettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void onAxisSettings(View view) {
+        if (isWindowLocked())
+            return;
+        Intent intent = new Intent(this, AxisSettingActivity.class);
+        startActivity(intent);
+    }
 
     public void onLocalDataSync(View view) {
         if (isWindowLocked())
             return;
-        // 同步
         startActivity(new Intent(this, ExportDataActivity.class));
     }
 
-    public void onTamperDetection(View view) {
+    public void onIndicatorSettings(View view) {
         if (isWindowLocked())
             return;
-        // 防拆
-        settingFragment.showTamperDetectionDialog();
+        startActivity(new Intent(this, IndicatorSettingsActivity.class));
     }
 
-
-    public void onPowerStatus(View view) {
+    public void selectTimeZone(View view) {
         if (isWindowLocked())
             return;
-        // 上电
-        settingFragment.showPowerStatusDialog();
+        deviceFragment.showTimeZoneDialog();
+    }
+
+    public void onOnOff(View view) {
+        if (isWindowLocked())
+            return;
+        startActivity(new Intent(this, OnOffActivity.class));
+    }
+
+    public void selectLowPowerPrompt(View view) {
+        if (isWindowLocked())
+            return;
+        deviceFragment.showLowPowerDialog();
+    }
+
+    public void onDeviceInfo(View view) {
+        if (isWindowLocked())
+            return;
+        startActivityForResult(new Intent(this, SystemInfoActivity.class), AppConstants.REQUEST_CODE_SYSTEM_INFO);
+    }
+
+    public void onFactoryReset(View view) {
+    }
+
+    public void onPowerOff(View view) {
     }
 }
