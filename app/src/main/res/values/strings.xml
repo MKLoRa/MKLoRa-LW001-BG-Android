@@ -58,20 +58,4 @@
     <string name="on_off">On/Off</string>
     <string name="device_information">Device Information</string>
 
-    <string-array name="lw001_region">
-        <item>AS923</item>
-        <item>AU915</item>
-        <item>CN470</item>
-        <item>CN779</item>
-        <item>EU433</item>
-        <item>EU868</item>
-        <item>KR920</item>
-        <item>IN865</item>
-        <item>US915</item>
-        <item>RU864</item>
-    </string-array>
-    <string-array name="upload_mode">
-        <item>ABP</item>
-        <item>OTAA</item>
-    </string-array>
 </resources>

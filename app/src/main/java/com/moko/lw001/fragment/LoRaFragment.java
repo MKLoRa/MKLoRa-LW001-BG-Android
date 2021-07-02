@@ -2,7 +2,6 @@ package com.moko.lw001.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,6 @@ import android.widget.TextView;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.activity.DeviceInfoActivity;
-import com.moko.support.lw001.LoRaLW001MokoSupport;
-import com.moko.support.lw001.OrderTaskAssembler;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
