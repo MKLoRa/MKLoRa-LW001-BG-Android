@@ -93,8 +93,6 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_FILTER_UUID_A(0x3B),
     // 规则1过滤RSSI
     KEY_FILTER_RSSI_A(0x3C),
-    // 规则1过滤PHY
-    KEY_FILTER_PHY_A(0x3D),
     // 规则2开关
     KEY_FILTER_SWITCH_B(0x3E),
     // 规则2过滤广播名称
@@ -111,8 +109,6 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_FILTER_UUID_B(0x44),
     // 规则2过滤RSSI
     KEY_FILTER_RSSI_B(0x45),
-    // 规则2过滤PHY
-    KEY_FILTER_PHY_B(0x46),
     // GPS冷启动超时
     KEY_GPS_COLD_START_TIMEOUT(0x47),
     // GPS粗定位精度

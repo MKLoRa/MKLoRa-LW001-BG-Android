@@ -563,27 +563,6 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setFilterPHYA(@IntRange(from = 0, to = 1) int enable, @IntRange(from = 0, to = 2) int phy) {
-        if (enable == 0) {
-            data = new byte[]{
-                    (byte) 0xED,
-                    (byte) 0x01,
-                    (byte) ParamsKeyEnum.KEY_FILTER_PHY_A.getParamsKey(),
-                    (byte) 0x01,
-                    (byte) enable,
-            };
-        } else {
-            data = new byte[]{
-                    (byte) 0xED,
-                    (byte) 0x01,
-                    (byte) ParamsKeyEnum.KEY_FILTER_PHY_A.getParamsKey(),
-                    (byte) 0x02,
-                    (byte) enable,
-                    (byte) phy,
-            };
-        }
-    }
-
     public void setFilterSwitchB(@IntRange(from = 0, to = 1) int enable) {
         data = new byte[]{
                 (byte) 0xED,
@@ -762,29 +741,6 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) rssi
         };
     }
-
-
-    public void setFilterPHYB(@IntRange(from = 0, to = 1) int enable, @IntRange(from = 0, to = 2) int phy) {
-        if (enable == 0) {
-            data = new byte[]{
-                    (byte) 0xED,
-                    (byte) 0x01,
-                    (byte) ParamsKeyEnum.KEY_FILTER_PHY_B.getParamsKey(),
-                    (byte) 0x01,
-                    (byte) enable,
-            };
-        } else {
-            data = new byte[]{
-                    (byte) 0xED,
-                    (byte) 0x01,
-                    (byte) ParamsKeyEnum.KEY_FILTER_PHY_B.getParamsKey(),
-                    (byte) 0x02,
-                    (byte) enable,
-                    (byte) phy,
-            };
-        }
-    }
-
 
     public void setGPSColdStartTimeout(@IntRange(from = 3, to = 15) int timeout) {
         data = new byte[]{

@@ -275,12 +275,6 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask getFilterPHYA() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_PHY_A);
-        return task;
-    }
-
     public static OrderTask getFilterSwitchB() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_FILTER_SWITCH_B);
@@ -328,14 +322,6 @@ public class OrderTaskAssembler {
         task.setData(ParamsKeyEnum.KEY_FILTER_RSSI_B);
         return task;
     }
-
-
-    public static OrderTask getFilterPHYB() {
-        ParamsReadTask task = new ParamsReadTask();
-        task.setData(ParamsKeyEnum.KEY_FILTER_PHY_B);
-        return task;
-    }
-
 
     public static OrderTask getGPSColdStartTimeout() {
         ParamsReadTask task = new ParamsReadTask();
@@ -902,12 +888,6 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setFilterPHYA(@IntRange(from = 0, to = 1) int enable, @IntRange(from = 0, to = 2) int phy) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterPHYA(enable, phy);
-        return task;
-    }
-
     public static OrderTask setFilterSwitchB(@IntRange(from = 0, to = 1) int enable) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setFilterSwitchB(enable);
@@ -961,14 +941,6 @@ public class OrderTaskAssembler {
         task.setFilterRssiB(rssi);
         return task;
     }
-
-
-    public static OrderTask setFilterPHYB(@IntRange(from = 0, to = 1) int enable, @IntRange(from = 0, to = 2) int phy) {
-        ParamsWriteTask task = new ParamsWriteTask();
-        task.setFilterPHYB(enable, phy);
-        return task;
-    }
-
 
     public static OrderTask setGPSColdStartTimeout(@IntRange(from = 3, to = 15) int timeout) {
         ParamsWriteTask task = new ParamsWriteTask();

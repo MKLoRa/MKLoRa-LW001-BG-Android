@@ -584,54 +584,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ll_raw_data_filter" />
 
-            <TextView
-                android:id="@+id/phy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="Filter by PHY"
-                android:textColor="@color/lw001_black_333333"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_raw_data_filter" />
-
-            <ImageView
-                android:id="@+id/iv_phy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:onClick="onPhy"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
-                app:layout_constraintBottom_toBottomOf="@id/phy"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@id/phy" />
-
-            <TextView
-                android:id="@+id/tv_phy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/lw001_shape_radius_blue_btn_bg"
-                android:clickable="true"
-                android:onClick="onSelectPhy"
-                android:padding="12dp"
-                android:text="1M phy"
-                android:textColor="@color/lw001_white_ffffff"
-                android:textSize="15sp"
-                android:visibility="gone"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_phy" />
-
-            <View
-                style="@style/lw001_divider_line"
-                android:layout_width="0dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_phy" />
 
             <TextView
                 android:id="@+id/tv_condition"
@@ -643,7 +595,7 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_phy" />
+                app:layout_constraintTop_toBottomOf="@id/ll_raw_data_filter" />
 
             <ImageView
                 android:id="@+id/iv_condition"

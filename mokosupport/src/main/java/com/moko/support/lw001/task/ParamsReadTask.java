@@ -61,7 +61,6 @@ public class ParamsReadTask extends OrderTask {
             case KEY_FILTER_ADV_RAW_DATA_A:
             case KEY_FILTER_UUID_A:
             case KEY_FILTER_RSSI_A:
-            case KEY_FILTER_PHY_A:
             case KEY_FILTER_SWITCH_B:
             case KEY_FILTER_ADV_NAME_B:
             case KEY_FILTER_MAC_B:
@@ -70,7 +69,6 @@ public class ParamsReadTask extends OrderTask {
             case KEY_FILTER_ADV_RAW_DATA_B:
             case KEY_FILTER_UUID_B:
             case KEY_FILTER_RSSI_B:
-            case KEY_FILTER_PHY_B:
             case KEY_GPS_COLD_START_TIMEOUT:
             case KEY_GPS_COARSE_ACCURACY_MASK:
             case KEY_GPS_FINE_ACCURACY_MASK:

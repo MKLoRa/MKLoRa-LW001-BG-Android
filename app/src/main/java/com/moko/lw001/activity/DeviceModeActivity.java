@@ -42,6 +42,7 @@ public class DeviceModeActivity extends BaseActivity {
     private boolean savedParamsError;
     private ArrayList<String> mValues;
     private int mSelected;
+    private int mShowSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +129,16 @@ public class DeviceModeActivity extends BaseActivity {
                                         if (length > 0) {
                                             int mode = value[4] & 0xFF;
                                             mSelected = mode;
-                                            tvDeviceMode.setText(mValues.get(mode));
+                                            if (mode == 1) {
+                                                mShowSelected = 0;
+                                            } else if (mode == 2) {
+                                                mShowSelected = 2;
+                                            } else if (mode == 3) {
+                                                mShowSelected = 1;
+                                            } else if (mode == 4) {
+                                                mShowSelected = 3;
+                                            }
+                                            tvDeviceMode.setText(mValues.get(mShowSelected));
                                         }
                                         break;
                                 }
@@ -205,12 +215,21 @@ public class DeviceModeActivity extends BaseActivity {
         if (isWindowLocked())
             return;
         BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mValues, mSelected);
+        dialog.setDatas(mValues, mShowSelected);
         dialog.setListener(value -> {
+            mShowSelected = value;
+            if (value == 0) {
+                mSelected = 1;
+            } else if (value == 1) {
+                mSelected = 3;
+            } else if (value == 2) {
+                mSelected = 2;
+            } else if (value == 3) {
+                mSelected = 4;
+            }
             tvDeviceMode.setText(mValues.get(value));
-            mSelected = value;
             showSyncingProgressDialog();
-            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWorkMode(value));
+            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWorkMode(mSelected));
         });
         dialog.show(getSupportFragmentManager());
     }

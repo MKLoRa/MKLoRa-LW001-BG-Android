@@ -111,17 +111,10 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     ImageView ivCondition;
     @BindView(R2.id.tv_condition_tips)
     TextView tvConditionTips;
-    @BindView(R2.id.iv_phy)
-    ImageView ivPhy;
-    @BindView(R2.id.tv_phy)
-    TextView tvPhy;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     private ArrayList<String> filterRawDatas;
-
-    private ArrayList<String> mValues;
-    private int mSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,10 +135,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
             return null;
         };
         etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(29), inputFilter});
-        mValues = new ArrayList<>();
-        mValues.add("1M phy");
-        mValues.add("2M phy");
-        mValues.add("Coded phy");
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -164,7 +153,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
             orderTasks.add(OrderTaskAssembler.getFilterUUIDA());
             orderTasks.add(OrderTaskAssembler.getFilterMajorRangeA());
             orderTasks.add(OrderTaskAssembler.getFilterMinorRangeA());
-            orderTasks.add(OrderTaskAssembler.getFilterPHYA());
             orderTasks.add(OrderTaskAssembler.getFilterRawDataA());
             LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
@@ -217,7 +205,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                     case KEY_FILTER_UUID_A:
                                     case KEY_FILTER_MAJOR_RANGE_A:
                                     case KEY_FILTER_MINOR_RANGE_A:
-                                    case KEY_FILTER_PHY_A:
                                     case KEY_FILTER_ADV_RAW_DATA_A:
                                         if (result != 1) {
                                             savedParamsError = true;
@@ -376,19 +363,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                             }
                                         }
                                         break;
-                                    case KEY_FILTER_PHY_A:
-                                        if (length > 0) {
-                                            final int enable = value[4] & 0xFF;
-                                            filterPHYEnable = enable > 0;
-                                            ivPhy.setImageResource(filterPHYEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            tvPhy.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
-                                            if (length > 1) {
-                                                final int selectPhy = value[5] & 0xFF;
-                                                mSelected = selectPhy;
-                                                tvPhy.setText(mValues.get(selectPhy));
-                                            }
-                                        }
-                                        break;
 
                                 }
                             }
@@ -452,7 +426,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     private boolean filterMajorEnable;
     private boolean filterMinorEnable;
     private boolean filterRawAdvDataEnable;
-    private boolean filterPHYEnable;
 
     public void onBack(View view) {
         finish();
@@ -511,12 +484,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
         ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
         ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
         cbRawAdvData.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-    }
-
-    public void onPhy(View view) {
-        filterPHYEnable = !filterPHYEnable;
-        ivPhy.setImageResource(filterPHYEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        tvPhy.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onRawDataAdd(View view) {
@@ -585,7 +552,6 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                 cbIbeaconMinor.isChecked()));
         orderTasks.add(OrderTaskAssembler.setFilterRawDataA(filterRawAdvDataEnable ? filterRawDatas : null
                 , cbRawAdvData.isChecked()));
-        orderTasks.add(OrderTaskAssembler.setFilterPHYA(filterPHYEnable ? 1 : 0, mSelected));
         orderTasks.add(OrderTaskAssembler.setFilterSwitchA(filterSwitchEnable ? 1 : 0));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
@@ -718,18 +684,5 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
-    }
-
-
-    public void onSelectPhy(View view) {
-        if (isWindowLocked())
-            return;
-        BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mValues, mSelected);
-        dialog.setListener(value -> {
-            tvPhy.setText(mValues.get(value));
-            mSelected = value;
-        });
-        dialog.show(getSupportFragmentManager());
     }
 }
