@@ -89,11 +89,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -140,11 +140,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_cold_start_timeout"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -191,11 +191,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_coarse_acc_mask"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -241,11 +241,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_coarse_timeout"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -292,11 +292,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_fine_acc_target"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -343,11 +343,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_fine_timeout"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -422,11 +422,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cb_autonomous_aiding"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -472,11 +472,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/et_aiding_accuracy"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -554,11 +554,12 @@
 
                 <TextView
                     android:id="@+id/tv_gps_model"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/lw001_shape_radius_blue_btn_bg"
                     android:clickable="true"
                     android:gravity="center"
+                    android:minWidth="70dp"
                     android:onClick="selectGpsModel"
                     android:padding="12dp"
                     android:text="Portable"
@@ -603,11 +604,11 @@
                     android:textColor="@color/lw001_black_333333"
                     android:textColorHint="@color/lw001_grey_ebebeb"
                     android:textSize="15sp"
-                    app:layout_constraintHorizontal_bias="0.85"
+                    app:layout_constraintHorizontal_bias="0.81"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.25" />
+                    app:layout_constraintWidth_percent="0.27" />
 
                 <TextView
                     android:layout_width="wrap_content"

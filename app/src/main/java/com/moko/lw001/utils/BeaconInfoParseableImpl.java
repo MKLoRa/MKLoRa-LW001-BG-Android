@@ -2,8 +2,10 @@ package com.moko.lw001.utils;
 
 import android.os.ParcelUuid;
 import android.os.SystemClock;
+import android.util.Log;
 import android.util.SparseArray;
 
+import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.entity.AdvInfo;
 import com.moko.support.lw001.entity.DeviceInfo;
@@ -35,7 +37,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
         if (manufacturer == null || manufacturer.size() == 0)
             return null;
         byte[] manufacturerSpecificDataByte = record.getManufacturerSpecificData(manufacturer.keyAt(0));
-        if (manufacturerSpecificDataByte.length != 21)
+        if (manufacturerSpecificDataByte.length != 23)
             return null;
         int battery = -1;
         int powerState = -1;
@@ -45,7 +47,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
         String uuid = "";
         int major = 0;
         int minor = 0;
-        byte[] uuidBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 0, 16);
+        byte[] uuidBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 2, 18);
         uuid = MokoUtils.bytesToHexString(uuidBytes).toLowerCase();
         StringBuffer sb = new StringBuffer(uuid);
         sb.insert(8, "-");
@@ -53,9 +55,9 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
         sb.insert(18, "-");
         sb.insert(23, "-");
         uuid = sb.toString();
-        byte[] majorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 16, 18);
-        byte[] minorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 18, 20);
-        measurePower = manufacturerSpecificDataByte[20];
+        byte[] majorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 18, 20);
+        byte[] minorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 18, 22);
+        measurePower = manufacturerSpecificDataByte[22];
         major = MokoUtils.toInt(majorBytes);
         minor = MokoUtils.toInt(minorBytes);
         Iterator iterator = map.keySet().iterator();

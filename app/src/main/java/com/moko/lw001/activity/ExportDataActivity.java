@@ -150,6 +150,7 @@ public class ExportDataActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
@@ -167,52 +168,19 @@ public class ExportDataActivity extends BaseActivity {
                         if (header == 0xED && flag == 0x02 && cmd == 0x01) {
                             int dataCount = value[4] & 0xFF;
                             if (dataCount > 0) {
+                                Calendar calendar = Calendar.getInstance();
+                                String time = Utils.calendar2strDate(calendar, AppConstants.PATTERN_YYYY_MM_DD_HH_MM_SS);
                                 int index = 5;
                                 while (index < length) {
                                     int dataLength = value[index];
-                                    index += 1;
-                                    byte[] timeBytes = Arrays.copyOfRange(value, index, index + 7);
-                                    byte[] macBytes = Arrays.copyOfRange(value, index + 7, index + 13);
-
-                                    byte[] yearBytes = Arrays.copyOfRange(timeBytes, 0, 2);
-                                    int year = MokoUtils.toInt(yearBytes);
-                                    int month = timeBytes[2] & 0xff;
-                                    int day = timeBytes[3] & 0xff;
-                                    int hour = timeBytes[4] & 0xff;
-                                    int minute = timeBytes[5] & 0xff;
-                                    int second = timeBytes[6] & 0xff;
-
-                                    Calendar calendar = Calendar.getInstance();
-                                    calendar.set(Calendar.YEAR, year);
-                                    calendar.set(Calendar.MONTH, month - 1);
-                                    calendar.set(Calendar.DAY_OF_MONTH, day);
-                                    calendar.set(Calendar.HOUR_OF_DAY, hour);
-                                    calendar.set(Calendar.MINUTE, minute);
-                                    calendar.set(Calendar.SECOND, second);
-                                    final String time = Utils.calendar2strDate(calendar, AppConstants.PATTERN_YYYY_MM_DD_HH_MM_SS);
-
-                                    StringBuffer stringBuffer = new StringBuffer();
-                                    for (int i = 0, l = macBytes.length; i < l; i++) {
-                                        stringBuffer.append(MokoUtils.byte2HexString(macBytes[i]));
-                                        if (i < (l - 1))
-                                            stringBuffer.append(":");
-                                    }
-                                    final String mac = stringBuffer.toString();
-
-                                    final int rssi = value[index + 13];
-                                    final String rssiStr = String.format("%ddBm", rssi);
-
                                     String rawData = "";
-                                    if (dataLength > 14) {
-                                        byte[] rawDataBytes = Arrays.copyOfRange(value, index + 14, index + dataLength);
+                                    if (dataLength > 0) {
+                                        index += 1;
+                                        byte[] rawDataBytes = Arrays.copyOfRange(value, index, index + dataLength);
                                         rawData = MokoUtils.bytesToHexString(rawDataBytes);
                                     }
-
                                     ExportData exportData = new ExportData();
-
                                     exportData.time = time;
-                                    exportData.rssi = rssi;
-                                    exportData.mac = mac;
                                     exportData.rawData = rawData;
                                     if (mStartTime == 65535) {
                                         exportDatas.add(0, exportData);
@@ -222,10 +190,6 @@ public class ExportDataActivity extends BaseActivity {
                                     tvCount.setText(String.format("Count:%d", exportDatas.size()));
 
                                     storeString.append(String.format("Time:%s", time));
-                                    storeString.append("\n");
-                                    storeString.append(String.format("Mac Address:%s", mac));
-                                    storeString.append("\n");
-                                    storeString.append(String.format("RSSI:%s", rssiStr));
                                     storeString.append("\n");
                                     if (!TextUtils.isEmpty(rawData)) {
                                         storeString.append(String.format("Raw Data:%s", rawData));
@@ -266,7 +230,6 @@ public class ExportDataActivity extends BaseActivity {
                 }
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;

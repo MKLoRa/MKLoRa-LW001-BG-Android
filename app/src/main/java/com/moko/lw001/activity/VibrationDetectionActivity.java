@@ -79,6 +79,7 @@ public class VibrationDetectionActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -87,7 +88,6 @@ public class VibrationDetectionActivity extends BaseActivity {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -255,7 +255,6 @@ public class VibrationDetectionActivity extends BaseActivity {
         final int interval = Integer.parseInt(intervalStr);
         final String timeoutStr = etVibrationTimeout.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
-        showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setVibrationEnable(cbVibrationDetection.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setVibrationReportInterval(interval));

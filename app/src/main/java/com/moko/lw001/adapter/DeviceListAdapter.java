@@ -24,10 +24,10 @@ public class DeviceListAdapter extends BaseQuickAdapter<AdvInfo, BaseViewHolder>
         final String intervalTime = item.intervalTime == 0 ? "<->N/A" : String.format("<->%dms", item.intervalTime);
         helper.setText(R.id.tv_track_interval, intervalTime);
         helper.setText(R.id.tv_tx_power, String.format("Tx Power:%d", item.txPower));
-        helper.setText(R.id.tv_uuid, String.format("UUID:%s", item.uuid));
-        helper.setText(R.id.tv_major, String.format("Major:%d", item.major));
-        helper.setText(R.id.tv_major, String.format("Minor:%d", item.minor));
-        helper.setText(R.id.tv_major, String.format("RSSI@1m:%d", item.measurePower));
+        helper.setText(R.id.tv_uuid_value, item.uuid);
+        helper.setText(R.id.tv_major_value, String.valueOf(item.major));
+        helper.setText(R.id.tv_minor_value, String.valueOf(item.minor));
+        helper.setText(R.id.tv_measure_power_value, String.format("%ddBm", item.measurePower));
         helper.addOnClickListener(R.id.tv_connect);
     }
 }

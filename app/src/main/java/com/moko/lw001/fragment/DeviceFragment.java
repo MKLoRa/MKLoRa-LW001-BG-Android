@@ -6,11 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.moko.ble.lib.task.OrderTask;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.activity.DeviceInfoActivity;
@@ -23,14 +22,14 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DeviceFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class DeviceFragment extends Fragment {
     private static final String TAG = DeviceFragment.class.getSimpleName();
     @BindView(R2.id.tv_time_zone)
     TextView tvTimeZone;
-    @BindView(R2.id.cb_shutdown_payload)
-    CheckBox cbShutdownPayload;
-    @BindView(R2.id.cb_low_power_payload)
-    CheckBox cbLowPowerPayload;
+    @BindView(R2.id.iv_shutdown_payload)
+    ImageView ivShutdownPayload;
+    @BindView(R2.id.iv_low_power_payload)
+    ImageView ivLowPowerPayload;
     @BindView(R2.id.tv_low_power_prompt)
     TextView tvLowPowerPrompt;
     @BindView(R2.id.iv_power_off)
@@ -39,6 +38,8 @@ public class DeviceFragment extends Fragment implements CompoundButton.OnChecked
     private int mSelectedTimeZone;
     private ArrayList<String> mLowPowerPrompts;
     private int mSelectedLowPowerPrompt;
+    private boolean mShutdownPayloadEnable;
+    private boolean mLowPowerPayloadEnable;
 
 
     private DeviceInfoActivity activity;
@@ -72,8 +73,6 @@ public class DeviceFragment extends Fragment implements CompoundButton.OnChecked
         mLowPowerPrompts = new ArrayList<>();
         mLowPowerPrompts.add("%5");
         mLowPowerPrompts.add("%10");
-        cbShutdownPayload.setOnCheckedChangeListener(this);
-        cbLowPowerPayload.setOnCheckedChangeListener(this);
         return view;
     }
 
@@ -96,7 +95,8 @@ public class DeviceFragment extends Fragment implements CompoundButton.OnChecked
 
 
     public void setShutdownPayload(int enable) {
-        cbShutdownPayload.setChecked(enable == 1);
+        mShutdownPayloadEnable = enable == 1;
+        ivShutdownPayload.setImageResource(mShutdownPayloadEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
     }
 
     public void setLowPower(int lowPower) {
@@ -106,9 +106,11 @@ public class DeviceFragment extends Fragment implements CompoundButton.OnChecked
             mSelectedLowPowerPrompt = 0;
         }
         if ((lowPower & 2) == 2) {
-            cbLowPowerPayload.setChecked(true);
+            mLowPowerPayloadEnable = true;
+            ivLowPowerPayload.setImageResource(R.drawable.lw001_ic_checked);
         } else {
-            cbLowPowerPayload.setChecked(false);
+            mLowPowerPayloadEnable = false;
+            ivLowPowerPayload.setImageResource(R.drawable.lw001_ic_unchecked);
         }
     }
 
@@ -119,7 +121,7 @@ public class DeviceFragment extends Fragment implements CompoundButton.OnChecked
             mSelectedLowPowerPrompt = value;
             tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
             activity.showSyncingProgressDialog();
-            int lowPower = mSelectedLowPowerPrompt | (cbLowPowerPayload.isChecked() ? 2 : 0);
+            int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
             activity.showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setLowPower(lowPower));
         });
@@ -127,16 +129,22 @@ public class DeviceFragment extends Fragment implements CompoundButton.OnChecked
 
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (buttonView.getId() == R.id.cb_shutdown_payload) {
-            activity.showSyncingProgressDialog();
-            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setShutdownInfoReport(isChecked ? 1 : 0));
-        }
-        if (buttonView.getId() == R.id.cb_low_power_payload) {
-            int lowPower = mSelectedLowPowerPrompt | (isChecked ? 2 : 0);
-            activity.showSyncingProgressDialog();
-            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setLowPower(lowPower));
-        }
+    public void changeShutdownPayload() {
+        mShutdownPayloadEnable = !mShutdownPayloadEnable;
+        activity.showSyncingProgressDialog();
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setShutdownInfoReport(mShutdownPayloadEnable ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.getShutdownInfoReport());
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+    }
+
+    public void changeLowPowerPayload() {
+        mLowPowerPayloadEnable = !mLowPowerPayloadEnable;
+        activity.showSyncingProgressDialog();
+        int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setLowPower(lowPower));
+        orderTasks.add(OrderTaskAssembler.getLowPower());
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

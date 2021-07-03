@@ -99,8 +99,8 @@ public class SystemInfoActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
-        final String action = event.getAction();
         EventBus.getDefault().cancelEventDelivery(event);
+        final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
                 if (!isUpgrade)
@@ -111,6 +111,7 @@ public class SystemInfoActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -119,7 +120,6 @@ public class SystemInfoActivity extends BaseActivity {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -171,7 +171,7 @@ public class SystemInfoActivity extends BaseActivity {
                                             byte[] batteryBytes = Arrays.copyOfRange(value, 4, 4 + length);
                                             int battery = MokoUtils.toInt(batteryBytes);
                                             String batteryStr = MokoUtils.getDecimalFormat("0.###").format(battery * 0.001);
-                                            tvBatteryVoltage.setText(batteryStr);
+                                            tvBatteryVoltage.setText(String.format("%sV", batteryStr));
                                         }
                                         break;
                                     case KEY_CHIP_MAC:
@@ -254,7 +254,6 @@ public class SystemInfoActivity extends BaseActivity {
     }
 
     private void backHome() {
-        setResult(RESULT_OK);
         finish();
     }
 
@@ -292,7 +291,7 @@ public class SystemInfoActivity extends BaseActivity {
         if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
             mDFUDialog.dismiss();
         }
-        setResult(RESULT_CANCELED);
+        setResult(RESULT_FIRST_USER);
         finish();
     }
 

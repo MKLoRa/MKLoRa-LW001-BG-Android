@@ -75,6 +75,7 @@ public class PosWifiFixActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -83,7 +84,6 @@ public class PosWifiFixActivity extends BaseActivity {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -186,7 +186,6 @@ public class PosWifiFixActivity extends BaseActivity {
         final String numberStr = etBssidNumber.getText().toString();
         final int posTimeout = Integer.parseInt(posTimeoutStr);
         final int number = Integer.parseInt(numberStr);
-        showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setWifiPosNumber(posTimeout));
         orderTasks.add(OrderTaskAssembler.setWifiPosBSSIDNumber(number));

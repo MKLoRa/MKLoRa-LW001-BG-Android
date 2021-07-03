@@ -440,7 +440,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 });
                 dialog.show(getSupportFragmentManager());
             }
-            if (resultCode == RESULT_CANCELED) {
+            if (resultCode == RESULT_FIRST_USER) {
                 showDisconnectDialog();
             }
         }
@@ -696,8 +696,48 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     public void onFactoryReset(View view) {
+        if (isWindowLocked())
+            return;
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Factory Reset!");
+        dialog.setMessage("After factory reset,all the data will be reseted to the factory values.");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            showSyncingProgressDialog();
+            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.restore());
+        });
+        dialog.show(getSupportFragmentManager());
     }
 
     public void onPowerOff(View view) {
+        if (isWindowLocked())
+            return;
+        AlertMessageDialog dialog = new AlertMessageDialog();
+        dialog.setTitle("Warning!");
+        dialog.setMessage("Are you sure to turn off the device? Please make sure the device has a button to turn on!");
+        dialog.setConfirm("OK");
+        dialog.setOnAlertConfirmListener(() -> {
+            showSyncingProgressDialog();
+            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWorkMode(0));
+        });
+        dialog.show(getSupportFragmentManager());
+    }
+
+    public void onOfflineFix(View view) {
+        if (isWindowLocked())
+            return;
+        posFragment.changeOfflineFix();
+    }
+
+    public void onShutdownPayload(View view) {
+        if (isWindowLocked())
+            return;
+        deviceFragment.changeShutdownPayload();
+    }
+
+    public void onLowPowerPayload(View view) {
+        if (isWindowLocked())
+            return;
+        deviceFragment.changeLowPowerPayload();
     }
 }

@@ -52,6 +52,7 @@
             android:textColor="@color/lw001_black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/tv_lora_info"
             app:layout_constraintLeft_toLeftOf="parent" />
 

@@ -119,19 +119,26 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_time_zone">
 
-            <CheckBox
-                android:id="@+id/cb_shutdown_payload"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:button="@null"
-                android:drawableRight="@drawable/lw001_selector_cb_btn"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
+                android:gravity="center_vertical"
                 android:text="Shutdown Payload"
                 android:textColor="@color/lw001_black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/iv_shutdown_payload"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_shutdown_payload" />
+
+            <ImageView
+                android:id="@+id/iv_shutdown_payload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onShutdownPayload"
+                android:padding="6dp"
+                android:src="@drawable/lw001_ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,24 +148,32 @@
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cb_shutdown_payload" />
+                app:layout_constraintTop_toBottomOf="@id/iv_shutdown_payload" />
 
-            <CheckBox
-                android:id="@+id/cb_low_power_payload"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:button="@null"
-                android:drawableRight="@drawable/lw001_selector_cb_btn"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
+                android:gravity="center_vertical"
                 android:text="Low-power Payload"
                 android:textColor="@color/lw001_black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/iv_low_power_payload"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_low_power_payload" />
+
+            <ImageView
+                android:id="@+id/iv_low_power_payload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:onClick="onLowPowerPayload"
+                android:padding="6dp"
+                android:src="@drawable/lw001_ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cb_shutdown_payload" />
+                app:layout_constraintTop_toBottomOf="@id/iv_shutdown_payload" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -344,12 +359,12 @@
             <ImageView
                 android:id="@+id/iv_power_off"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:clickable="true"
                 android:gravity="center_vertical"
                 android:onClick="onPowerOff"
-                android:paddingLeft="20dp"
+                android:padding="6dp"
                 android:src="@drawable/lw001_ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_change_password" />

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.moko.lw001.R;
+import com.moko.lw001.R2;
 import com.moko.lw001.activity.DeviceInfoActivity;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 
 public class GeneralFragment extends Fragment {
     private static final String TAG = GeneralFragment.class.getSimpleName();
-    @BindView(R.id.et_heartbeat_interval)
+    @BindView(R2.id.et_heartbeat_interval)
     EditText etHeartbeatInterval;
 
 
@@ -61,7 +62,6 @@ public class GeneralFragment extends Fragment {
     public void saveParams() {
         final String intervalStr = etHeartbeatInterval.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
-        activity.showSyncingProgressDialog();
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setHeartBeatInterval(interval));
     }
 }

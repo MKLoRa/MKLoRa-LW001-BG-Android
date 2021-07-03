@@ -94,19 +94,19 @@
             android:textColor="@color/lw001_black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/cb_offline_fix"
+            app:layout_constraintBottom_toBottomOf="@id/iv_offline_fix"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@id/cb_offline_fix" />
+            app:layout_constraintTop_toTopOf="@id/iv_offline_fix" />
 
-        <CheckBox
-            android:id="@+id/cb_offline_fix"
+        <ImageView
+            android:id="@+id/iv_offline_fix"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:button="@null"
-            android:checked="false"
-            android:drawableRight="@drawable/lw001_selector_cb_btn"
+            android:src="@drawable/lw001_ic_unchecked"
             android:padding="6dp"
+            android:clickable="true"
+            android:onClick="onOfflineFix"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_gps_fix" />
 
@@ -121,7 +121,7 @@
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cb_offline_fix" />
+            app:layout_constraintTop_toBottomOf="@id/iv_offline_fix" />
 
         <View
             style="@style/lw001_divider_line"

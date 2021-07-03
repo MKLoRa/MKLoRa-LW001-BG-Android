@@ -6,22 +6,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 
+import com.moko.ble.lib.task.OrderTask;
 import com.moko.lw001.R;
+import com.moko.lw001.R2;
 import com.moko.lw001.activity.DeviceInfoActivity;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PositionFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
+public class PositionFragment extends Fragment {
     private static final String TAG = PositionFragment.class.getSimpleName();
-    @BindView(R.id.cb_offline_fix)
-    CheckBox cbOfflineFix;
-
+    @BindView(R2.id.iv_offline_fix)
+    ImageView ivOfflineFix;
+    private boolean mOfflineFixEnable;
 
     private DeviceInfoActivity activity;
 
@@ -41,17 +44,20 @@ public class PositionFragment extends Fragment implements CompoundButton.OnCheck
         View view = inflater.inflate(R.layout.lw001_fragment_pos, container, false);
         ButterKnife.bind(this, view);
         activity = (DeviceInfoActivity) getActivity();
-        cbOfflineFix.setOnCheckedChangeListener(this);
         return view;
     }
 
     public void setOfflineFix(int enable) {
-        cbOfflineFix.setChecked(enable == 1);
+        mOfflineFixEnable = enable == 1;
+        ivOfflineFix.setImageResource(mOfflineFixEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void changeOfflineFix() {
+        mOfflineFixEnable = !mOfflineFixEnable;
         activity.showSyncingProgressDialog();
-        LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setOfflineLocation(isChecked ? 1 : 0));
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setOfflineLocation(mOfflineFixEnable ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.getOfflineLocation());
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

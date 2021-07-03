@@ -90,7 +90,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
-    @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
+    @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
         final String action = event.getAction();
         runOnUiThread(() -> {
@@ -100,8 +100,9 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
         });
     }
 
-    @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
+    @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -110,7 +111,6 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -276,7 +276,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
         finish();
     }
 
-    public void selectPosStrategy(View view) {
+    public void selectScanType(View view) {
         if (isWindowLocked())
             return;
         BottomDialog dialog = new BottomDialog();
@@ -336,7 +336,6 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
         final String timeoutStr = etAdvTimeout.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
         final int timeout = Integer.parseInt(timeoutStr);
-        showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setBeaconEnable(cbBeaconMode.isChecked() ? 1 : 0));
         if (cbBeaconMode.isChecked()) {

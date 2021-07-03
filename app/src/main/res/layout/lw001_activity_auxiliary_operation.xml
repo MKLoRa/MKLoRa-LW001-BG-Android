@@ -161,20 +161,27 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_active_state_count" />
 
-            <CheckBox
-                android:id="@+id/cb_tamper_alarm"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:button="@null"
-                android:drawableRight="@drawable/lw001_selector_cb_btn"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
+                android:gravity="center_vertical"
                 android:text="Tamper Alarm"
                 android:textColor="@color/lw001_black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/iv_tamper_alarm"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_tamper_alarm" />
+
+            <ImageView
+                android:id="@+id/iv_tamper_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:clickable="true"
+                android:onClick="onTamperAlarm"
+                android:padding="6dp"
+                android:src="@drawable/lw001_ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_active_state_count" />
         </androidx.constraintlayout.widget.ConstraintLayout>

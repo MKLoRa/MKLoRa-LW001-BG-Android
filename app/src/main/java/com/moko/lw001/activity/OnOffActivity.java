@@ -8,8 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
@@ -38,16 +37,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OnOffActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class OnOffActivity extends BaseActivity {
 
-    @BindView(R2.id.cb_magnet)
-    CheckBox cbMagnet;
+    @BindView(R2.id.iv_magnet)
+    ImageView ivMagnet;
     @BindView(R2.id.tv_default_mode)
     TextView tvDefaultMode;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
     private int mSelected;
+    private boolean mMagnetEnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,6 @@ public class OnOffActivity extends BaseActivity implements CompoundButton.OnChec
         mValues = new ArrayList<>();
         mValues.add("OFF");
         mValues.add("Revert to last mode");
-        cbMagnet.setOnCheckedChangeListener(this);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -83,6 +82,7 @@ public class OnOffActivity extends BaseActivity implements CompoundButton.OnChec
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -91,7 +91,6 @@ public class OnOffActivity extends BaseActivity implements CompoundButton.OnChec
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -140,7 +139,8 @@ public class OnOffActivity extends BaseActivity implements CompoundButton.OnChec
                                     case KEY_REED_SWITCH:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbMagnet.setChecked(enable == 1);
+                                            mMagnetEnable = enable == 1;
+                                            ivMagnet.setImageResource(mMagnetEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                     case KEY_POWER_STATUS:
@@ -229,14 +229,19 @@ public class OnOffActivity extends BaseActivity implements CompoundButton.OnChec
             mSelected = value;
             tvDefaultMode.setText(mValues.get(value));
             showSyncingProgressDialog();
-            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setReedSwitch(value));
+            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setPowerStatus(value));
         });
         dialog.show(getSupportFragmentManager());
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onMagnet(View view) {
+        if (isWindowLocked())
+            return;
+        mMagnetEnable = !mMagnetEnable;
         showSyncingProgressDialog();
-        LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setPowerStatus(isChecked ? 1 : 0));
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setReedSwitch(mMagnetEnable ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.getReedSwitch());
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

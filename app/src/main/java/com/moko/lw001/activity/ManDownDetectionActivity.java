@@ -19,6 +19,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.R;
+import com.moko.lw001.R2;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -40,9 +41,9 @@ import butterknife.ButterKnife;
 
 public class ManDownDetectionActivity extends BaseActivity {
 
-    @BindView(R.id.cb_man_down_detection)
+    @BindView(R2.id.cb_man_down_detection)
     CheckBox cbManDownDetection;
-    @BindView(R.id.et_idle_detection_timeout)
+    @BindView(R2.id.et_idle_detection_timeout)
     EditText etIdleDetectionTimeout;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
@@ -77,6 +78,7 @@ public class ManDownDetectionActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -85,7 +87,6 @@ public class ManDownDetectionActivity extends BaseActivity {
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -240,10 +241,9 @@ public class ManDownDetectionActivity extends BaseActivity {
     private void saveParams() {
         final String timeoutStr = etIdleDetectionTimeout.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
-        showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setManDownEnable(cbManDownDetection.isChecked() ? 1 : 0));
-        orderTasks.add(OrderTaskAssembler.setVibrationTimeout(timeout));
+        orderTasks.add(OrderTaskAssembler.setManDownIdleTimeout(timeout));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 

@@ -8,12 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
+import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
@@ -29,22 +29,24 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AuxiliaryOperationActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+public class AuxiliaryOperationActivity extends BaseActivity {
 
-    @BindView(R2.id.cb_tamper_alarm)
-    CheckBox cbTamperAlarm;
+    @BindView(R2.id.iv_tamper_alarm)
+    ImageView ivTamperAlarm;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
+    private boolean mTamperAlarmEnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lw001_activity_auxiliary_operation);
         ButterKnife.bind(this);
-        cbTamperAlarm.setOnCheckedChangeListener(this);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -67,6 +69,7 @@ public class AuxiliaryOperationActivity extends BaseActivity implements Compound
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
+        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
@@ -75,7 +78,6 @@ public class AuxiliaryOperationActivity extends BaseActivity implements Compound
                 dismissSyncProgressDialog();
             }
             if (MokoConstants.ACTION_ORDER_RESULT.equals(action)) {
-                EventBus.getDefault().cancelEventDelivery(event);
                 OrderTaskResponse response = event.getResponse();
                 OrderCHAR orderCHAR = (OrderCHAR) response.orderCHAR;
                 int responseType = response.responseType;
@@ -119,7 +121,8 @@ public class AuxiliaryOperationActivity extends BaseActivity implements Compound
                                     case KEY_TAMPER_ALARM:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbTamperAlarm.setChecked(enable == 1);
+                                            mTamperAlarmEnable = enable == 1;
+                                            ivTamperAlarm.setImageResource(mTamperAlarmEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                 }
@@ -192,12 +195,6 @@ public class AuxiliaryOperationActivity extends BaseActivity implements Compound
         finish();
     }
 
-    @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        showSyncingProgressDialog();
-        LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setTamperAlarm(isChecked ? 1 : 0));
-    }
-
     public void onDownlinkForPos(View view) {
         if (isWindowLocked())
             return;
@@ -220,5 +217,16 @@ public class AuxiliaryOperationActivity extends BaseActivity implements Compound
         if (isWindowLocked())
             return;
         startActivity(new Intent(this, ActiveStateCountActivity.class));
+    }
+
+    public void onTamperAlarm(View view) {
+        if (isWindowLocked())
+            return;
+        mTamperAlarmEnable = !mTamperAlarmEnable;
+        showSyncingProgressDialog();
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setTamperAlarm(mTamperAlarmEnable ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.getTamperAlarm());
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 }

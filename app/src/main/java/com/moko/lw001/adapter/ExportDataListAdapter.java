@@ -12,10 +12,7 @@ public class ExportDataListAdapter extends BaseQuickAdapter<ExportData, BaseView
 
     @Override
     protected void convert(BaseViewHolder helper, ExportData item) {
-        final String rssi = String.format("%ddBm", item.rssi);
-        helper.setText(R.id.tv_rssi, rssi);
         helper.setText(R.id.tv_time, item.time);
-        helper.setText(R.id.tv_mac, item.mac);
         helper.setText(R.id.tv_raw_data, item.rawData);
 
     }

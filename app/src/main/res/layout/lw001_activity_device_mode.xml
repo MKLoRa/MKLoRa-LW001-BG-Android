@@ -75,11 +75,12 @@
 
             <TextView
                 android:id="@+id/tv_device_mode"
-                android:layout_width="120dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/lw001_shape_radius_blue_btn_bg"
                 android:clickable="true"
                 android:gravity="center"
+                android:minWidth="70dp"
                 android:onClick="selectDeviceMode"
                 android:padding="12dp"
                 android:text="Timing Mode"
