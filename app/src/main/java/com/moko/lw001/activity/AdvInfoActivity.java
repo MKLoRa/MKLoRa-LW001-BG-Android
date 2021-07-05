@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
 public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeListener {
 
     public static final String UUID_PATTERN = "[A-Fa-f0-9]{8}-(?:[A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}";
-    private final String FILTER_ASCII = "\\A\\p{ASCII}*\\z";
+    private final String FILTER_ASCII = "[^ -~]";
     @BindView(R2.id.et_adv_name)
     EditText etAdvName;
     @BindView(R2.id.et_uuid)
@@ -128,7 +128,7 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
             }
         });
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
-            if (!(source + "").matches(FILTER_ASCII)) {
+            if ((source + "").matches(FILTER_ASCII)) {
                 return "";
             }
 
@@ -165,8 +165,9 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }

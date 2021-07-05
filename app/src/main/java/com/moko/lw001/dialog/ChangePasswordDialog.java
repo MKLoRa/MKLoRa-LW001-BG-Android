@@ -18,9 +18,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ChangePasswordDialog extends BaseDialog<Object> {
+    private final String FILTER_ASCII = "[^ -~]";
     @BindView(R2.id.et_password)
     EditText etPassword;
-    private final String FILTER_ASCII = "\\A\\p{ASCII}*\\z";
     @BindView(R2.id.et_password_confirm)
     EditText etPasswordConfirm;
     @BindView(R2.id.tv_password_ensure)
@@ -42,7 +42,7 @@ public class ChangePasswordDialog extends BaseDialog<Object> {
         InputFilter filter = new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                if (!(source + "").matches(FILTER_ASCII)) {
+                if ((source + "").matches(FILTER_ASCII)) {
                     return "";
                 }
 

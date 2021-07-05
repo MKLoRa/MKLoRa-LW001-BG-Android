@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="On/Off Settings"
+            android:text="On/off Settings"
             android:textColor="@color/lw001_white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />

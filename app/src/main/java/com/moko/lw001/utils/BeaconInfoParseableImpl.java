@@ -2,10 +2,8 @@ package com.moko.lw001.utils;
 
 import android.os.ParcelUuid;
 import android.os.SystemClock;
-import android.util.Log;
 import android.util.SparseArray;
 
-import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.entity.AdvInfo;
 import com.moko.support.lw001.entity.DeviceInfo;
@@ -56,7 +54,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
         sb.insert(23, "-");
         uuid = sb.toString();
         byte[] majorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 18, 20);
-        byte[] minorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 18, 22);
+        byte[] minorBytes = Arrays.copyOfRange(manufacturerSpecificDataByte, 20, 22);
         measurePower = manufacturerSpecificDataByte[22];
         major = MokoUtils.toInt(majorBytes);
         minor = MokoUtils.toInt(minorBytes);

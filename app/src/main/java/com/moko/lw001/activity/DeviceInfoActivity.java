@@ -333,7 +333,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             dialog.show(getSupportFragmentManager());
         } else if (disConnectType == 3) {
             AlertMessageDialog dialog = new AlertMessageDialog();
-            dialog.setMessage("No data communication for 2 minutes, the device is disconnected.");
+            dialog.setMessage("No data communication for 3 minutes, the device is disconnected.");
             dialog.setConfirm("OK");
             dialog.setCancelGone();
             dialog.setOnAlertConfirmListener(() -> {
@@ -533,7 +533,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     private void showGeneralAndGetData() {
-        tvTitle.setText("General Setting");
+        tvTitle.setText("General Settings");
         ivSave.setVisibility(View.VISIBLE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)

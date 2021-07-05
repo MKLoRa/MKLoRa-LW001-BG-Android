@@ -351,7 +351,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                                             final int dr1 = value[6] & 0xFF;
                                             mSelectedDr1 = dr1;
                                             final int dr2 = value[7] & 0xFF;
-                                            mSelectedDr2 = dr1;
+                                            mSelectedDr2 = dr2;
                                             tvDr1.setText(String.valueOf(dr1));
                                             tvDr2.setText(String.valueOf(dr2));
                                         }
@@ -518,6 +518,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         tvDr.setText(String.valueOf(mSelectedDr));
         tvDr1.setText(String.valueOf(mSelectedDr1));
         tvDr2.setText(String.valueOf(mSelectedDr2));
+        mSelectedTransmissions = 0;
+        tvTransmissions.setText(mTransmissionsNumberList.get(mSelectedTransmissions));
     }
 
     private ArrayList<String> mCHList;

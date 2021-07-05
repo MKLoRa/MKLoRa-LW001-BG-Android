@@ -147,8 +147,9 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -371,8 +372,10 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         if (isWindowLocked())
             return;
         int size = mTimePoints.size();
-        if (size >= 10)
+        if (size >= 10) {
+            ToastUtils.showToast(this, "You can set up to 10 time points!");
             return;
+        }
         TimePoint timePoint = new TimePoint();
         timePoint.name = String.format("Time Point %d", size + 1);
         timePoint.hour = String.format("%02d", 0);
@@ -382,6 +385,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
     }
 
     public void onSave(View view) {
+        savedParamsError = false;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setTimePosStrategy(mSelected));

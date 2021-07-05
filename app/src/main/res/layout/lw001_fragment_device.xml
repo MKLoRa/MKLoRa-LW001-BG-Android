@@ -244,11 +244,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/tv_low_power_prompt_tips"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:text="*When the battery is less than or equal to 10%, the red LED will flashe once every 30 seconds."
+                android:text="@string/low_power_prompt_tips"
                 android:textColor="@color/lw001_black_333333"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"

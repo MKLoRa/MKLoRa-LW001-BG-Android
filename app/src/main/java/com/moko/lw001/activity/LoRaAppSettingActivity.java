@@ -75,8 +75,9 @@ public class LoRaAppSettingActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -186,6 +187,7 @@ public class LoRaAppSettingActivity extends BaseActivity {
         final String reconnectIntervalStr = etReconnectInterval.getText().toString();
         final int syncInterval = Integer.parseInt(syncIntervalStr);
         final int reconnectInterval = Integer.parseInt(reconnectIntervalStr);
+        savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setLoraTimeSyncInterval(syncInterval));
         orderTasks.add(OrderTaskAssembler.setLoraReconnectInterval(reconnectInterval));

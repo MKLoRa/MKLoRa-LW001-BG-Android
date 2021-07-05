@@ -78,8 +78,9 @@ public class ManDownDetectionActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -241,6 +242,7 @@ public class ManDownDetectionActivity extends BaseActivity {
     private void saveParams() {
         final String timeoutStr = etIdleDetectionTimeout.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
+        savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setManDownEnable(cbManDownDetection.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setManDownIdleTimeout(timeout));

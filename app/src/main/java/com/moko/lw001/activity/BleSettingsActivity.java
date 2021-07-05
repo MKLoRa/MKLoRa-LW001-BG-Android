@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
@@ -45,8 +46,8 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
 
     @BindView(R2.id.cb_beacon_mode)
     CheckBox cbBeaconMode;
-    @BindView(R2.id.cb_connectable)
-    CheckBox cbConnectable;
+    @BindView(R2.id.iv_connectable)
+    ImageView ivConnectable;
     @BindView(R2.id.et_adv_interval)
     EditText etAdvInterval;
     @BindView(R2.id.cl_beacon_mode_open)
@@ -62,6 +63,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
     private ArrayList<String> mValues;
     private int mSelected;
     private int mShowSelected;
+    private boolean mConnectableEnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +104,9 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -175,7 +178,8 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                                     case KEY_CONNECTABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbConnectable.setChecked(enable == 1);
+                                            mConnectableEnable = enable == 1;
+                                            ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                     case KEY_ADV_INTERVAL:
@@ -336,10 +340,11 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
         final String timeoutStr = etAdvTimeout.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
         final int timeout = Integer.parseInt(timeoutStr);
+        savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setBeaconEnable(cbBeaconMode.isChecked() ? 1 : 0));
         if (cbBeaconMode.isChecked()) {
-            orderTasks.add(OrderTaskAssembler.setConnectable(cbConnectable.isChecked() ? 1 : 0));
+            orderTasks.add(OrderTaskAssembler.setConnectable(mConnectableEnable ? 1 : 0));
             orderTasks.add(OrderTaskAssembler.setAdvInterval(interval));
         } else {
             orderTasks.add(OrderTaskAssembler.setAdvTimeout(timeout));
@@ -363,5 +368,22 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
         if (isWindowLocked())
             return;
         startActivity(new Intent(this, AdvInfoActivity.class));
+    }
+
+    public void onConnectable(View view) {
+        if (mConnectableEnable) {
+            AlertMessageDialog dialog = new AlertMessageDialog();
+            dialog.setTitle("Warning!");
+            dialog.setMessage("Are you sure to make the device unconnectable？");
+            dialog.setOnAlertConfirmListener(() -> {
+                mConnectableEnable = false;
+                ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+
+            });
+            dialog.show(getSupportFragmentManager());
+        } else {
+            mConnectableEnable = true;
+            ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        }
     }
 }

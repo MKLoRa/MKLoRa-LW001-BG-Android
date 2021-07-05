@@ -32,6 +32,8 @@ public class DeviceFragment extends Fragment {
     ImageView ivLowPowerPayload;
     @BindView(R2.id.tv_low_power_prompt)
     TextView tvLowPowerPrompt;
+    @BindView(R2.id.tv_low_power_prompt_tips)
+    TextView tvLowPowerPromptTips;
     @BindView(R2.id.iv_power_off)
     ImageView ivPowerOff;
     private ArrayList<String> mTimeZones;
@@ -105,6 +107,8 @@ public class DeviceFragment extends Fragment {
         } else {
             mSelectedLowPowerPrompt = 0;
         }
+        tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
+        tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
         if ((lowPower & 2) == 2) {
             mLowPowerPayloadEnable = true;
             ivLowPowerPayload.setImageResource(R.drawable.lw001_ic_checked);
@@ -120,6 +124,7 @@ public class DeviceFragment extends Fragment {
         dialog.setListener(value -> {
             mSelectedLowPowerPrompt = value;
             tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
+            tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(value)));
             int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
             activity.showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setLowPower(lowPower));

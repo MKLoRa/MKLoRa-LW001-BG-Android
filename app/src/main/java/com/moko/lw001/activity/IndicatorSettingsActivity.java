@@ -94,8 +94,9 @@ public class IndicatorSettingsActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -244,6 +245,7 @@ public class IndicatorSettingsActivity extends BaseActivity {
                 | (cbWifiFix.isChecked() ? 256 : 0)
                 | (cbWifiFixSuccess.isChecked() ? 512 : 0)
                 | (cbWifiFixFail.isChecked() ? 1024 : 0);
+        savedParamsError = false;
         showSyncingProgressDialog();
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setIndicatorLight(indicator));
     }

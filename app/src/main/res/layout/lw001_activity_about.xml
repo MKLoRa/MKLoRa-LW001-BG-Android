@@ -48,7 +48,7 @@
         android:layout_below="@id/iv_logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="LW001"
+        android:text="LW001-BG"
         android:textColor="@color/lw001_grey_888888"
         android:textSize="20sp" />
 

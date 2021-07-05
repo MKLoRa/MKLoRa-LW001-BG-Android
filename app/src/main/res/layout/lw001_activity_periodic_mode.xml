@@ -51,6 +51,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/lw001_white_ffffff"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="10dp">
 
         <TextView
@@ -104,9 +106,9 @@
             android:id="@+id/et_report_interval"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:hint="30~86400"
-            android:layout_marginTop="20dp"
             android:inputType="number"
             android:maxLength="5"
             android:text=""

@@ -47,7 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FilterOptionsBActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
-    private final String FILTER_ASCII = "\\A\\p{ASCII}*\\z";
+    private final String FILTER_ASCII = "[^ -~]";
     @BindView(R2.id.sb_rssi_filter)
     SeekBar sbRssiFilter;
     @BindView(R2.id.tv_rssi_filter_value)
@@ -127,7 +127,7 @@ public class FilterOptionsBActivity extends BaseActivity implements SeekBar.OnSe
 
         sbRssiFilter.setOnSeekBarChangeListener(this);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
-            if (!(source + "").matches(FILTER_ASCII)) {
+            if ((source + "").matches(FILTER_ASCII)) {
                 return "";
             }
 
@@ -525,7 +525,6 @@ public class FilterOptionsBActivity extends BaseActivity implements SeekBar.OnSe
     private void saveParams() {
         final int progress = sbRssiFilter.getProgress();
         int filterRssi = progress - 127;
-        List<OrderTask> orderTasks = new ArrayList<>();
         final String mac = etMacAddress.getText().toString();
         final String name = etAdvName.getText().toString();
         final String uuid = etIbeaconUuid.getText().toString();
@@ -534,6 +533,8 @@ public class FilterOptionsBActivity extends BaseActivity implements SeekBar.OnSe
         final String minorMin = etIbeaconMinorMin.getText().toString();
         final String minorMax = etIbeaconMinorMax.getText().toString();
 
+        savedParamsError = false;
+        List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setFilterRssiB(filterRssi));
         orderTasks.add(OrderTaskAssembler.setFilterMacB(filterMacEnable ? mac : "", cbMacAddress.isChecked()));
         orderTasks.add(OrderTaskAssembler.setFilterNameB(filterNameEnable ? name : "", cbAdvName.isChecked()));

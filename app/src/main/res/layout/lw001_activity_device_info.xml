@@ -41,7 +41,8 @@
             android:onClick="onSave"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw001_ic_save" />
+            android:src="@drawable/lw001_ic_save"
+            android:visibility="gone" />
 
     </RelativeLayout>
 

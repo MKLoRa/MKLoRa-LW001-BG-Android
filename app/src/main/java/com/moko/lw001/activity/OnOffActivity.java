@@ -82,8 +82,9 @@ public class OnOffActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -228,6 +229,7 @@ public class OnOffActivity extends BaseActivity {
         dialog.setListener(value -> {
             mSelected = value;
             tvDefaultMode.setText(mValues.get(value));
+            savedParamsError = false;
             showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setPowerStatus(value));
         });
@@ -238,6 +240,7 @@ public class OnOffActivity extends BaseActivity {
         if (isWindowLocked())
             return;
         mMagnetEnable = !mMagnetEnable;
+        savedParamsError = false;
         showSyncingProgressDialog();
         ArrayList<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setReedSwitch(mMagnetEnable ? 1 : 0));

@@ -108,7 +108,6 @@ public class ExportDataActivity extends BaseActivity {
             tvCount.setText(String.format("Count:%d", exportDatas.size()));
             tvExport.setEnabled(true);
             tvEmpty.setEnabled(true);
-            tvStart.setEnabled(false);
         } else {
             exportDatas = new ArrayList<>();
             storeString = new StringBuilder();
@@ -150,8 +149,9 @@ public class ExportDataActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_CURRENT_DATA.equals(action)) {
                 OrderTaskResponse response = event.getResponse();
@@ -287,6 +287,7 @@ public class ExportDataActivity extends BaseActivity {
                                                 tvSync.setText("Stop");
                                             } else {
                                                 mIsSync = false;
+                                                tvStart.setEnabled(true);
                                                 if (exportDatas != null && exportDatas.size() > 0 && storeString != null) {
                                                     tvEmpty.setEnabled(true);
                                                     tvExport.setEnabled(true);
@@ -397,7 +398,19 @@ public class ExportDataActivity extends BaseActivity {
             ToastUtils.showToast(this, "Opps！Save failed. Please check the input characters and try again.");
             return;
         }
+        if (LoRaLW001MokoSupport.getInstance().exportDatas != null) {
+            LoRaLW001MokoSupport.getInstance().exportDatas.clear();
+            LoRaLW001MokoSupport.getInstance().storeString = null;
+            LoRaLW001MokoSupport.getInstance().startTime = 0;
+            LoRaLW001MokoSupport.getInstance().sum = 0;
+        }
         mStartTime = time;
+        storeString = new StringBuilder();
+        writeTrackedFile("");
+        exportDatas.clear();
+        adapter.replaceData(exportDatas);
+        tvSum.setText("Sum:0");
+        tvCount.setText("Count:0");
         showSyncingProgressDialog();
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.readStorageData(time));
     }

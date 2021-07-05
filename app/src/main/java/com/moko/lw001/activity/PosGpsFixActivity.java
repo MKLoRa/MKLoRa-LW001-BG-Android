@@ -19,6 +19,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lw001.BuildConfig;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.dialog.AlertMessageDialog;
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -70,6 +72,8 @@ public class PosGpsFixActivity extends BaseActivity {
     EditText etTimeBudget;
     @BindView(R2.id.cb_extreme_mode)
     CheckBox cbExtremeMode;
+    @BindView(R2.id.cl_cold_start_timeout)
+    ConstraintLayout clColdStartTimeout;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
@@ -98,7 +102,7 @@ public class PosGpsFixActivity extends BaseActivity {
         mGPSModelValues.add("Airborne<4g");
         mGPSModelValues.add("Wrist");
         mGPSModelValues.add("Bike");
-
+        clColdStartTimeout.setVisibility(BuildConfig.IS_LIBRARY ? View.GONE : View.VISIBLE);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -107,7 +111,9 @@ public class PosGpsFixActivity extends BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.getGPSColdStartTimeout());
+        if (!BuildConfig.IS_LIBRARY) {
+            orderTasks.add(OrderTaskAssembler.getGPSColdStartTimeout());
+        }
         orderTasks.add(OrderTaskAssembler.getGPSCoarseAccuracyMask());
         orderTasks.add(OrderTaskAssembler.getGPSCoarseTimeout());
         orderTasks.add(OrderTaskAssembler.getGPSFineAccuracyMask());
@@ -135,8 +141,9 @@ public class PosGpsFixActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
     public void onOrderTaskResponseEvent(OrderTaskResponseEvent event) {
-        EventBus.getDefault().cancelEventDelivery(event);
         final String action = event.getAction();
+        if (!MokoConstants.ACTION_CURRENT_DATA.equals(action))
+            EventBus.getDefault().cancelEventDelivery(event);
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_ORDER_TIMEOUT.equals(action)) {
             }
@@ -306,12 +313,14 @@ public class PosGpsFixActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String coldStartTimeoutStr = etColdStartTimeout.getText().toString();
-        if (TextUtils.isEmpty(coldStartTimeoutStr))
-            return false;
-        final int coldStartTimeout = Integer.parseInt(coldStartTimeoutStr);
-        if (coldStartTimeout < 3 || coldStartTimeout > 15) {
-            return false;
+        if (!BuildConfig.IS_LIBRARY) {
+            final String coldStartTimeoutStr = etColdStartTimeout.getText().toString();
+            if (TextUtils.isEmpty(coldStartTimeoutStr))
+                return false;
+            final int coldStartTimeout = Integer.parseInt(coldStartTimeoutStr);
+            if (coldStartTimeout < 3 || coldStartTimeout > 15) {
+                return false;
+            }
         }
         final String coarseAccMaskStr = etCoarseAccMask.getText().toString();
         if (TextUtils.isEmpty(coarseAccMaskStr))
@@ -393,8 +402,11 @@ public class PosGpsFixActivity extends BaseActivity {
         final int aidingTimeout = Integer.parseInt(aidingTimeoutStr);
         final String timeBudgetStr = etTimeBudget.getText().toString();
         final int timeBudget = Integer.parseInt(timeBudgetStr);
+        savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setGPSColdStartTimeout(coldStartTimeout));
+        if (!BuildConfig.IS_LIBRARY) {
+            orderTasks.add(OrderTaskAssembler.setGPSColdStartTimeout(coldStartTimeout));
+        }
         orderTasks.add(OrderTaskAssembler.setGPSCoarseAccuracyMask(coarseAccMask));
         orderTasks.add(OrderTaskAssembler.setGPSCoarseTimeout(coarseTimeout));
         orderTasks.add(OrderTaskAssembler.setGPSFineAccuracyMask(fineAccTarget));
