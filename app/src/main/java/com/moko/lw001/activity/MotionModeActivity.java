@@ -221,7 +221,7 @@ public class MotionModeActivity extends BaseActivity {
                                             } else if (strategy == 6) {
                                                 mStartShowSelected = 4;
                                             } else if (strategy == 7) {
-                                                mStartShowSelected = 7;
+                                                mStartShowSelected = 6;
                                             }
                                             tvPosStrategyOnStart.setText(mValues.get(mStartShowSelected));
                                         }
@@ -250,7 +250,7 @@ public class MotionModeActivity extends BaseActivity {
                                             } else if (strategy == 6) {
                                                 mTripShowSelected = 4;
                                             } else if (strategy == 7) {
-                                                mTripShowSelected = 7;
+                                                mTripShowSelected = 6;
                                             }
                                             tvPosStrategyInTrip.setText(mValues.get(mTripShowSelected));
                                         }
@@ -291,7 +291,7 @@ public class MotionModeActivity extends BaseActivity {
                                             } else if (strategy == 6) {
                                                 mEndShowSelected = 4;
                                             } else if (strategy == 7) {
-                                                mEndShowSelected = 7;
+                                                mEndShowSelected = 6;
                                             }
                                             tvPosStrategyOnEnd.setText(mValues.get(mEndShowSelected));
                                         }

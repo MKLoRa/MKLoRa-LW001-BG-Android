@@ -50,7 +50,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1.0"
         android:background="@color/lw001_white_ffffff"
         android:padding="10dp">
 
@@ -113,22 +114,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_timing_pos_strategy" />
 
-        <com.yanzhenjie.recyclerview.SwipeRecyclerView
-            android:id="@+id/srv_time_point"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_time_point"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_time_point_add"
             tools:listitem="@layout/lw001_item_time_point" />
-
-        <View
-            style="@style/lw001_divider_line"
-            android:layout_width="0dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/srv_time_point" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

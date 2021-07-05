@@ -161,7 +161,7 @@ public class PeriodicModeActivity extends BaseActivity {
                                             } else if (strategy == 6) {
                                                 mShowSelected = 4;
                                             } else if (strategy == 7) {
-                                                mShowSelected = 7;
+                                                mShowSelected = 6;
                                             }
                                             tvPeriodicPosStrategy.setText(mValues.get(mShowSelected));
                                         }

@@ -71,8 +71,8 @@ public class DeviceFragment extends Fragment {
             }
         }
         mLowPowerPrompts = new ArrayList<>();
-        mLowPowerPrompts.add("%5");
-        mLowPowerPrompts.add("%10");
+        mLowPowerPrompts.add("5%");
+        mLowPowerPrompts.add("10%");
         return view;
     }
 
@@ -120,7 +120,6 @@ public class DeviceFragment extends Fragment {
         dialog.setListener(value -> {
             mSelectedLowPowerPrompt = value;
             tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
-            activity.showSyncingProgressDialog();
             int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
             activity.showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setLowPower(lowPower));

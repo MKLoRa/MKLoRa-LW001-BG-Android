@@ -181,7 +181,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/ll_sync"
-        android:layout_centerHorizontal="true"
         android:padding="10dp"
         tools:listitem="@layout/lw001_item_export_data" />
 

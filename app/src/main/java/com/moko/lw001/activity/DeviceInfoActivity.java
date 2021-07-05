@@ -239,7 +239,6 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                     case KEY_TIME_ZONE:
                                     case KEY_SHUTDOWN_INFO_REPORT:
                                     case KEY_LOW_POWER:
-                                    case KEY_WORK_MODE:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -294,7 +293,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         break;
                                     case KEY_TIME_ZONE:
                                         if (length > 0) {
-                                            int timeZone = value[4] & 0xFF;
+                                            int timeZone = value[4];
                                             deviceFragment.setTimeZone(timeZone);
                                         }
                                         break;
@@ -516,7 +515,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     private void showDeviceAndGetData() {
-        tvTitle.setText(R.string.title_device);
+        tvTitle.setText("Device Settings");
         ivSave.setVisibility(View.GONE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)
@@ -534,7 +533,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     private void showGeneralAndGetData() {
-        tvTitle.setText(R.string.title_general);
+        tvTitle.setText("General Setting");
         ivSave.setVisibility(View.VISIBLE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)
@@ -547,7 +546,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     private void showPosAndGetData() {
-        tvTitle.setText(R.string.title_position);
+        tvTitle.setText("Positioning Strategy");
         ivSave.setVisibility(View.GONE);
         fragmentManager.beginTransaction()
                 .hide(loraFragment)

@@ -101,7 +101,6 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
     implementation 'com.github.GrenderG:Toasty:1.4.1'
     implementation 'cn.carbswang.android:NumberPickerView:1.1.1'
-    implementation 'com.yanzhenjie.recyclerview:x:1.3.2'
     if (!isLibrary.toBoolean()) {
         implementation project(path: ':mokosupport')
     } else {

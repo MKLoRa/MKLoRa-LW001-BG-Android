@@ -107,7 +107,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cb_man_down_detection"
-            app:layout_constraintWidth_percent="0.2" />
+            app:layout_constraintWidth_percent="0.27" />
 
         <TextView
             android:layout_width="wrap_content"

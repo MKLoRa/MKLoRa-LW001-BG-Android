@@ -394,16 +394,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/lw001_white_ffffff"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:orientation="vertical">
 
                     <RelativeLayout
                         android:id="@+id/rl_ch"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="10dp"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -465,6 +465,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
+                        android:padding="10dp"
                         android:visibility="gone">
 
                         <CheckBox
@@ -498,15 +499,14 @@
                         android:id="@+id/rl_dr"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingTop="6dp"
-                        android:paddingBottom="6dp"
+                        android:padding="10dp"
                         android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:text="DR For Join"
                             android:layout_alignBaseline="@id/tv_dr"
+                            android:text="DR For Join"
                             android:textColor="@color/lw001_black_333333"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -607,8 +607,8 @@
                                 android:layout_alignParentRight="true"
                                 android:background="@drawable/lw001_shape_radius_blue_btn_bg"
                                 android:clickable="true"
+                                android:gravity="center"
                                 android:onClick="selectTransmissions"
-                                android:padding="12dp"
                                 android:text=""
                                 android:textColor="@color/lw001_white_ffffff"
                                 android:textSize="15sp" />

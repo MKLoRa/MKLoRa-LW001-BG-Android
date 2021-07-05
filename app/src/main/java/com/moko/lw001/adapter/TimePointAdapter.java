@@ -1,13 +1,15 @@
 package com.moko.lw001.adapter;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.moko.lw001.R;
 import com.moko.lw001.entity.TimePoint;
 
-public class TimePointAdapter extends BaseQuickAdapter<TimePoint, BaseViewHolder> {
-    public TimePointAdapter() {
-        super(R.layout.lw001_item_time_point);
+import java.util.List;
+
+public class TimePointAdapter extends BaseItemDraggableAdapter<TimePoint, BaseViewHolder> {
+    public TimePointAdapter(List<TimePoint> data) {
+        super(R.layout.lw001_item_time_point, data);
     }
 
     @Override

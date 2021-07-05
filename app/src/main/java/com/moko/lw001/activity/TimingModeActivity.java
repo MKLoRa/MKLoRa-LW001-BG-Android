@@ -6,11 +6,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
+import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
@@ -28,8 +31,6 @@ import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
 import com.moko.support.lw001.entity.ParamsKeyEnum;
-import com.yanzhenjie.recyclerview.SwipeRecyclerView;
-import com.yanzhenjie.recyclerview.touch.OnItemMoveListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,17 +39,18 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener, OnItemMoveListener {
+public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener {
 
     @BindView(R2.id.tv_timing_pos_strategy)
     TextView tvTimingPosStrategy;
-    @BindView(R2.id.srv_time_point)
-    SwipeRecyclerView srvTimePoint;
+    @BindView(R2.id.rv_time_point)
+    RecyclerView rvTimePoint;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -81,14 +83,18 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
             mMinValues.add(String.format("%02d", i * 15));
         }
         mTimePoints = new ArrayList<>();
-        mAdapter = new TimePointAdapter();
-        mAdapter.openLoadAnimation();
+        mAdapter = new TimePointAdapter(mTimePoints);
+        ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
+        itemTouchHelper.attachToRecyclerView(rvTimePoint);
+
+        // 开启滑动删除
+        mAdapter.enableSwipeItem();
+        mAdapter.setOnItemSwipeListener(onItemSwipeListener);
         mAdapter.setOnItemChildClickListener(this);
-        mAdapter.replaceData(mTimePoints);
-        srvTimePoint.setLayoutManager(new LinearLayoutManager(this));
-        srvTimePoint.setAdapter(mAdapter);
-        srvTimePoint.setItemViewSwipeEnabled(true);
-        srvTimePoint.setOnItemMoveListener(this);
+        mAdapter.openLoadAnimation();
+        rvTimePoint.setLayoutManager(new LinearLayoutManager(this));
+        rvTimePoint.setAdapter(mAdapter);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -101,6 +107,33 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         orderTasks.add(OrderTaskAssembler.getTimePosReportPoints());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
+
+
+    OnItemSwipeListener onItemSwipeListener = new OnItemSwipeListener() {
+        @Override
+        public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int pos) {
+        }
+
+        @Override
+        public void clearView(RecyclerView.ViewHolder viewHolder, int pos) {
+        }
+
+        @Override
+        public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int pos) {
+            mTimePoints.remove(pos);
+            int size = mTimePoints.size();
+            for (int i = 1; i <= size; i++) {
+                TimePoint point = mTimePoints.get(i - 1);
+                point.name = String.format("Time Point %d", i);
+            }
+            mAdapter.replaceData(mTimePoints);
+        }
+
+        @Override
+        public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float v, float v1, boolean b) {
+        }
+    };
+
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 300)
     public void onConnectStatusEvent(ConnectStatusEvent event) {
@@ -185,7 +218,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
                                             } else if (strategy == 6) {
                                                 mShowSelected = 4;
                                             } else if (strategy == 7) {
-                                                mShowSelected = 7;
+                                                mShowSelected = 6;
                                             }
                                             tvTimingPosStrategy.setText(mValues.get(mShowSelected));
                                         }
@@ -199,7 +232,11 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
                                                 min = min % 60;
                                                 TimePoint timePoint = new TimePoint();
                                                 timePoint.name = String.format("Time Point %d", i + 1);
-                                                timePoint.hour = String.format("%02d", hour);
+                                                if (hour == 24) {
+                                                    timePoint.hour = String.format("%02d", 0);
+                                                } else {
+                                                    timePoint.hour = String.format("%02d", hour);
+                                                }
                                                 timePoint.min = String.format("%02d", min);
                                                 mTimePoints.add(timePoint);
                                                 mAdapter.replaceData(mTimePoints);
@@ -303,23 +340,6 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         }
     }
 
-    @Override
-    public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
-        return false;
-    }
-
-    @Override
-    public void onItemDismiss(RecyclerView.ViewHolder srcHolder) {
-        int position = srcHolder.getAdapterPosition();
-        mTimePoints.remove(position);
-        int size = mTimePoints.size();
-        for (int i = 0; i < size; i++) {
-            TimePoint point = mTimePoints.get(i);
-            point.name = String.format("Time Point %d", i);
-        }
-        mAdapter.replaceData(mTimePoints);
-    }
-
     public void selectPosStrategy(View view) {
         if (isWindowLocked())
             return;
@@ -354,7 +374,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         if (size >= 10)
             return;
         TimePoint timePoint = new TimePoint();
-        timePoint.name = String.format("Time Point %d", size);
+        timePoint.name = String.format("Time Point %d", size + 1);
         timePoint.hour = String.format("%02d", 0);
         timePoint.min = String.format("%02d", 0);
         mTimePoints.add(timePoint);
@@ -369,6 +389,10 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         for (TimePoint point : mTimePoints) {
             int hour = Integer.parseInt(point.hour);
             int min = Integer.parseInt(point.min);
+            if (hour == 0 && min == 0) {
+                points.add(96);
+                continue;
+            }
             points.add((hour * 60 + min) / 15);
         }
         orderTasks.add(OrderTaskAssembler.setTimePosReportPoints(points));

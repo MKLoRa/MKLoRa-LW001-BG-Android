@@ -134,7 +134,7 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
 
             return null;
         };
-        etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10), inputFilter});
+        etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13), inputFilter});
 
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();

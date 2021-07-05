@@ -127,12 +127,12 @@ public class PosBleFixActivity extends BaseActivity {
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_BLE_POS_TIMEOUT:
-                                    case KEY_BLE_POS_MAC_NUMBER:
+                                    case KEY_FILTER_A_B_RELATION:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
                                         break;
-                                    case KEY_FILTER_A_B_RELATION:
+                                    case KEY_BLE_POS_MAC_NUMBER:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -236,10 +236,10 @@ public class PosBleFixActivity extends BaseActivity {
         final int number = Integer.parseInt(numberStr);
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setBlePosTimeout(posTimeout));
-        orderTasks.add(OrderTaskAssembler.setBlePosNumber(number));
         if (isFilterAEnable && isFilterBEnable) {
             orderTasks.add(OrderTaskAssembler.setFilterABRelation(mSelected));
         }
+        orderTasks.add(OrderTaskAssembler.setBlePosNumber(number));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
