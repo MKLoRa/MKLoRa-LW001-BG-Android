@@ -778,13 +778,10 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
-            case R.id.cb_advance_setting:
-                llAdvancedSetting.setVisibility(isChecked ? View.VISIBLE : View.GONE);
-                break;
-            case R.id.cb_adr:
-                llAdrOptions.setVisibility(isChecked ? View.GONE : View.VISIBLE);
-                break;
+        if (buttonView.getId() == R.id.cb_advance_setting) {
+            llAdvancedSetting.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        } else if (buttonView.getId() == R.id.cb_adr) {
+            llAdrOptions.setVisibility(isChecked ? View.GONE : View.VISIBLE);
         }
     }
 }
