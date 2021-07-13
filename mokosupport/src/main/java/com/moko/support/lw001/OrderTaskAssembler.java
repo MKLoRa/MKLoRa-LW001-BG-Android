@@ -1185,7 +1185,7 @@ public class OrderTaskAssembler {
     }
 
     public static OrderTask setMotionDetection(@IntRange(from = 10, to = 250) int threshold,
-                                               @IntRange(from = 1, to = 15) int time) {
+                                               @IntRange(from = 1, to = 50) int time) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setMotionDetection(threshold, time);
         return task;

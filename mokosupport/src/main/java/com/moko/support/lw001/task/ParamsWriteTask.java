@@ -1192,7 +1192,7 @@ public class ParamsWriteTask extends OrderTask {
     }
 
     public void setMotionDetection(@IntRange(from = 10, to = 250) int threshold,
-                                   @IntRange(from = 1, to = 15) int time) {
+                                   @IntRange(from = 1, to = 50) int time) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,

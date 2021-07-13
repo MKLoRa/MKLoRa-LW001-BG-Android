@@ -48,7 +48,7 @@
         android:layout_below="@id/iv_logo"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="LW001-BG"
+        android:text="LW001-BG PRO"
         android:textColor="@color/lw001_grey_888888"
         android:textSize="20sp" />
 
@@ -70,7 +70,7 @@
         android:layout_below="@id/app_version"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:text="FW Version:V2.0"
+        android:text="FW Version:V1.0"
         android:textColor="@color/lw001_grey_a8a8a8"
         android:textSize="17sp" />
 

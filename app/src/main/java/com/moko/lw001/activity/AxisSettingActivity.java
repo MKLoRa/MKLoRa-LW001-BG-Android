@@ -266,7 +266,7 @@ public class AxisSettingActivity extends BaseActivity {
         if (TextUtils.isEmpty(motionDurationStr))
             return false;
         final int motionDuration = Integer.parseInt(motionDurationStr);
-        if (motionDuration < 1 || motionDuration > 15)
+        if (motionDuration < 1 || motionDuration > 50)
             return false;
         final String vibrationThresholdStr = etVibrationThresholds.getText().toString();
         if (TextUtils.isEmpty(vibrationThresholdStr))
