@@ -734,7 +734,6 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             orderTasks.add(OrderTaskAssembler.setLoraDevAddr(devAddr));
             orderTasks.add(OrderTaskAssembler.setLoraAppSKey(appSkey));
             orderTasks.add(OrderTaskAssembler.setLoraNwkSKey(nwkSkey));
-            orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
         } else {
             String devEui = etDevEui.getText().toString();
             String appEui = etAppEui.getText().toString();
@@ -754,8 +753,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             orderTasks.add(OrderTaskAssembler.setLoraDevEUI(devEui));
             orderTasks.add(OrderTaskAssembler.setLoraAppEUI(appEui));
             orderTasks.add(OrderTaskAssembler.setLoraAppKey(appKey));
-            orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
         }
+        orderTasks.add(OrderTaskAssembler.setLoraUploadMode(mSelectedMode + 1));
         orderTasks.add(OrderTaskAssembler.setLoraMessageType(mSelectedMessageType));
         savedParamsError = false;
         // 保存并连接

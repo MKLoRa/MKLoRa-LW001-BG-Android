@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name"><LW001></LW001>-BG PRO</string>
+    <string name="app_name">LW001-BG PRO</string>
 
     <string name="cancel">Cancel</string>
     <string name="ensure">OK</string>
@@ -26,7 +26,7 @@
     <string name="permission_storage_need_content">LW001 requires access to Location and Storage permission. If the permissions are not on, LW001 cannot be used normally.</string>
     <string name="location_need_title">Turn on Location permission</string>
     <string name="location_need_content">After that, LW001 could search and connect with the device</string>
-    <string name="permission_location_close_title">Location persission is not available</string>
+    <string name="permission_location_close_title">Location permission is not available</string>
     <string name="permission_location_close_content">Please find it in cellphone setting- permission, and allow LW001 use the Location and Storage permission</string>
     <string name="permission_location_need_title">Turn on Location permission</string>
     <string name="permission_location_need_content">After that, LW001 could search and connect with the device</string>
@@ -57,6 +57,6 @@
     <string name="indicator_settings">Indicator Settings</string>
     <string name="on_off">On/Off</string>
     <string name="device_information">Device Information</string>
-    <string name="low_power_prompt_tips">*When the battery is less than or equal to %s, the red LED will flashe once every 30 seconds.</string>
+    <string name="low_power_prompt_tips">*When the battery is less than or equal to %s, the green LED will flash once every 10 seconds.</string>
 
 </resources>
