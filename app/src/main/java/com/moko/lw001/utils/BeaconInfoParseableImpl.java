@@ -92,6 +92,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.measurePower = measurePower;
             advInfo.major = major;
             advInfo.minor = minor;
+            advInfo.connectable = result.isConnectable();
         } else {
             advInfo = new AdvInfo();
             advInfo.name = deviceInfo.name;
@@ -107,6 +108,7 @@ public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
             advInfo.measurePower = measurePower;
             advInfo.major = major;
             advInfo.minor = minor;
+            advInfo.connectable = result.isConnectable();
             advInfoHashMap.put(deviceInfo.mac, advInfo);
         }
 

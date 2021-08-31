@@ -47,7 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
-    private final String FILTER_ASCII = "[^ -~]";
+    private final String FILTER_ASCII = "[ -~]*";
     @BindView(R2.id.sb_rssi_filter)
     SeekBar sbRssiFilter;
     @BindView(R2.id.tv_rssi_filter_value)
@@ -127,7 +127,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
 
         sbRssiFilter.setOnSeekBarChangeListener(this);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
-            if ((source + "").matches(FILTER_ASCII)) {
+            if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
             }
 

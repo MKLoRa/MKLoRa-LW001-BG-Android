@@ -384,8 +384,6 @@ public class PosGpsFixActivity extends BaseActivity {
 
 
     private void saveParams() {
-        final String coldStartTimeoutStr = etColdStartTimeout.getText().toString();
-        final int coldStartTimeout = Integer.parseInt(coldStartTimeoutStr);
         final String coarseAccMaskStr = etCoarseAccMask.getText().toString();
         final int coarseAccMask = Integer.parseInt(coarseAccMaskStr);
         final String coarseTimeoutStr = etCoarseTimeout.getText().toString();
@@ -405,6 +403,8 @@ public class PosGpsFixActivity extends BaseActivity {
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         if (!BuildConfig.IS_LIBRARY) {
+            final String coldStartTimeoutStr = etColdStartTimeout.getText().toString();
+            final int coldStartTimeout = Integer.parseInt(coldStartTimeoutStr);
             orderTasks.add(OrderTaskAssembler.setGPSColdStartTimeout(coldStartTimeout));
         }
         orderTasks.add(OrderTaskAssembler.setGPSCoarseAccuracyMask(coarseAccMask));

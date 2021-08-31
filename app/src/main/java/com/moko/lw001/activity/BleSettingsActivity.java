@@ -382,8 +382,14 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
             });
             dialog.show(getSupportFragmentManager());
         } else {
-            mConnectableEnable = true;
-            ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+            AlertMessageDialog dialog = new AlertMessageDialog();
+            dialog.setTitle("Warning!");
+            dialog.setMessage("Are you sure to make the device connectable？");
+            dialog.setOnAlertConfirmListener(() -> {
+                mConnectableEnable = true;
+                ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+            });
+            dialog.show(getSupportFragmentManager());
         }
     }
 }

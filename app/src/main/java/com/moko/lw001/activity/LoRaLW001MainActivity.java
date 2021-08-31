@@ -332,8 +332,8 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
             LoRaLW001MokoSupport.getInstance().enableBluetooth();
             return;
         }
-        AdvInfo beaconInfo = (AdvInfo) adapter.getItem(position);
-        if (beaconInfo != null && !isFinishing()) {
+        AdvInfo advInfo = (AdvInfo) adapter.getItem(position);
+        if (advInfo.connectable && advInfo != null && !isFinishing()) {
             if (animation != null) {
                 mHandler.removeMessages(0);
                 mokoBleScanner.stopScanDevice();
@@ -355,7 +355,7 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
                         mokoBleScanner.stopScanDevice();
                     }
                     showLoadingProgressDialog();
-                    ivRefresh.postDelayed(() -> LoRaLW001MokoSupport.getInstance().connDevice(beaconInfo.mac), 500);
+                    ivRefresh.postDelayed(() -> LoRaLW001MokoSupport.getInstance().connDevice(advInfo.mac), 500);
                 }
 
                 @Override

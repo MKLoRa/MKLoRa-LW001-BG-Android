@@ -49,7 +49,7 @@ import butterknife.ButterKnife;
 public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeListener {
 
     public static final String UUID_PATTERN = "[A-Fa-f0-9]{8}-(?:[A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}";
-    private final String FILTER_ASCII = "[^ -~]";
+    private final String FILTER_ASCII = "[ -~]*";
     @BindView(R2.id.et_adv_name)
     EditText etAdvName;
     @BindView(R2.id.et_uuid)
@@ -128,7 +128,7 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
             }
         });
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
-            if ((source + "").matches(FILTER_ASCII)) {
+            if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
             }
 

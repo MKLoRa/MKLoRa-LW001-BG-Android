@@ -343,8 +343,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             dialog.show(getSupportFragmentManager());
         } else if (disConnectType == 4) {
             AlertMessageDialog dialog = new AlertMessageDialog();
-            dialog.setTitle("Factory Reset");
-            dialog.setMessage("Factory reset successfully!Please reconnect the device.");
+            dialog.setTitle("Reset Successfully");
+            dialog.setMessage("Reset successfully!Please reconnect the device.");
             dialog.setConfirm("OK");
             dialog.setCancelGone();
             dialog.setOnAlertConfirmListener(() -> {

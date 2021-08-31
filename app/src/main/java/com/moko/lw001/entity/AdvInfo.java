@@ -14,4 +14,5 @@ public class AdvInfo {
     public int major;
     public int minor;
     public int measurePower;
+    public boolean connectable;
 }
