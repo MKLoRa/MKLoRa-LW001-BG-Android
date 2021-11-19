@@ -134,7 +134,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Vibration Timeout"
+            android:text="Shock Timeout"
             android:textColor="@color/lw001_black_333333"
             android:textSize="15sp"
             android:textStyle="bold"

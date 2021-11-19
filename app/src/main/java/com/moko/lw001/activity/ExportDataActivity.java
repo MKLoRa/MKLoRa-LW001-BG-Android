@@ -409,6 +409,7 @@ public class ExportDataActivity extends BaseActivity {
         writeTrackedFile("");
         exportDatas.clear();
         adapter.replaceData(exportDatas);
+        tvSum.setText("Sum:N/A");
         tvCount.setText("Count:0");
         showSyncingProgressDialog();
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.readStorageData(time));
