@@ -347,6 +347,7 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
 
 
     private void saveParams() {
+        savedParamsError = false;
         final String advNameStr = etAdvName.getText().toString();
         final String uuidStr = etUuid.getText().toString();
         final String majorStr = etMajor.getText().toString();
