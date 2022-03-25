@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -24,7 +23,6 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.AppConstants;
-import com.moko.lw001.BuildConfig;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.adapter.ExportDataListAdapter;
@@ -118,13 +116,7 @@ public class ExportDataActivity extends BaseActivity {
         adapter.replaceData(exportDatas);
         rvExportData.setLayoutManager(new LinearLayoutManager(this));
         rvExportData.setAdapter(adapter);
-        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            // 优先保存到SD卡中
-            PATH_LOGCAT = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW001") + File.separator + TRACKED_FILE;
-        } else {
-            // 如果SD卡不存在，就保存到本应用的目录下
-            PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW001") + File.separator + TRACKED_FILE;
-        }
+        PATH_LOGCAT = LoRaLW001MainActivity.PATH_LOGCAT + File.separator + TRACKED_FILE;
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
