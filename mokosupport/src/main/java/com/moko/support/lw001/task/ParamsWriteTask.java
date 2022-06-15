@@ -105,6 +105,16 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
+    public void setOnOffMethod(@IntRange(from = 0, to = 1) int method) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_ON_OFF_METHOD.getParamsKey(),
+                (byte) 0x01,
+                (byte) method
+        };
+    }
+
     public void setHeartBeatInterval(@IntRange(from = 300, to = 86400) int interval) {
         byte[] intervalBytes = MokoUtils.toByteArray(interval, 4);
         data = new byte[]{

@@ -30,6 +30,8 @@ public class LoRaLW001MokoSupport extends MokoBleLib {
 
     private Context mContext;
 
+    private MokoBleConfig mBleConfig;
+
     private LoRaLW001MokoSupport() {
         //no instance
     }
@@ -52,8 +54,8 @@ public class LoRaLW001MokoSupport extends MokoBleLib {
 
     @Override
     public MokoBleManager getMokoBleManager() {
-        MokoBleConfig mokoSupportBleManager = new MokoBleConfig(mContext, this);
-        return mokoSupportBleManager;
+        mBleConfig = new MokoBleConfig(mContext, this);
+        return mBleConfig;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -133,6 +135,9 @@ public class LoRaLW001MokoSupport extends MokoBleLib {
         if (responseUUID.equals(OrderCHAR.CHAR_STORAGE_DATA_NOTIFY.getUuid())) {
             orderCHAR = OrderCHAR.CHAR_STORAGE_DATA_NOTIFY;
         }
+        if (responseUUID.equals(OrderCHAR.CHAR_LOG.getUuid())) {
+            orderCHAR = OrderCHAR.CHAR_LOG;
+        }
         if (orderCHAR == null)
             return false;
         XLog.i(orderCHAR.name());
@@ -150,4 +155,14 @@ public class LoRaLW001MokoSupport extends MokoBleLib {
     public StringBuilder storeString;
     public int startTime;
     public int sum;
+
+    public void enableLogNotify() {
+        if (mBleConfig != null)
+            mBleConfig.enableLogNotify();
+    }
+
+    public void disableLogNotify() {
+        if (mBleConfig != null)
+            mBleConfig.disableLogNotify();
+    }
 }

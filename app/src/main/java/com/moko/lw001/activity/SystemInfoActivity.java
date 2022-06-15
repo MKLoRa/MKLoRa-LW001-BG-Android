@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +24,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lw001.AppConstants;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -200,6 +202,42 @@ public class SystemInfoActivity extends BaseActivity {
         });
     }
 
+
+    public void onDebuggerMode(View view) {
+        if (isWindowLocked())
+            return;
+        Intent intent = new Intent(this, LogDataActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+        startActivity(intent);
+    }
+
+
+    // 记录上次页面控件点击时间,屏蔽无效点击事件
+    private long mLastOnClickTime = 0;
+
+    private int mTriggerSum;
+
+    private boolean isTriggerValid() {
+        long current = SystemClock.elapsedRealtime();
+        if (current - mLastOnClickTime > 500) {
+            mTriggerSum = 0;
+            mLastOnClickTime = current;
+            return false;
+        } else {
+            mTriggerSum++;
+            if (mTriggerSum == 2) {
+                mTriggerSum = 0;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    public void onTest(View view) {
+        if (isTriggerValid()) {
+            startActivity(new Intent(this, SelfTestActivity.class));
+        }
+    }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
 

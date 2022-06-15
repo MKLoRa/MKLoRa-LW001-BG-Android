@@ -32,6 +32,9 @@ public class ParamsReadTask extends OrderTask {
             case KEY_DEMAND_VERSION:
             case KEY_BATTERY_POWER:
             case KEY_CHIP_MAC:
+            case KEY_PCBA_STATUS:
+            case KEY_SELFTEST_STATUS:
+            case KEY_ON_OFF_METHOD:
 
             case KEY_PERIODIC_MODE_POS_STRATEGY:
             case KEY_PERIODIC_MODE_REPORT_INTERVAL:

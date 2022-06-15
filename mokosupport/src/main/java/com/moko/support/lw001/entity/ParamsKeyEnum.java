@@ -37,6 +37,12 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_BATTERY_POWER(0x11),
     // 芯片MAC
     KEY_CHIP_MAC(0x12),
+    // 产测标志
+    KEY_PCBA_STATUS(0x13),
+    // 自检故障
+    KEY_SELFTEST_STATUS(0x14),
+    // 磁簧开关开关机方式
+    KEY_ON_OFF_METHOD(0x15),
 
     // 定期模式定位策略
     KEY_PERIODIC_MODE_POS_STRATEGY(0x20),

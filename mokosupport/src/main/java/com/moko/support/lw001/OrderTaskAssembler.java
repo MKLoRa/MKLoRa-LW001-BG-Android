@@ -57,6 +57,24 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getPCBAStatus() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_PCBA_STATUS);
+        return task;
+    }
+
+    public static OrderTask getSelfTestStatus() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_SELFTEST_STATUS);
+        return task;
+    }
+
+    public static OrderTask getOnOffMethod() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_ON_OFF_METHOD);
+        return task;
+    }
+
     public static OrderTask getTimeZone() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_TIME_ZONE);
@@ -679,6 +697,12 @@ public class OrderTaskAssembler {
     public static OrderTask setPowerStatus(@IntRange(from = 0, to = 1) int status) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setPowerStatus(status);
+        return task;
+    }
+
+    public static OrderTask setOnOffMethod(@IntRange(from = 0, to = 1) int method) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setOnOffMethod(method);
         return task;
     }
 

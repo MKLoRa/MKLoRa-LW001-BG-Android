@@ -543,4 +543,19 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
         }
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        XLog.i("onNewIntent...");
+        setIntent(intent);
+        if (getIntent().getExtras() != null) {
+            String from = getIntent().getStringExtra(AppConstants.EXTRA_KEY_FROM_ACTIVITY);
+            if (LogDataActivity.TAG.equals(from)) {
+                if (animation == null) {
+                    startScan();
+                }
+            }
+        }
+    }
 }

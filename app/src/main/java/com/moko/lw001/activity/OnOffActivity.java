@@ -43,10 +43,14 @@ public class OnOffActivity extends BaseActivity {
     ImageView ivMagnet;
     @BindView(R2.id.tv_default_mode)
     TextView tvDefaultMode;
+    @BindView(R2.id.tv_on_off_method)
+    TextView tvOnOffMethod;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
     private int mSelected;
+    private ArrayList<String> mMethodValues;
+    private int mMethodSelected;
     private boolean mMagnetEnable;
 
     @Override
@@ -57,6 +61,9 @@ public class OnOffActivity extends BaseActivity {
         mValues = new ArrayList<>();
         mValues.add("OFF");
         mValues.add("Revert to last mode");
+        mMethodValues = new ArrayList<>();
+        mMethodValues.add("Multiple approaches");
+        mMethodValues.add("Continuous approach");
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -65,6 +72,7 @@ public class OnOffActivity extends BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.getOnOffMethod());
         orderTasks.add(OrderTaskAssembler.getReedSwitch());
         orderTasks.add(OrderTaskAssembler.getPowerStatus());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -113,12 +121,9 @@ public class OnOffActivity extends BaseActivity {
                                 // write
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
-                                    case KEY_REED_SWITCH:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
-                                        break;
                                     case KEY_POWER_STATUS:
+                                    case KEY_ON_OFF_METHOD:
+                                    case KEY_REED_SWITCH:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -137,6 +142,13 @@ public class OnOffActivity extends BaseActivity {
                             if (flag == 0x00) {
                                 // read
                                 switch (configKeyEnum) {
+                                    case KEY_ON_OFF_METHOD:
+                                        if (length > 0) {
+                                            int method = value[4] & 0xFF;
+                                            mMethodSelected = method;
+                                            tvOnOffMethod.setText(mMethodValues.get(mMethodSelected));
+                                        }
+                                        break;
                                     case KEY_REED_SWITCH:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
@@ -246,5 +258,20 @@ public class OnOffActivity extends BaseActivity {
         orderTasks.add(OrderTaskAssembler.setReedSwitch(mMagnetEnable ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.getReedSwitch());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+    }
+
+    public void selectOnOffMethod(View view) {
+        if (isWindowLocked())
+            return;
+        BottomDialog dialog = new BottomDialog();
+        dialog.setDatas(mMethodValues, mMethodSelected);
+        dialog.setListener(value -> {
+            mMethodSelected = value;
+            tvOnOffMethod.setText(mMethodValues.get(value));
+            savedParamsError = false;
+            showSyncingProgressDialog();
+            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setOnOffMethod(value));
+        });
+        dialog.show(getSupportFragmentManager());
     }
 }
