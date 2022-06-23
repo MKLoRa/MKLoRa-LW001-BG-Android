@@ -55,40 +55,51 @@
         android:padding="10dp">
 
 
-        <TextView
-            android:id="@+id/tv_on_off_method"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/lw001_shape_radius_blue_btn_bg"
-            android:clickable="true"
-            android:gravity="center"
-            android:minWidth="70dp"
-            android:onClick="selectOnOffMethod"
-            android:padding="12dp"
-            android:text="Multiple approaches"
-            android:textColor="@color/lw001_white_ffffff"
-            android:textSize="15sp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ON/Off Method"
-            android:textColor="@color/lw001_black_333333"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/tv_on_off_method"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tv_on_off_method" />
-
-        <View
-            style="@style/lw001_divider_line"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_on_off_method"
             android:layout_width="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:visibility="gone"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_on_off_method" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_on_off_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                android:clickable="true"
+                android:gravity="center"
+                android:minWidth="70dp"
+                android:onClick="selectOnOffMethod"
+                android:padding="12dp"
+                android:text="Multiple approaches"
+                android:textColor="@color/lw001_white_ffffff"
+                android:textSize="15sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ON/Off Method"
+                android:textColor="@color/lw001_black_333333"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/tv_on_off_method"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_on_off_method" />
+
+            <View
+                style="@style/lw001_divider_line"
+                android:layout_width="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_on_off_method" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="0dp"
@@ -106,13 +117,12 @@
             android:id="@+id/iv_magnet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:clickable="true"
             android:onClick="onMagnet"
             android:padding="6dp"
             android:src="@drawable/lw001_ic_unchecked"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_on_off_method" />
+            app:layout_constraintTop_toBottomOf="@id/cl_on_off_method" />
 
         <View
             style="@style/lw001_divider_line"

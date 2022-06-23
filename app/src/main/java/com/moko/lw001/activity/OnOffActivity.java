@@ -16,6 +16,7 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.lw001.AppConstants;
 import com.moko.lw001.R;
 import com.moko.lw001.R2;
 import com.moko.lw001.dialog.AlertMessageDialog;
@@ -34,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -45,6 +47,8 @@ public class OnOffActivity extends BaseActivity {
     TextView tvDefaultMode;
     @BindView(R2.id.tv_on_off_method)
     TextView tvOnOffMethod;
+    @BindView(R2.id.cl_on_off_method)
+    ConstraintLayout clOnOffMethod;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -58,6 +62,7 @@ public class OnOffActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lw001_activity_on_off_settings);
         ButterKnife.bind(this);
+        int mFirmwareCode = getIntent().getIntExtra(AppConstants.EXTRA_KEY_FIRMWARE_CODE, 0);
         mValues = new ArrayList<>();
         mValues.add("OFF");
         mValues.add("Revert to last mode");
@@ -72,7 +77,11 @@ public class OnOffActivity extends BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.getOnOffMethod());
+        if (mFirmwareCode >= 107) {
+            clOnOffMethod.setVisibility(View.VISIBLE);
+            orderTasks.add(OrderTaskAssembler.getOnOffMethod());
+        }
+        orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
         orderTasks.add(OrderTaskAssembler.getReedSwitch());
         orderTasks.add(OrderTaskAssembler.getPowerStatus());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

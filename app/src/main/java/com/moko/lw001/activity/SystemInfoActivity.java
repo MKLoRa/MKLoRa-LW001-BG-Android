@@ -71,9 +71,12 @@ public class SystemInfoActivity extends BaseActivity {
     TextView tvProductModel;
     @BindView(R2.id.tv_manufacture)
     TextView tvManufacture;
+    @BindView(R2.id.tv_debug)
+    TextView tvDebug;
     private boolean mReceiverTag = false;
     private String mDeviceMac;
     private String mDeviceName;
+    private int mFirmwareCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +144,10 @@ public class SystemInfoActivity extends BaseActivity {
                     case CHAR_FIRMWARE_REVISION:
                         String firmwareVersion = new String(value);
                         tvFirmwareVersion.setText(firmwareVersion);
+                        // 1.0.7及以上才有日志和PCBA测试功能
+                        String firmwareCodeStr = firmwareVersion.replaceAll("V", "").replaceAll("\\.", "");
+                        mFirmwareCode = Integer.parseInt(firmwareCodeStr);
+                        tvDebug.setVisibility(mFirmwareCode < 107 ? View.GONE : View.VISIBLE);
                         break;
                     case CHAR_HARDWARE_REVISION:
                         String hardwareVersion = new String(value);
@@ -234,6 +241,8 @@ public class SystemInfoActivity extends BaseActivity {
     }
 
     public void onTest(View view) {
+        if (mFirmwareCode < 107)
+            return;
         if (isTriggerValid()) {
             startActivity(new Intent(this, SelfTestActivity.class));
         }

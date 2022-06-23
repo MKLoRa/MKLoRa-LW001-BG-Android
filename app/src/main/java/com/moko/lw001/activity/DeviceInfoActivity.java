@@ -85,6 +85,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private int disConnectType;
 
     private boolean savedParamsError;
+    private int mFirmwareCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,6 +128,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             orderTasks.add(OrderTaskAssembler.getLoraRegion());
             orderTasks.add(OrderTaskAssembler.getLoraUploadMode());
             orderTasks.add(OrderTaskAssembler.getLoraNetworkStatus());
+            orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
             LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
         }
     }
@@ -214,6 +216,12 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 int responseType = response.responseType;
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
+                    case CHAR_FIRMWARE_REVISION:
+                        String firmwareVersion = new String(value);
+                        // 1.0.7及以上才有日志和PCBA测试功能
+                        String firmwareCodeStr = firmwareVersion.replaceAll("V", "").replaceAll("\\.", "");
+                        mFirmwareCode = Integer.parseInt(firmwareCodeStr);
+                        break;
                     case CHAR_PARAMS:
                         if (value.length >= 4) {
                             int header = value[0] & 0xFF;// 0xED
@@ -679,7 +687,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onOnOff(View view) {
         if (isWindowLocked())
             return;
-        startActivity(new Intent(this, OnOffActivity.class));
+        Intent intent = new Intent(this, OnOffActivity.class);
+        intent.putExtra(AppConstants.EXTRA_KEY_FIRMWARE_CODE, mFirmwareCode);
+        startActivity(intent);
     }
 
     public void selectLowPowerPrompt(View view) {
