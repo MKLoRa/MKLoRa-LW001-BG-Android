@@ -108,6 +108,8 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
             // 如果SD卡不存在，就保存到本应用的目录下
             PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW001");
         }
+        int gpsFixType = getIntent().getIntExtra("GPS_FIX_TYPE", 0);
+        SPUtiles.setIntValue(this, AppConstants.SP_KEY_GPS_FIX, gpsFixType);
         LoRaLW001MokoSupport.getInstance().init(getApplicationContext());
         mSavedPassword = SPUtiles.getStringValue(this, AppConstants.SP_KEY_SAVED_PASSWORD_LW001, "");
         beaconInfoHashMap = new ConcurrentHashMap<>();

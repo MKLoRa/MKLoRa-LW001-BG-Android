@@ -15,6 +15,7 @@ public class AppConstants {
 
     public static final String SP_KEY_DEVICE_ADDRESS = "sp_key_device_address";
     public static final String SP_KEY_SAVED_PASSWORD_LW001 = "SP_KEY_SAVED_PASSWORD_LW001";
+    public static final String SP_KEY_GPS_FIX = "SP_KEY_GPS_FIX";
     // extra_key
     // 设备列表\
     public static final String EXTRA_KEY_DEVICE_PARAM = "EXTRA_KEY_DEVICE_PARAM";

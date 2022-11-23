@@ -34,6 +34,7 @@ import com.moko.lw001.fragment.DeviceFragment;
 import com.moko.lw001.fragment.GeneralFragment;
 import com.moko.lw001.fragment.LoRaFragment;
 import com.moko.lw001.fragment.PositionFragment;
+import com.moko.lw001.utils.SPUtiles;
 import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
@@ -86,6 +87,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
 
     private boolean savedParamsError;
     private int mFirmwareCode;
+    private int mGPSFixType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         mRegions.add("IN865");
         mRegions.add("US915");
         mRegions.add("RU864");
+        mGPSFixType = SPUtiles.getIntValue(this, AppConstants.SP_KEY_GPS_FIX, 0);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -634,7 +637,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     public void onGPSFix(View view) {
         if (isWindowLocked())
             return;
-        Intent intent = new Intent(this, PosGpsFixActivity.class);
+        Intent intent;
+        if (mGPSFixType == 0)
+            intent = new Intent(this, PosGpsFixActivity.class);
+        else
+            intent = new Intent(this, PosGpsFixLActivity.class);
         startActivity(intent);
     }
 
