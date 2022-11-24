@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -19,8 +17,8 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.BuildConfig;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityMainBinding;
+import com.moko.lw001.databinding.Lw001ActivityPosGpsLBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -37,27 +35,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class PosGpsFixLActivity extends BaseActivity {
 
-    @BindView(R2.id.et_coarse_timeout)
-    EditText etCoarseTimeout;
-    @BindView(R2.id.et_pdop_limit)
-    EditText etPdopLimit;
-    @BindView(R2.id.et_time_budget)
-    EditText etTimeBudget;
-    @BindView(R2.id.cb_extreme_mode)
-    CheckBox cbExtremeMode;
+    private Lw001ActivityPosGpsLBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_pos_gps_l);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityPosGpsLBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -149,26 +137,26 @@ public class PosGpsFixLActivity extends BaseActivity {
                                         if (length > 0) {
                                             byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 6);
                                             int timeout = MokoUtils.toInt(timeoutBytes);
-                                            etCoarseTimeout.setText(String.valueOf(timeout));
+                                            mBind.etCoarseTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_GPS_PDOP_LIMIT:
                                         if (length > 0) {
                                             int limit = value[4] & 0xFF;
-                                            etPdopLimit.setText(String.valueOf(limit));
+                                            mBind.etPdopLimit.setText(String.valueOf(limit));
                                         }
                                         break;
                                     case KEY_GPS_TIME_BUDGET:
                                         if (length > 0) {
                                             byte[] budgetBytes = Arrays.copyOfRange(value, 4, 8);
                                             int budget = MokoUtils.toInt(budgetBytes);
-                                            etTimeBudget.setText(String.valueOf(budget));
+                                            mBind.etTimeBudget.setText(String.valueOf(budget));
                                         }
                                         break;
                                     case KEY_GPS_EXTREME_MODE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbExtremeMode.setChecked(enable == 1);
+                                            mBind.cbExtremeMode.setChecked(enable == 1);
                                         }
                                         break;
                                 }
@@ -192,21 +180,21 @@ public class PosGpsFixLActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String coarseTimeoutStr = etCoarseTimeout.getText().toString();
+        final String coarseTimeoutStr = mBind.etCoarseTimeout.getText().toString();
         if (TextUtils.isEmpty(coarseTimeoutStr))
             return false;
         final int coarseTimeout = Integer.parseInt(coarseTimeoutStr);
         if (coarseTimeout < 1 || coarseTimeout > 7620) {
             return false;
         }
-        final String pdopLimitStr = etPdopLimit.getText().toString();
+        final String pdopLimitStr = mBind.etPdopLimit.getText().toString();
         if (TextUtils.isEmpty(pdopLimitStr))
             return false;
         final int pdopLimit = Integer.parseInt(pdopLimitStr);
         if (pdopLimit < 25 || pdopLimit > 100) {
             return false;
         }
-        final String timeBudgetStr = etTimeBudget.getText().toString();
+        final String timeBudgetStr = mBind.etTimeBudget.getText().toString();
         if (TextUtils.isEmpty(timeBudgetStr))
             return false;
         final int timeBudget = Integer.parseInt(timeBudgetStr);
@@ -219,18 +207,18 @@ public class PosGpsFixLActivity extends BaseActivity {
 
 
     private void saveParams() {
-        final String coarseTimeoutStr = etCoarseTimeout.getText().toString();
+        final String coarseTimeoutStr = mBind.etCoarseTimeout.getText().toString();
         final int coarseTimeout = Integer.parseInt(coarseTimeoutStr);
-        final String pdopLimitStr = etPdopLimit.getText().toString();
+        final String pdopLimitStr = mBind.etPdopLimit.getText().toString();
         final int pdopLimit = Integer.parseInt(pdopLimitStr);
-        final String timeBudgetStr = etTimeBudget.getText().toString();
+        final String timeBudgetStr = mBind.etTimeBudget.getText().toString();
         final int timeBudget = Integer.parseInt(timeBudgetStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setGPSCoarseTimeout(coarseTimeout));
         orderTasks.add(OrderTaskAssembler.setGPSPDOPLimit(pdopLimit));
         orderTasks.add(OrderTaskAssembler.setGPSTimeBudget(timeBudget));
-        orderTasks.add(OrderTaskAssembler.setGPSExtremeMode(cbExtremeMode.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setGPSExtremeMode(mBind.cbExtremeMode.isChecked() ? 1 : 0));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 

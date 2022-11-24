@@ -8,15 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityDownlinkForPosBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -33,13 +31,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class DownlinkForPosActivity extends BaseActivity {
 
-    @BindView(R2.id.tv_downlink_pos_strategy)
-    TextView tvDownlinkPosStrategy;
+    private Lw001ActivityDownlinkForPosBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -49,8 +43,8 @@ public class DownlinkForPosActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_downlink_for_pos);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityDownlinkForPosBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("WIFI");
         mValues.add("BLE");
@@ -152,7 +146,7 @@ public class DownlinkForPosActivity extends BaseActivity {
                                             } else if (strategy == 7) {
                                                 mShowSelected = 6;
                                             }
-                                            tvDownlinkPosStrategy.setText(mValues.get(mShowSelected));
+                                            mBind.tvDownlinkPosStrategy.setText(mValues.get(mShowSelected));
                                         }
                                         break;
                                 }
@@ -247,7 +241,7 @@ public class DownlinkForPosActivity extends BaseActivity {
             } else if (value == 6) {
                 mSelected = 7;
             }
-            tvDownlinkPosStrategy.setText(mValues.get(value));
+            mBind.tvDownlinkPosStrategy.setText(mValues.get(value));
             savedParamsError = false;
             showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setDownLinkPosStrategy(mSelected));

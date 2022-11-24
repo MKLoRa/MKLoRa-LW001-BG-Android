@@ -7,21 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
 import com.moko.lw001.activity.DeviceInfoActivity;
+import com.moko.lw001.databinding.Lw001FragmentGeneralBinding;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class GeneralFragment extends Fragment {
     private static final String TAG = GeneralFragment.class.getSimpleName();
-    @BindView(R2.id.et_heartbeat_interval)
-    EditText etHeartbeatInterval;
+    private Lw001FragmentGeneralBinding mBind;
 
 
     private DeviceInfoActivity activity;
@@ -39,17 +33,17 @@ public class GeneralFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView: ");
-        View view = inflater.inflate(R.layout.lw001_fragment_general, container, false);
-        ButterKnife.bind(this, view);
+        mBind = Lw001FragmentGeneralBinding.inflate(inflater, container, false);
         activity = (DeviceInfoActivity) getActivity();
-        return view;
+        return mBind.getRoot();
     }
+
     public void setHeartbeatInterval(int interval) {
-        etHeartbeatInterval.setText(String.valueOf(interval));
+        mBind.etHeartbeatInterval.setText(String.valueOf(interval));
     }
 
     public boolean isValid() {
-        final String intervalStr = etHeartbeatInterval.getText().toString();
+        final String intervalStr = mBind.etHeartbeatInterval.getText().toString();
         if (TextUtils.isEmpty(intervalStr))
             return false;
         final int interval = Integer.parseInt(intervalStr);
@@ -60,7 +54,7 @@ public class GeneralFragment extends Fragment {
     }
 
     public void saveParams() {
-        final String intervalStr = etHeartbeatInterval.getText().toString();
+        final String intervalStr = mBind.etHeartbeatInterval.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setHeartBeatInterval(interval));
     }

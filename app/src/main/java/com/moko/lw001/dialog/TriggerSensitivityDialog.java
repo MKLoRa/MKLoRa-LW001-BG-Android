@@ -1,39 +1,42 @@
 package com.moko.lw001.dialog;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001DialogSensitivityBinding;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+public class TriggerSensitivityDialog extends BaseDialog<Lw001DialogSensitivityBinding> implements SeekBar.OnSeekBarChangeListener {
 
-public class TriggerSensitivityDialog extends BaseDialog<Integer> implements SeekBar.OnSeekBarChangeListener {
+    private Lw001DialogSensitivityBinding mBind;
 
-    @BindView(R2.id.sb_sensitivity)
-    SeekBar sbSensitivity;
-    @BindView(R2.id.tv_sensitivity_value)
-    TextView tvSensitivityValue;
+    private int sensitivity;
 
     public TriggerSensitivityDialog(Context context) {
         super(context);
     }
 
+
     @Override
-    protected int getLayoutResId() {
-        return R.layout.lw001_dialog_sensitivity;
+    protected Lw001DialogSensitivityBinding getViewBind() {
+        return Lw001DialogSensitivityBinding.inflate(getLayoutInflater());
     }
 
     @Override
-    protected void renderConvertView(View convertView, Integer sensitivity) {
+    protected void onCreate() {
         int progress = sensitivity;
         String value = String.valueOf(progress);
-        tvSensitivityValue.setText(value);
-        sbSensitivity.setProgress(progress);
-        sbSensitivity.setOnSeekBarChangeListener(this);
+        mBind.tvSensitivityValue.setText(value);
+        mBind.sbSensitivity.setProgress(progress);
+        mBind.sbSensitivity.setOnSeekBarChangeListener(this);
+        mBind.tvCancel.setOnClickListener(v -> {
+            dismiss();
+        });
+        mBind.tvEnsure.setOnClickListener(v -> {
+            int sensitivity = mBind.sbSensitivity.getProgress();
+            dismiss();
+            if (sensitivityListener != null)
+                sensitivityListener.onEnsure(sensitivity);
+        });
     }
 
     private SensitivityListener sensitivityListener;
@@ -45,7 +48,12 @@ public class TriggerSensitivityDialog extends BaseDialog<Integer> implements See
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         String value = String.valueOf(progress);
-        tvSensitivityValue.setText(value);
+        mBind.tvSensitivityValue.setText(value);
+    }
+
+
+    public void setData(int sensitivity) {
+        this.sensitivity = sensitivity;
     }
 
     @Override
@@ -61,19 +69,5 @@ public class TriggerSensitivityDialog extends BaseDialog<Integer> implements See
     public interface SensitivityListener {
 
         void onEnsure(int sensitivity);
-    }
-
-    @OnClick(R2.id.tv_cancel)
-    public void onCancel(View view) {
-        dismiss();
-    }
-
-    @OnClick(R2.id.tv_ensure)
-    public void onEnsure(View view) {
-        int progress = sbSensitivity.getProgress();
-        int sensitivity = progress;
-        dismiss();
-        if (sensitivityListener != null)
-            sensitivityListener.onEnsure(sensitivity);
     }
 }

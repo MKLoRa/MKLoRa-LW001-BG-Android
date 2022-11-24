@@ -12,10 +12,8 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -24,7 +22,8 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityAdvBinding;
+import com.moko.lw001.databinding.Lw001ActivityMainBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.entity.TxPowerEnum;
@@ -43,29 +42,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeListener {
 
     public static final String UUID_PATTERN = "[A-Fa-f0-9]{8}-(?:[A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}";
     private final String FILTER_ASCII = "[ -~]*";
-    @BindView(R2.id.et_adv_name)
-    EditText etAdvName;
-    @BindView(R2.id.et_uuid)
-    EditText etUuid;
-    @BindView(R2.id.et_major)
-    EditText etMajor;
-    @BindView(R2.id.et_minor)
-    EditText etMinor;
-    @BindView(R2.id.sb_rssi_1m)
-    SeekBar sbRssi1m;
-    @BindView(R2.id.tv_rssi_1m_value)
-    TextView tvRssi1mValue;
-    @BindView(R2.id.sb_tx_power)
-    SeekBar sbTxPower;
-    @BindView(R2.id.tv_tx_power_value)
-    TextView tvTxPowerValue;
+    private Lw001ActivityAdvBinding mBind;
 
     private Pattern pattern;
     private boolean mReceiverTag = false;
@@ -74,13 +55,13 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_adv);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityAdvBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
-        sbRssi1m.setOnSeekBarChangeListener(this);
-        sbTxPower.setOnSeekBarChangeListener(this);
+        mBind.sbRssi1m.setOnSeekBarChangeListener(this);
+        mBind.sbTxPower.setOnSeekBarChangeListener(this);
         pattern = Pattern.compile(UUID_PATTERN);
-        etUuid.addTextChangedListener(new TextWatcher() {
+        mBind.etUuid.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -97,23 +78,23 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
                 if (!pattern.matcher(input).matches()) {
                     if (input.length() == 9 && !input.endsWith("-")) {
                         String show = input.substring(0, 8) + "-" + input.substring(8, input.length());
-                        etUuid.setText(show);
-                        etUuid.setSelection(show.length());
+                        mBind.etUuid.setText(show);
+                        mBind.etUuid.setSelection(show.length());
                     }
                     if (input.length() == 14 && !input.endsWith("-")) {
                         String show = input.substring(0, 13) + "-" + input.substring(13, input.length());
-                        etUuid.setText(show);
-                        etUuid.setSelection(show.length());
+                        mBind.etUuid.setText(show);
+                        mBind.etUuid.setSelection(show.length());
                     }
                     if (input.length() == 19 && !input.endsWith("-")) {
                         String show = input.substring(0, 18) + "-" + input.substring(18, input.length());
-                        etUuid.setText(show);
-                        etUuid.setSelection(show.length());
+                        mBind.etUuid.setText(show);
+                        mBind.etUuid.setSelection(show.length());
                     }
                     if (input.length() == 24 && !input.endsWith("-")) {
                         String show = input.substring(0, 23) + "-" + input.substring(23, input.length());
-                        etUuid.setText(show);
-                        etUuid.setSelection(show.length());
+                        mBind.etUuid.setText(show);
+                        mBind.etUuid.setSelection(show.length());
                     }
                     if (input.length() == 32 && input.indexOf("-") < 0) {
                         StringBuilder stringBuilder = new StringBuilder(input);
@@ -121,8 +102,8 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
                         stringBuilder.insert(13, "-");
                         stringBuilder.insert(18, "-");
                         stringBuilder.insert(23, "-");
-                        etUuid.setText(stringBuilder.toString());
-                        etUuid.setSelection(stringBuilder.toString().length());
+                        mBind.etUuid.setText(stringBuilder.toString());
+                        mBind.etUuid.setSelection(stringBuilder.toString().length());
                     }
                 }
             }
@@ -134,7 +115,7 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
 
             return null;
         };
-        etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13), inputFilter});
+        mBind.etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13), inputFilter});
 
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -275,8 +256,8 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
     }
 
     private void setDeviceName(String deviceName) {
-        etAdvName.setText(deviceName);
-        etAdvName.setSelection(deviceName.length());
+        mBind.etAdvName.setText(deviceName);
+        mBind.etAdvName.setSelection(deviceName.length());
     }
 
     private void setUUID(String uuid) {
@@ -285,31 +266,31 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
         stringBuilder.insert(13, "-");
         stringBuilder.insert(18, "-");
         stringBuilder.insert(23, "-");
-        etUuid.setText(stringBuilder.toString());
+        mBind.etUuid.setText(stringBuilder.toString());
         int length = stringBuilder.toString().length();
-        etUuid.setSelection(length);
+        mBind.etUuid.setSelection(length);
     }
 
     private void setMajor(int major) {
-        etMajor.setText(String.valueOf(major));
-        etMajor.setSelection(String.valueOf(major).length());
+        mBind.etMajor.setText(String.valueOf(major));
+        mBind.etMajor.setSelection(String.valueOf(major).length());
     }
 
     private void setMinor(int minor) {
-        etMinor.setText(String.valueOf(minor));
-        etMinor.setSelection(String.valueOf(minor).length());
+        mBind.etMinor.setText(String.valueOf(minor));
+        mBind.etMinor.setSelection(String.valueOf(minor).length());
     }
 
     private void setMeasurePower(int rssi_1m) {
         int progress = rssi_1m + 127;
-        sbRssi1m.setProgress(progress);
-        tvRssi1mValue.setText(String.format("%ddBm", rssi_1m));
+        mBind.sbRssi1m.setProgress(progress);
+        mBind.tvRssi1mValue.setText(String.format("%ddBm", rssi_1m));
     }
 
     private void setTransmission(int txPower) {
         int progress = TxPowerEnum.fromTxPower(txPower).ordinal();
-        sbTxPower.setProgress(progress);
-        tvTxPowerValue.setText(String.format("%ddBm", txPower));
+        mBind.sbTxPower.setProgress(progress);
+        mBind.tvTxPowerValue.setText(String.format("%ddBm", txPower));
     }
 
     public void onSave(View view) {
@@ -324,10 +305,10 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
     }
 
     private boolean isValid() {
-        final String advNameStr = etAdvName.getText().toString();
-        final String uuidStr = etUuid.getText().toString();
-        final String majorStr = etMajor.getText().toString();
-        final String minorStr = etMinor.getText().toString();
+        final String advNameStr = mBind.etAdvName.getText().toString();
+        final String uuidStr = mBind.etUuid.getText().toString();
+        final String majorStr = mBind.etMajor.getText().toString();
+        final String minorStr = mBind.etMinor.getText().toString();
         if (TextUtils.isEmpty(advNameStr))
             return false;
         if (TextUtils.isEmpty(uuidStr) || uuidStr.length() != 36)
@@ -348,10 +329,10 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
 
     private void saveParams() {
         savedParamsError = false;
-        final String advNameStr = etAdvName.getText().toString();
-        final String uuidStr = etUuid.getText().toString();
-        final String majorStr = etMajor.getText().toString();
-        final String minorStr = etMinor.getText().toString();
+        final String advNameStr = mBind.etAdvName.getText().toString();
+        final String uuidStr = mBind.etUuid.getText().toString();
+        final String majorStr = mBind.etMajor.getText().toString();
+        final String minorStr = mBind.etMinor.getText().toString();
         List<OrderTask> orderTasks = new ArrayList<>();
 
         orderTasks.add(OrderTaskAssembler.setAdvName(advNameStr));
@@ -365,11 +346,11 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
         int minor = Integer.parseInt(minorStr);
         orderTasks.add(OrderTaskAssembler.setAdvMinor(minor));
 
-        int rssi1mProgress = sbRssi1m.getProgress();
+        int rssi1mProgress = mBind.sbRssi1m.getProgress();
         int rssi1m = rssi1mProgress - 127;
         orderTasks.add(OrderTaskAssembler.setAdvRSSI(rssi1m));
 
-        int txPowerProgress = sbTxPower.getProgress();
+        int txPowerProgress = mBind.sbTxPower.getProgress();
         int txPower = TxPowerEnum.fromOrdinal(txPowerProgress).getTxPower();
         orderTasks.add(OrderTaskAssembler.setAdvTxPower(txPower));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
@@ -431,13 +412,13 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
         int id = seekBar.getId();
         if (id == R.id.sb_rssi_1m) {
             int rssi_1m = progress - 127;
-            tvRssi1mValue.setText(String.format("%ddBm", rssi_1m));
+            mBind.tvRssi1mValue.setText(String.format("%ddBm", rssi_1m));
         } else if (id == R.id.sb_tx_power) {
             TxPowerEnum txPowerEnum = TxPowerEnum.fromOrdinal(progress);
             if (txPowerEnum == null)
                 return;
             int txPower = txPowerEnum.getTxPower();
-            tvTxPowerValue.setText(String.format("%ddBm", txPower));
+            mBind.tvTxPowerValue.setText(String.format("%ddBm", txPower));
         }
     }
 

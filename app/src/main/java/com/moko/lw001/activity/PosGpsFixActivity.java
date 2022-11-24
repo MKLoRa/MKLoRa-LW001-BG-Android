@@ -9,9 +9,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -20,8 +17,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.BuildConfig;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityPosGpsBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -39,41 +35,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class PosGpsFixActivity extends BaseActivity {
 
 
-    @BindView(R2.id.et_cold_start_timeout)
-    EditText etColdStartTimeout;
-    @BindView(R2.id.et_coarse_acc_mask)
-    EditText etCoarseAccMask;
-    @BindView(R2.id.et_coarse_timeout)
-    EditText etCoarseTimeout;
-    @BindView(R2.id.et_fine_acc_target)
-    EditText etFineAccTarget;
-    @BindView(R2.id.et_fine_timeout)
-    EditText etFineTimeout;
-    @BindView(R2.id.et_pdop_limit)
-    EditText etPdopLimit;
-    @BindView(R2.id.cb_autonomous_aiding)
-    CheckBox cbAutonomousAiding;
-    @BindView(R2.id.et_aiding_accuracy)
-    EditText etAidingAccuracy;
-    @BindView(R2.id.et_aiding_timeout)
-    EditText etAidingTimeout;
-    @BindView(R2.id.tv_fix_mode)
-    TextView tvFixMode;
-    @BindView(R2.id.tv_gps_model)
-    TextView tvGpsModel;
-    @BindView(R2.id.et_time_budget)
-    EditText etTimeBudget;
-    @BindView(R2.id.cb_extreme_mode)
-    CheckBox cbExtremeMode;
-    @BindView(R2.id.cl_cold_start_timeout)
-    ConstraintLayout clColdStartTimeout;
+    private Lw001ActivityPosGpsBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
@@ -85,8 +50,8 @@ public class PosGpsFixActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_pos_gps);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityPosGpsBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mFixModeValues = new ArrayList<>();
         mFixModeValues.add("2D");
         mFixModeValues.add("3D");
@@ -102,7 +67,7 @@ public class PosGpsFixActivity extends BaseActivity {
         mGPSModelValues.add("Airborne<4g");
         mGPSModelValues.add("Wrist");
         mGPSModelValues.add("Bike");
-        clColdStartTimeout.setVisibility(BuildConfig.IS_LIBRARY ? View.GONE : View.VISIBLE);
+        mBind.clColdStartTimeout.setVisibility(BuildConfig.IS_LIBRARY ? View.GONE : View.VISIBLE);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -210,86 +175,86 @@ public class PosGpsFixActivity extends BaseActivity {
                                     case KEY_GPS_COLD_START_TIMEOUT:
                                         if (length > 0) {
                                             int timeout = value[4] & 0xFF;
-                                            etColdStartTimeout.setText(String.valueOf(timeout));
+                                            mBind.etColdStartTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_GPS_COARSE_ACCURACY_MASK:
                                         if (length > 0) {
                                             int mask = value[4] & 0xFF;
-                                            etCoarseAccMask.setText(String.valueOf(mask));
+                                            mBind.etCoarseAccMask.setText(String.valueOf(mask));
                                         }
                                         break;
                                     case KEY_GPS_COARSE_TIMEOUT:
                                         if (length > 0) {
                                             byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 6);
                                             int timeout = MokoUtils.toInt(timeoutBytes);
-                                            etCoarseTimeout.setText(String.valueOf(timeout));
+                                            mBind.etCoarseTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_GPS_FINE_ACCURACY_MASK:
                                         if (length > 0) {
                                             int mask = value[4] & 0xFF;
-                                            etFineAccTarget.setText(String.valueOf(mask));
+                                            mBind.etFineAccTarget.setText(String.valueOf(mask));
                                         }
                                         break;
                                     case KEY_GPS_FINE_TIMEOUT:
                                         if (length > 0) {
                                             byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 8);
                                             int timeout = MokoUtils.toInt(timeoutBytes);
-                                            etFineTimeout.setText(String.valueOf(timeout));
+                                            mBind.etFineTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_GPS_PDOP_LIMIT:
                                         if (length > 0) {
                                             int limit = value[4] & 0xFF;
-                                            etPdopLimit.setText(String.valueOf(limit));
+                                            mBind.etPdopLimit.setText(String.valueOf(limit));
                                         }
                                         break;
                                     case KEY_GPS_AUTONOMOUS_AIDING:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbAutonomousAiding.setChecked(enable == 1);
+                                            mBind.cbAutonomousAiding.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_GPS_AIDING_ACCURACY:
                                         if (length > 0) {
                                             byte[] accBytes = Arrays.copyOfRange(value, 4, 6);
                                             int acc = MokoUtils.toInt(accBytes);
-                                            etAidingAccuracy.setText(String.valueOf(acc));
+                                            mBind.etAidingAccuracy.setText(String.valueOf(acc));
                                         }
                                         break;
                                     case KEY_GPS_AIDING_TIMEOUT:
                                         if (length > 0) {
                                             byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 6);
                                             int timeout = MokoUtils.toInt(timeoutBytes);
-                                            etAidingTimeout.setText(String.valueOf(timeout));
+                                            mBind.etAidingTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_GPS_FIX_MODE:
                                         if (length > 0) {
                                             int mode = value[4] & 0xFF;
                                             mFixModeSelected = mode;
-                                            tvFixMode.setText(mFixModeValues.get(mode));
+                                            mBind.tvFixMode.setText(mFixModeValues.get(mode));
                                         }
                                         break;
                                     case KEY_GPS_MODEL:
                                         if (length > 0) {
                                             int model = value[4] & 0xFF;
                                             mGPSModelSelected = model;
-                                            tvGpsModel.setText(mGPSModelValues.get(model));
+                                            mBind.tvGpsModel.setText(mGPSModelValues.get(model));
                                         }
                                         break;
                                     case KEY_GPS_TIME_BUDGET:
                                         if (length > 0) {
                                             byte[] budgetBytes = Arrays.copyOfRange(value, 4, 8);
                                             int budget = MokoUtils.toInt(budgetBytes);
-                                            etTimeBudget.setText(String.valueOf(budget));
+                                            mBind.etTimeBudget.setText(String.valueOf(budget));
                                         }
                                         break;
                                     case KEY_GPS_EXTREME_MODE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbExtremeMode.setChecked(enable == 1);
+                                            mBind.cbExtremeMode.setChecked(enable == 1);
                                         }
                                         break;
                                 }
@@ -314,7 +279,7 @@ public class PosGpsFixActivity extends BaseActivity {
 
     private boolean isValid() {
         if (!BuildConfig.IS_LIBRARY) {
-            final String coldStartTimeoutStr = etColdStartTimeout.getText().toString();
+            final String coldStartTimeoutStr = mBind.etColdStartTimeout.getText().toString();
             if (TextUtils.isEmpty(coldStartTimeoutStr))
                 return false;
             final int coldStartTimeout = Integer.parseInt(coldStartTimeoutStr);
@@ -322,56 +287,56 @@ public class PosGpsFixActivity extends BaseActivity {
                 return false;
             }
         }
-        final String coarseAccMaskStr = etCoarseAccMask.getText().toString();
+        final String coarseAccMaskStr = mBind.etCoarseAccMask.getText().toString();
         if (TextUtils.isEmpty(coarseAccMaskStr))
             return false;
         final int coarseAccMask = Integer.parseInt(coarseAccMaskStr);
         if (coarseAccMask < 5 || coarseAccMask > 100) {
             return false;
         }
-        final String coarseTimeoutStr = etCoarseTimeout.getText().toString();
+        final String coarseTimeoutStr = mBind.etCoarseTimeout.getText().toString();
         if (TextUtils.isEmpty(coarseTimeoutStr))
             return false;
         final int coarseTimeout = Integer.parseInt(coarseTimeoutStr);
         if (coarseTimeout < 1 || coarseTimeout > 7620) {
             return false;
         }
-        final String fineAccTargetStr = etFineAccTarget.getText().toString();
+        final String fineAccTargetStr = mBind.etFineAccTarget.getText().toString();
         if (TextUtils.isEmpty(fineAccTargetStr))
             return false;
         final int fineAccTarget = Integer.parseInt(fineAccTargetStr);
         if (fineAccTarget < 5 || fineAccTarget > 100) {
             return false;
         }
-        final String fineTimeoutStr = etFineTimeout.getText().toString();
+        final String fineTimeoutStr = mBind.etFineTimeout.getText().toString();
         if (TextUtils.isEmpty(fineTimeoutStr))
             return false;
         final int fineTimeout = Integer.parseInt(fineTimeoutStr);
         if (fineTimeout < 0 || fineTimeout > 76200) {
             return false;
         }
-        final String pdopLimitStr = etPdopLimit.getText().toString();
+        final String pdopLimitStr = mBind.etPdopLimit.getText().toString();
         if (TextUtils.isEmpty(pdopLimitStr))
             return false;
         final int pdopLimit = Integer.parseInt(pdopLimitStr);
         if (pdopLimit < 25 || pdopLimit > 100) {
             return false;
         }
-        final String aidingAccStr = etAidingAccuracy.getText().toString();
+        final String aidingAccStr = mBind.etAidingAccuracy.getText().toString();
         if (TextUtils.isEmpty(aidingAccStr))
             return false;
         final int aidingAcc = Integer.parseInt(aidingAccStr);
         if (aidingAcc < 5 || aidingAcc > 1000) {
             return false;
         }
-        final String aidingTimeoutStr = etAidingTimeout.getText().toString();
+        final String aidingTimeoutStr = mBind.etAidingTimeout.getText().toString();
         if (TextUtils.isEmpty(aidingTimeoutStr))
             return false;
         final int aidingTimeout = Integer.parseInt(aidingTimeoutStr);
         if (aidingTimeout < 1 || aidingTimeout > 7620) {
             return false;
         }
-        final String timeBudgetStr = etTimeBudget.getText().toString();
+        final String timeBudgetStr = mBind.etTimeBudget.getText().toString();
         if (TextUtils.isEmpty(timeBudgetStr))
             return false;
         final int timeBudget = Integer.parseInt(timeBudgetStr);
@@ -384,26 +349,26 @@ public class PosGpsFixActivity extends BaseActivity {
 
 
     private void saveParams() {
-        final String coarseAccMaskStr = etCoarseAccMask.getText().toString();
+        final String coarseAccMaskStr = mBind.etCoarseAccMask.getText().toString();
         final int coarseAccMask = Integer.parseInt(coarseAccMaskStr);
-        final String coarseTimeoutStr = etCoarseTimeout.getText().toString();
+        final String coarseTimeoutStr = mBind.etCoarseTimeout.getText().toString();
         final int coarseTimeout = Integer.parseInt(coarseTimeoutStr);
-        final String fineAccTargetStr = etFineAccTarget.getText().toString();
+        final String fineAccTargetStr = mBind.etFineAccTarget.getText().toString();
         final int fineAccTarget = Integer.parseInt(fineAccTargetStr);
-        final String fineTimeoutStr = etFineTimeout.getText().toString();
+        final String fineTimeoutStr = mBind.etFineTimeout.getText().toString();
         final int fineTimeout = Integer.parseInt(fineTimeoutStr);
-        final String pdopLimitStr = etPdopLimit.getText().toString();
+        final String pdopLimitStr = mBind.etPdopLimit.getText().toString();
         final int pdopLimit = Integer.parseInt(pdopLimitStr);
-        final String aidingAccStr = etAidingAccuracy.getText().toString();
+        final String aidingAccStr = mBind.etAidingAccuracy.getText().toString();
         final int aidingAcc = Integer.parseInt(aidingAccStr);
-        final String aidingTimeoutStr = etAidingTimeout.getText().toString();
+        final String aidingTimeoutStr = mBind.etAidingTimeout.getText().toString();
         final int aidingTimeout = Integer.parseInt(aidingTimeoutStr);
-        final String timeBudgetStr = etTimeBudget.getText().toString();
+        final String timeBudgetStr = mBind.etTimeBudget.getText().toString();
         final int timeBudget = Integer.parseInt(timeBudgetStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         if (!BuildConfig.IS_LIBRARY) {
-            final String coldStartTimeoutStr = etColdStartTimeout.getText().toString();
+            final String coldStartTimeoutStr = mBind.etColdStartTimeout.getText().toString();
             final int coldStartTimeout = Integer.parseInt(coldStartTimeoutStr);
             orderTasks.add(OrderTaskAssembler.setGPSColdStartTimeout(coldStartTimeout));
         }
@@ -412,13 +377,13 @@ public class PosGpsFixActivity extends BaseActivity {
         orderTasks.add(OrderTaskAssembler.setGPSFineAccuracyMask(fineAccTarget));
         orderTasks.add(OrderTaskAssembler.setGPSFineTimeout(fineTimeout));
         orderTasks.add(OrderTaskAssembler.setGPSPDOPLimit(pdopLimit));
-        orderTasks.add(OrderTaskAssembler.setGPSAutonomousAiding(cbAutonomousAiding.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setGPSAutonomousAiding(mBind.cbAutonomousAiding.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setGPSAidingAccuracy(aidingAcc));
         orderTasks.add(OrderTaskAssembler.setGPSAidingTimeout(aidingTimeout));
         orderTasks.add(OrderTaskAssembler.setGPSFixMode(mFixModeSelected));
         orderTasks.add(OrderTaskAssembler.setGPSModel(mGPSModelSelected));
         orderTasks.add(OrderTaskAssembler.setGPSTimeBudget(timeBudget));
-        orderTasks.add(OrderTaskAssembler.setGPSExtremeMode(cbExtremeMode.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setGPSExtremeMode(mBind.cbExtremeMode.isChecked() ? 1 : 0));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
@@ -489,7 +454,7 @@ public class PosGpsFixActivity extends BaseActivity {
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mFixModeValues, mFixModeSelected);
         dialog.setListener(value -> {
-            tvFixMode.setText(mFixModeValues.get(value));
+            mBind.tvFixMode.setText(mFixModeValues.get(value));
             mFixModeSelected = value;
         });
         dialog.show(getSupportFragmentManager());
@@ -501,7 +466,7 @@ public class PosGpsFixActivity extends BaseActivity {
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mGPSModelValues, mGPSModelSelected);
         dialog.setListener(value -> {
-            tvGpsModel.setText(mGPSModelValues.get(value));
+            mBind.tvGpsModel.setText(mGPSModelValues.get(value));
             mGPSModelSelected = value;
         });
         dialog.show(getSupportFragmentManager());

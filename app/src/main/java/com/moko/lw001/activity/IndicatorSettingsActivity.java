@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -16,8 +15,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityIndicatorSettingsBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -34,41 +32,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class IndicatorSettingsActivity extends BaseActivity {
 
-    @BindView(R2.id.cb_tamper)
-    CheckBox cbTamper;
-    @BindView(R2.id.cb_low_power)
-    CheckBox cbLowPower;
-    @BindView(R2.id.cb_wifi_fix)
-    CheckBox cbWifiFix;
-    @BindView(R2.id.cb_wifi_fix_success)
-    CheckBox cbWifiFixSuccess;
-    @BindView(R2.id.cb_wifi_fix_fail)
-    CheckBox cbWifiFixFail;
-    @BindView(R2.id.cb_ble_fix)
-    CheckBox cbBleFix;
-    @BindView(R2.id.cb_ble_fix_success)
-    CheckBox cbBleFixSuccess;
-    @BindView(R2.id.cb_ble_fix_fail)
-    CheckBox cbBleFixFail;
-    @BindView(R2.id.cb_gps_fix)
-    CheckBox cbGpsFix;
-    @BindView(R2.id.cb_gps_fix_success)
-    CheckBox cbGpsFixSuccess;
-    @BindView(R2.id.cb_gps_fix_fail)
-    CheckBox cbGpsFixFail;
+    private Lw001ActivityIndicatorSettingsBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_indicator_settings);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityIndicatorSettingsBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
 
         EventBus.getDefault().register(this);
         // 注册广播接收器
@@ -148,17 +122,17 @@ public class IndicatorSettingsActivity extends BaseActivity {
                                         if (length > 0) {
                                             byte[] indicatorBytes = Arrays.copyOfRange(value, 4, 4 + length);
                                             int indicator = MokoUtils.toInt(indicatorBytes);
-                                            cbTamper.setChecked((indicator & 1) == 1);
-                                            cbLowPower.setChecked((indicator & 2) == 2);
-                                            cbBleFix.setChecked((indicator & 4) == 4);
-                                            cbBleFixSuccess.setChecked((indicator & 8) == 8);
-                                            cbBleFixFail.setChecked((indicator & 16) == 16);
-                                            cbGpsFix.setChecked((indicator & 32) == 32);
-                                            cbGpsFixSuccess.setChecked((indicator & 64) == 64);
-                                            cbGpsFixFail.setChecked((indicator & 128) == 128);
-                                            cbWifiFix.setChecked((indicator & 256) == 256);
-                                            cbWifiFixSuccess.setChecked((indicator & 512) == 512);
-                                            cbWifiFixFail.setChecked((indicator & 1024) == 1024);
+                                            mBind.cbTamper.setChecked((indicator & 1) == 1);
+                                            mBind.cbLowPower.setChecked((indicator & 2) == 2);
+                                            mBind.cbBleFix.setChecked((indicator & 4) == 4);
+                                            mBind.cbBleFixSuccess.setChecked((indicator & 8) == 8);
+                                            mBind.cbBleFixFail.setChecked((indicator & 16) == 16);
+                                            mBind.cbGpsFix.setChecked((indicator & 32) == 32);
+                                            mBind.cbGpsFixSuccess.setChecked((indicator & 64) == 64);
+                                            mBind.cbGpsFixFail.setChecked((indicator & 128) == 128);
+                                            mBind.cbWifiFix.setChecked((indicator & 256) == 256);
+                                            mBind.cbWifiFixSuccess.setChecked((indicator & 512) == 512);
+                                            mBind.cbWifiFixFail.setChecked((indicator & 1024) == 1024);
                                         }
                                         break;
                                 }
@@ -234,17 +208,17 @@ public class IndicatorSettingsActivity extends BaseActivity {
     public void onSave(View view) {
         if (isWindowLocked())
             return;
-        int indicator = (cbTamper.isChecked() ? 1 : 0)
-                | (cbLowPower.isChecked() ? 2 : 0)
-                | (cbBleFix.isChecked() ? 4 : 0)
-                | (cbBleFixSuccess.isChecked() ? 8 : 0)
-                | (cbBleFixFail.isChecked() ? 16 : 0)
-                | (cbGpsFix.isChecked() ? 32 : 00)
-                | (cbGpsFixSuccess.isChecked() ? 64 : 0)
-                | (cbGpsFixFail.isChecked() ? 128 : 0)
-                | (cbWifiFix.isChecked() ? 256 : 0)
-                | (cbWifiFixSuccess.isChecked() ? 512 : 0)
-                | (cbWifiFixFail.isChecked() ? 1024 : 0);
+        int indicator = (mBind.cbTamper.isChecked() ? 1 : 0)
+                | (mBind.cbLowPower.isChecked() ? 2 : 0)
+                | (mBind.cbBleFix.isChecked() ? 4 : 0)
+                | (mBind.cbBleFixSuccess.isChecked() ? 8 : 0)
+                | (mBind.cbBleFixFail.isChecked() ? 16 : 0)
+                | (mBind.cbGpsFix.isChecked() ? 32 : 00)
+                | (mBind.cbGpsFixSuccess.isChecked() ? 64 : 0)
+                | (mBind.cbGpsFixFail.isChecked() ? 128 : 0)
+                | (mBind.cbWifiFix.isChecked() ? 256 : 0)
+                | (mBind.cbWifiFixSuccess.isChecked() ? 512 : 0)
+                | (mBind.cbWifiFixFail.isChecked() ? 1024 : 0);
         savedParamsError = false;
         showSyncingProgressDialog();
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setIndicatorLight(indicator));

@@ -8,14 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityDeviceModeBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -31,13 +29,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class DeviceModeActivity extends BaseActivity {
 
-    @BindView(R2.id.tv_device_mode)
-    TextView tvDeviceMode;
+    private Lw001ActivityDeviceModeBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -47,8 +41,8 @@ public class DeviceModeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_device_mode);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityDeviceModeBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("Standby Mode");
         mValues.add("Timing Mode");
@@ -139,7 +133,7 @@ public class DeviceModeActivity extends BaseActivity {
                                             } else if (mode == 4) {
                                                 mShowSelected = 3;
                                             }
-                                            tvDeviceMode.setText(mValues.get(mShowSelected));
+                                            mBind.tvDeviceMode.setText(mValues.get(mShowSelected));
                                         }
                                         break;
                                 }
@@ -228,7 +222,7 @@ public class DeviceModeActivity extends BaseActivity {
             } else if (value == 3) {
                 mSelected = 4;
             }
-            tvDeviceMode.setText(mValues.get(value));
+            mBind.tvDeviceMode.setText(mValues.get(value));
             savedParamsError = false;
             showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setWorkMode(mSelected));

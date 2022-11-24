@@ -9,15 +9,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityAppSettingBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -33,23 +31,17 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class LoRaAppSettingActivity extends BaseActivity {
 
-    @BindView(R2.id.et_sync_interval)
-    EditText etSyncInterval;
-    @BindView(R2.id.et_reconnect_interval)
-    EditText etReconnectInterval;
+    private Lw001ActivityAppSettingBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_app_setting);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityAppSettingBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -133,13 +125,13 @@ public class LoRaAppSettingActivity extends BaseActivity {
                                     case KEY_LORA_TIME_SYNC_INTERVAL:
                                         if (length > 0) {
                                             int interval = value[4] & 0xFF;
-                                            etSyncInterval.setText(String.valueOf(interval));
+                                            mBind.etSyncInterval.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_LORA_RECONNECT_INTERVAL:
                                         if (length > 0) {
                                             int interval = value[4] & 0xFF;
-                                            etReconnectInterval.setText(String.valueOf(interval));
+                                            mBind.etReconnectInterval.setText(String.valueOf(interval));
                                         }
                                         break;
                                 }
@@ -163,14 +155,14 @@ public class LoRaAppSettingActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String syncIntervalStr = etSyncInterval.getText().toString();
+        final String syncIntervalStr = mBind.etSyncInterval.getText().toString();
         if (TextUtils.isEmpty(syncIntervalStr))
             return false;
         final int syncInterval = Integer.parseInt(syncIntervalStr);
         if (syncInterval > 255) {
             return false;
         }
-        final String reconnectIntervalStr = etReconnectInterval.getText().toString();
+        final String reconnectIntervalStr = mBind.etReconnectInterval.getText().toString();
         if (TextUtils.isEmpty(reconnectIntervalStr))
             return false;
         final int reconnectInterval = Integer.parseInt(reconnectIntervalStr);
@@ -183,8 +175,8 @@ public class LoRaAppSettingActivity extends BaseActivity {
 
 
     private void saveParams() {
-        final String syncIntervalStr = etSyncInterval.getText().toString();
-        final String reconnectIntervalStr = etReconnectInterval.getText().toString();
+        final String syncIntervalStr = mBind.etSyncInterval.getText().toString();
+        final String reconnectIntervalStr = mBind.etReconnectInterval.getText().toString();
         final int syncInterval = Integer.parseInt(syncIntervalStr);
         final int reconnectInterval = Integer.parseInt(reconnectIntervalStr);
         savedParamsError = false;

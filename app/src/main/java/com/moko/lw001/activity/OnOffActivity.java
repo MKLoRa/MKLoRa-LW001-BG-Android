@@ -8,8 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -18,7 +16,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.AppConstants;
 import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityOnOffSettingsBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -35,20 +33,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class OnOffActivity extends BaseActivity {
 
-    @BindView(R2.id.iv_magnet)
-    ImageView ivMagnet;
-    @BindView(R2.id.tv_default_mode)
-    TextView tvDefaultMode;
-    @BindView(R2.id.tv_on_off_method)
-    TextView tvOnOffMethod;
-    @BindView(R2.id.cl_on_off_method)
-    ConstraintLayout clOnOffMethod;
+    private Lw001ActivityOnOffSettingsBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -60,8 +47,8 @@ public class OnOffActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_on_off_settings);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityOnOffSettingsBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         int mFirmwareCode = getIntent().getIntExtra(AppConstants.EXTRA_KEY_FIRMWARE_CODE, 0);
         mValues = new ArrayList<>();
         mValues.add("OFF");
@@ -78,7 +65,7 @@ public class OnOffActivity extends BaseActivity {
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         if (mFirmwareCode >= 107) {
-            clOnOffMethod.setVisibility(View.VISIBLE);
+            mBind.clOnOffMethod.setVisibility(View.VISIBLE);
             orderTasks.add(OrderTaskAssembler.getOnOffMethod());
         }
         orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
@@ -155,21 +142,21 @@ public class OnOffActivity extends BaseActivity {
                                         if (length > 0) {
                                             int method = value[4] & 0xFF;
                                             mMethodSelected = method;
-                                            tvOnOffMethod.setText(mMethodValues.get(mMethodSelected));
+                                            mBind.tvOnOffMethod.setText(mMethodValues.get(mMethodSelected));
                                         }
                                         break;
                                     case KEY_REED_SWITCH:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mMagnetEnable = enable == 1;
-                                            ivMagnet.setImageResource(mMagnetEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivMagnet.setImageResource(mMagnetEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                     case KEY_POWER_STATUS:
                                         if (length > 0) {
                                             int status = value[4] & 0xFF;
                                             mSelected = status;
-                                            tvDefaultMode.setText(mValues.get(status));
+                                            mBind.tvDefaultMode.setText(mValues.get(status));
                                         }
                                         break;
                                 }
@@ -249,7 +236,7 @@ public class OnOffActivity extends BaseActivity {
         dialog.setDatas(mValues, mSelected);
         dialog.setListener(value -> {
             mSelected = value;
-            tvDefaultMode.setText(mValues.get(value));
+            mBind.tvDefaultMode.setText(mValues.get(value));
             savedParamsError = false;
             showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setPowerStatus(value));
@@ -276,7 +263,7 @@ public class OnOffActivity extends BaseActivity {
         dialog.setDatas(mMethodValues, mMethodSelected);
         dialog.setListener(value -> {
             mMethodSelected = value;
-            tvOnOffMethod.setText(mMethodValues.get(value));
+            mBind.tvOnOffMethod.setText(mMethodValues.get(value));
             savedParamsError = false;
             showSyncingProgressDialog();
             LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setOnOffMethod(value));

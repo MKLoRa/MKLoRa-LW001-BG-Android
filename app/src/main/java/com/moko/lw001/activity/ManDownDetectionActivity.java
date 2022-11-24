@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -18,8 +16,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityMainBinding;
+import com.moko.lw001.databinding.Lw001ActivityManDownDetectionBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -36,23 +34,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class ManDownDetectionActivity extends BaseActivity {
 
-    @BindView(R2.id.cb_man_down_detection)
-    CheckBox cbManDownDetection;
-    @BindView(R2.id.et_idle_detection_timeout)
-    EditText etIdleDetectionTimeout;
+    private Lw001ActivityManDownDetectionBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_man_down_detection);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityManDownDetectionBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -137,14 +129,14 @@ public class ManDownDetectionActivity extends BaseActivity {
                                     case KEY_MAN_DOWN_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbManDownDetection.setChecked(enable == 1);
+                                            mBind.cbManDownDetection.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_MAN_DOWN_IDLE_TIMEOUT:
                                         if (length > 0) {
                                             byte[] timeoutBytes = Arrays.copyOfRange(value, 4, 4 + length);
                                             int timeout = MokoUtils.toInt(timeoutBytes);
-                                            etIdleDetectionTimeout.setText(String.valueOf(timeout));
+                                            mBind.etIdleDetectionTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                 }
@@ -229,7 +221,7 @@ public class ManDownDetectionActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String timeoutStr = etIdleDetectionTimeout.getText().toString();
+        final String timeoutStr = mBind.etIdleDetectionTimeout.getText().toString();
         if (TextUtils.isEmpty(timeoutStr))
             return false;
         final int timeout = Integer.parseInt(timeoutStr);
@@ -240,11 +232,11 @@ public class ManDownDetectionActivity extends BaseActivity {
     }
 
     private void saveParams() {
-        final String timeoutStr = etIdleDetectionTimeout.getText().toString();
+        final String timeoutStr = mBind.etIdleDetectionTimeout.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setManDownEnable(cbManDownDetection.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setManDownEnable(mBind.cbManDownDetection.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setManDownIdleTimeout(timeout));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }

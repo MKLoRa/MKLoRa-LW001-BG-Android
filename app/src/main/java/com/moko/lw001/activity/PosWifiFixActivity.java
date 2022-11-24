@@ -9,15 +9,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityPosWifiBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -33,23 +31,17 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class PosWifiFixActivity extends BaseActivity {
 
-    @BindView(R2.id.et_pos_timeout)
-    EditText etPosTimeout;
-    @BindView(R2.id.et_bssid_number)
-    EditText etBssidNumber;
+    private Lw001ActivityPosWifiBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_pos_wifi);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityPosWifiBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -133,13 +125,13 @@ public class PosWifiFixActivity extends BaseActivity {
                                     case KEY_WIFI_POS_NUMBER:
                                         if (length > 0) {
                                             int number = value[4] & 0xFF;
-                                            etPosTimeout.setText(String.valueOf(number));
+                                            mBind.etPosTimeout.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_WIFI_POS_BSSID_NUMBER:
                                         if (length > 0) {
                                             int number = value[4] & 0xFF;
-                                            etBssidNumber.setText(String.valueOf(number));
+                                            mBind.etBssidNumber.setText(String.valueOf(number));
                                         }
                                         break;
                                 }
@@ -163,14 +155,14 @@ public class PosWifiFixActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String posTimeoutStr = etPosTimeout.getText().toString();
+        final String posTimeoutStr = mBind.etPosTimeout.getText().toString();
         if (TextUtils.isEmpty(posTimeoutStr))
             return false;
         final int posTimeout = Integer.parseInt(posTimeoutStr);
         if (posTimeout < 1 || posTimeout > 5) {
             return false;
         }
-        final String numberStr = etBssidNumber.getText().toString();
+        final String numberStr = mBind.etBssidNumber.getText().toString();
         if (TextUtils.isEmpty(numberStr))
             return false;
         final int number = Integer.parseInt(numberStr);
@@ -183,8 +175,8 @@ public class PosWifiFixActivity extends BaseActivity {
 
 
     private void saveParams() {
-        final String posTimeoutStr = etPosTimeout.getText().toString();
-        final String numberStr = etBssidNumber.getText().toString();
+        final String posTimeoutStr = mBind.etPosTimeout.getText().toString();
+        final String numberStr = mBind.etBssidNumber.getText().toString();
         final int posTimeout = Integer.parseInt(posTimeoutStr);
         final int number = Integer.parseInt(numberStr);
         savedParamsError = false;

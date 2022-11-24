@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -18,8 +16,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.AppConstants;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityMainBinding;
+import com.moko.lw001.databinding.Lw001ActivityPosBleBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -37,22 +35,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class PosBleFixActivity extends BaseActivity {
 
 
-    @BindView(R2.id.et_pos_timeout)
-    EditText etPosTimeout;
-    @BindView(R2.id.et_mac_number)
-    EditText etMacNumber;
-    @BindView(R2.id.tv_condition_a)
-    TextView tvConditionA;
-    @BindView(R2.id.tv_condition_b)
-    TextView tvConditionB;
-    @BindView(R2.id.tv_relation)
-    TextView tvRelation;
+    private Lw001ActivityPosBleBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private boolean isFilterAEnable;
@@ -63,8 +50,8 @@ public class PosBleFixActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_pos_ble);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityPosBleBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("Or");
         mValues.add("And");
@@ -155,38 +142,38 @@ public class PosBleFixActivity extends BaseActivity {
                                     case KEY_BLE_POS_TIMEOUT:
                                         if (length > 0) {
                                             int number = value[4] & 0xFF;
-                                            etPosTimeout.setText(String.valueOf(number));
+                                            mBind.etPosTimeout.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_BLE_POS_MAC_NUMBER:
                                         if (length > 0) {
                                             int number = value[4] & 0xFF;
-                                            etMacNumber.setText(String.valueOf(number));
+                                            mBind.etMacNumber.setText(String.valueOf(number));
                                         }
                                         break;
                                     case KEY_FILTER_SWITCH_A:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            tvConditionA.setText(enable == 0 ? "OFF" : "ON");
+                                            mBind.tvConditionA.setText(enable == 0 ? "OFF" : "ON");
                                             isFilterAEnable = enable == 1;
                                         }
                                         break;
                                     case KEY_FILTER_SWITCH_B:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            tvConditionB.setText(enable == 0 ? "OFF" : "ON");
+                                            mBind.tvConditionB.setText(enable == 0 ? "OFF" : "ON");
                                             isFilterBEnable = enable == 1;
                                             if (isFilterAEnable && isFilterBEnable) {
-                                                tvRelation.setEnabled(true);
+                                                mBind.tvRelation.setEnabled(true);
                                             } else {
-                                                tvRelation.setEnabled(false);
+                                                mBind.tvRelation.setEnabled(false);
                                             }
                                         }
                                         break;
                                     case KEY_FILTER_A_B_RELATION:
                                         if (length == 1) {
                                             final int relation = value[4] & 0xFF;
-                                            tvRelation.setText(relation == 1 ? "And" : "Or");
+                                            mBind.tvRelation.setText(relation == 1 ? "And" : "Or");
                                             mSelected = relation;
                                         }
                                         break;
@@ -211,14 +198,14 @@ public class PosBleFixActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String posTimeoutStr = etPosTimeout.getText().toString();
+        final String posTimeoutStr = mBind.etPosTimeout.getText().toString();
         if (TextUtils.isEmpty(posTimeoutStr))
             return false;
         final int posTimeout = Integer.parseInt(posTimeoutStr);
         if (posTimeout < 1 || posTimeout > 10) {
             return false;
         }
-        final String numberStr = etMacNumber.getText().toString();
+        final String numberStr = mBind.etMacNumber.getText().toString();
         if (TextUtils.isEmpty(numberStr))
             return false;
         final int number = Integer.parseInt(numberStr);
@@ -231,8 +218,8 @@ public class PosBleFixActivity extends BaseActivity {
 
 
     private void saveParams() {
-        final String posTimeoutStr = etPosTimeout.getText().toString();
-        final String numberStr = etMacNumber.getText().toString();
+        final String posTimeoutStr = mBind.etPosTimeout.getText().toString();
+        final String numberStr = mBind.etMacNumber.getText().toString();
         final int posTimeout = Integer.parseInt(posTimeoutStr);
         final int number = Integer.parseInt(numberStr);
         savedParamsError = false;
@@ -312,7 +299,7 @@ public class PosBleFixActivity extends BaseActivity {
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mValues, mSelected);
         dialog.setListener(value -> {
-            tvRelation.setText(value == 1 ? "And" : "Or");
+            mBind.tvRelation.setText(value == 1 ? "And" : "Or");
             mSelected = value;
         });
         dialog.show(getSupportFragmentManager());
@@ -334,7 +321,7 @@ public class PosBleFixActivity extends BaseActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppConstants.REQUEST_CODE_FILTER) {
-            tvRelation.postDelayed(() -> {
+            mBind.tvRelation.postDelayed(() -> {
                 showSyncingProgressDialog();
                 List<OrderTask> orderTasks = new ArrayList<>();
                 orderTasks.add(OrderTaskAssembler.getFilterSwitchA());

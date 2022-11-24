@@ -11,12 +11,8 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -25,7 +21,7 @@ import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityFilterBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -43,73 +39,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
     private final String FILTER_ASCII = "[ -~]*";
-    @BindView(R2.id.sb_rssi_filter)
-    SeekBar sbRssiFilter;
-    @BindView(R2.id.tv_rssi_filter_value)
-    TextView tvRssiFilterValue;
-    @BindView(R2.id.tv_rssi_filter_tips)
-    TextView tvRssiFilterTips;
-    @BindView(R2.id.iv_mac_address)
-    ImageView ivMacAddress;
-    @BindView(R2.id.et_mac_address)
-    EditText etMacAddress;
-    @BindView(R2.id.iv_adv_name)
-    ImageView ivAdvName;
-    @BindView(R2.id.et_adv_name)
-    EditText etAdvName;
-    @BindView(R2.id.iv_ibeacon_major)
-    ImageView ivIbeaconMajor;
-    @BindView(R2.id.iv_ibeacon_minor)
-    ImageView ivIbeaconMinor;
-    @BindView(R2.id.iv_raw_adv_data)
-    ImageView ivRawAdvData;
-    @BindView(R2.id.et_ibeacon_major_min)
-    EditText etIbeaconMajorMin;
-    @BindView(R2.id.et_ibeacon_major_max)
-    EditText etIbeaconMajorMax;
-    @BindView(R2.id.ll_ibeacon_major)
-    LinearLayout llIbeaconMajor;
-    @BindView(R2.id.et_ibeacon_minor_min)
-    EditText etIbeaconMinorMin;
-    @BindView(R2.id.et_ibeacon_minor_max)
-    EditText etIbeaconMinorMax;
-    @BindView(R2.id.ll_ibeacon_minor)
-    LinearLayout llIbeaconMinor;
-    @BindView(R2.id.iv_raw_data_del)
-    ImageView ivRawDataDel;
-    @BindView(R2.id.iv_raw_data_add)
-    ImageView ivRawDataAdd;
-    @BindView(R2.id.ll_raw_data_filter)
-    LinearLayout llRawDataFilter;
-    @BindView(R2.id.tv_title)
-    TextView tvTitle;
-    @BindView(R2.id.cb_mac_address)
-    CheckBox cbMacAddress;
-    @BindView(R2.id.cb_adv_name)
-    CheckBox cbAdvName;
-    @BindView(R2.id.iv_ibeacon_uuid)
-    ImageView ivIbeaconUuid;
-    @BindView(R2.id.cb_ibeacon_uuid)
-    CheckBox cbIbeaconUuid;
-    @BindView(R2.id.et_ibeacon_uuid)
-    EditText etIbeaconUuid;
-    @BindView(R2.id.cb_ibeacon_major)
-    CheckBox cbIbeaconMajor;
-    @BindView(R2.id.cb_ibeacon_minor)
-    CheckBox cbIbeaconMinor;
-    @BindView(R2.id.cb_raw_adv_data)
-    CheckBox cbRawAdvData;
-    @BindView(R2.id.tv_condition)
-    TextView tvCondition;
-    @BindView(R2.id.iv_condition)
-    ImageView ivCondition;
-    @BindView(R2.id.tv_condition_tips)
-    TextView tvConditionTips;
+    private Lw001ActivityFilterBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
@@ -118,14 +50,14 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_filter);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityFilterBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
 
-        tvTitle.setText("Filter Condition A");
-        tvCondition.setText("Filter Condition A");
-        tvConditionTips.setText(getString(R.string.condition_tips, "A", "A"));
+        mBind.tvTitle.setText("Filter Condition A");
+        mBind.tvCondition.setText("Filter Condition A");
+        mBind.tvConditionTips.setText(getString(R.string.condition_tips, "A", "A"));
 
-        sbRssiFilter.setOnSeekBarChangeListener(this);
+        mBind.sbRssiFilter.setOnSeekBarChangeListener(this);
         InputFilter inputFilter = (source, start, end, dest, dstart, dend) -> {
             if (!(source + "").matches(FILTER_ASCII)) {
                 return "";
@@ -133,7 +65,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
 
             return null;
         };
-        etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(29), inputFilter});
+        mBind.etAdvName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(29), inputFilter});
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -232,30 +164,30 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length == 1) {
                                             final int enable = value[4] & 0xFF;
                                             filterSwitchEnable = enable == 1;
-                                            ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                     case KEY_FILTER_RSSI_A:
                                         if (length == 1) {
                                             final int rssi = value[4];
                                             int progress = rssi + 127;
-                                            sbRssiFilter.setProgress(progress);
-                                            tvRssiFilterValue.setText(String.format("%ddBm", rssi));
-                                            tvRssiFilterTips.setText(getString(R.string.rssi_filter, rssi));
+                                            mBind.sbRssiFilter.setProgress(progress);
+                                            mBind.tvRssiFilterValue.setText(String.format("%ddBm", rssi));
+                                            mBind.tvRssiFilterTips.setText(getString(R.string.rssi_filter, rssi));
                                         }
                                         break;
                                     case KEY_FILTER_MAC_A:
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMacEnable = enable > 0;
-                                            ivMacAddress.setImageResource(filterMacEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            etMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
-                                            cbMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
-                                            cbMacAddress.setChecked(enable > 1);
+                                            mBind.ivMacAddress.setImageResource(filterMacEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.etMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbMacAddress.setChecked(enable > 1);
                                             if (length > 1) {
                                                 byte[] macBytes = Arrays.copyOfRange(value, 5, 4 + length);
                                                 String filterMac = MokoUtils.bytesToHexString(macBytes).toUpperCase();
-                                                etMacAddress.setText(filterMac);
+                                                mBind.etMacAddress.setText(filterMac);
                                             }
                                         }
                                         break;
@@ -263,14 +195,14 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterNameEnable = enable > 0;
-                                            ivAdvName.setImageResource(filterNameEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            etAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
-                                            cbAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
-                                            cbAdvName.setChecked(enable > 1);
+                                            mBind.ivAdvName.setImageResource(filterNameEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.etAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbAdvName.setChecked(enable > 1);
                                             if (length > 1) {
                                                 byte[] nameBytes = Arrays.copyOfRange(value, 5, 4 + length);
                                                 String filterName = new String(nameBytes);
-                                                etAdvName.setText(filterName);
+                                                mBind.etAdvName.setText(filterName);
                                             }
                                         }
                                         break;
@@ -278,14 +210,14 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterUUIDEnable = enable > 0;
-                                            ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            etIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
-                                            cbIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
-                                            cbIbeaconUuid.setChecked(enable > 1);
+                                            mBind.ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.etIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbIbeaconUuid.setChecked(enable > 1);
                                             if (length > 1) {
                                                 byte[] uuidBytes = Arrays.copyOfRange(value, 5, 4 + length);
                                                 String filterUUID = MokoUtils.bytesToHexString(uuidBytes).toUpperCase();
-                                                etIbeaconUuid.setText(filterUUID);
+                                                mBind.etIbeaconUuid.setText(filterUUID);
                                             }
                                         }
                                         break;
@@ -293,17 +225,17 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMajorEnable = enable > 0;
-                                            ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            llIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
-                                            cbIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
-                                            cbIbeaconMajor.setChecked(enable > 1);
+                                            mBind.ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.llIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbIbeaconMajor.setChecked(enable > 1);
                                             if (length > 1) {
                                                 byte[] majorMinBytes = Arrays.copyOfRange(value, 5, 7);
                                                 int majorMin = MokoUtils.toInt(majorMinBytes);
-                                                etIbeaconMajorMin.setText(String.valueOf(majorMin));
+                                                mBind.etIbeaconMajorMin.setText(String.valueOf(majorMin));
                                                 byte[] majorMaxBytes = Arrays.copyOfRange(value, 7, 9);
                                                 int majorMax = MokoUtils.toInt(majorMaxBytes);
-                                                etIbeaconMajorMax.setText(String.valueOf(majorMax));
+                                                mBind.etIbeaconMajorMax.setText(String.valueOf(majorMax));
                                             }
                                         }
                                         break;
@@ -311,17 +243,17 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMinorEnable = enable > 0;
-                                            ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            llIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
-                                            cbIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
-                                            cbIbeaconMinor.setChecked(enable > 1);
+                                            mBind.ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.llIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbIbeaconMinor.setChecked(enable > 1);
                                             if (length > 1) {
                                                 byte[] minorMinBytes = Arrays.copyOfRange(value, 5, 7);
                                                 int minorMin = MokoUtils.toInt(minorMinBytes);
-                                                etIbeaconMinorMin.setText(String.valueOf(minorMin));
+                                                mBind.etIbeaconMinorMin.setText(String.valueOf(minorMin));
                                                 byte[] minorMaxBytes = Arrays.copyOfRange(value, 7, 9);
                                                 int minorMax = MokoUtils.toInt(minorMaxBytes);
-                                                etIbeaconMinorMax.setText(String.valueOf(minorMax));
+                                                mBind.etIbeaconMinorMax.setText(String.valueOf(minorMax));
                                             }
                                         }
                                         break;
@@ -329,16 +261,16 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterRawAdvDataEnable = enable > 0;
-                                            ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-                                            llRawDataFilter.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-                                            ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-                                            ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-                                            cbRawAdvData.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-                                            cbRawAdvData.setChecked(enable > 1);
+                                            mBind.ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.llRawDataFilter.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+                                            mBind.ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+                                            mBind.ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbRawAdvData.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+                                            mBind.cbRawAdvData.setChecked(enable > 1);
                                             if (length > 1) {
                                                 byte[] rawDataBytes = Arrays.copyOfRange(value, 5, 4 + length);
                                                 for (int i = 0, l = rawDataBytes.length; i < l; ) {
-                                                    View v = LayoutInflater.from(FilterOptionsAActivity.this).inflate(R.layout.lw001_item_raw_data_filter, llRawDataFilter, false);
+                                                    View v = LayoutInflater.from(FilterOptionsAActivity.this).inflate(R.layout.lw001_item_raw_data_filter, mBind.llRawDataFilter, false);
                                                     EditText etDataType = v.findViewById(R.id.et_data_type);
                                                     EditText etMin = v.findViewById(R.id.et_min);
                                                     EditText etMax = v.findViewById(R.id.et_max);
@@ -357,7 +289,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                                     etMin.setText(min);
                                                     etMax.setText(max);
                                                     etRawData.setText(data);
-                                                    llRawDataFilter.addView(v);
+                                                    mBind.llRawDataFilter.addView(v);
                                                 }
                                             }
                                         }
@@ -443,64 +375,64 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
 
     public void onMacAddress(View view) {
         filterMacEnable = !filterMacEnable;
-        ivMacAddress.setImageResource(filterMacEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        etMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
-        cbMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
+        mBind.ivMacAddress.setImageResource(filterMacEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.etMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
+        mBind.cbMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onAdvName(View view) {
         filterNameEnable = !filterNameEnable;
-        ivAdvName.setImageResource(filterNameEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        etAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
-        cbAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
+        mBind.ivAdvName.setImageResource(filterNameEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.etAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
+        mBind.cbAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
     }
 
     public void oniBeaconUUID(View view) {
         filterUUIDEnable = !filterUUIDEnable;
-        ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        etIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
-        cbIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
+        mBind.ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.etIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
+        mBind.cbIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
     }
 
     public void oniBeaconMajor(View view) {
         filterMajorEnable = !filterMajorEnable;
-        ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        llIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
-        cbIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
+        mBind.ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.llIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
+        mBind.cbIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
     }
 
     public void oniBeaconMinor(View view) {
         filterMinorEnable = !filterMinorEnable;
-        ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        llIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
-        cbIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
+        mBind.ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.llIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
+        mBind.cbIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onRawAdvData(View view) {
         filterRawAdvDataEnable = !filterRawAdvDataEnable;
-        ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
-        llRawDataFilter.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-        ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-        ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
-        cbRawAdvData.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+        mBind.ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.llRawDataFilter.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+        mBind.ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+        mBind.ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
+        mBind.cbRawAdvData.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onRawDataAdd(View view) {
         if (isWindowLocked())
             return;
-        int count = llRawDataFilter.getChildCount();
+        int count = mBind.llRawDataFilter.getChildCount();
         if (count > 4) {
             ToastUtils.showToast(this, "You can set up to 5 filters!");
             return;
         }
-        View v = LayoutInflater.from(this).inflate(R.layout.lw001_item_raw_data_filter, llRawDataFilter, false);
-        llRawDataFilter.addView(v);
+        View v = LayoutInflater.from(this).inflate(R.layout.lw001_item_raw_data_filter, mBind.llRawDataFilter, false);
+        mBind.llRawDataFilter.addView(v);
     }
 
     public void onRawDataDel(View view) {
         if (isWindowLocked())
             return;
-        final int c = llRawDataFilter.getChildCount();
+        final int c = mBind.llRawDataFilter.getChildCount();
         if (c == 0) {
             ToastUtils.showToast(this, "There are currently no filters to delete");
             return;
@@ -509,9 +441,9 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
         dialog.setTitle("Warning");
         dialog.setMessage("Please confirm whether to delete  a filter option，If yes，the last option will be deleted. ");
         dialog.setOnAlertConfirmListener(() -> {
-            int count = llRawDataFilter.getChildCount();
+            int count = mBind.llRawDataFilter.getChildCount();
             if (count > 0) {
-                llRawDataFilter.removeViewAt(count - 1);
+                mBind.llRawDataFilter.removeViewAt(count - 1);
             }
         });
         dialog.show(getSupportFragmentManager());
@@ -519,51 +451,51 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
 
     public void onCondition(View view) {
         filterSwitchEnable = !filterSwitchEnable;
-        ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
     }
 
 
     private void saveParams() {
-        final int progress = sbRssiFilter.getProgress();
+        final int progress = mBind.sbRssiFilter.getProgress();
         int filterRssi = progress - 127;
-        final String mac = etMacAddress.getText().toString();
-        final String name = etAdvName.getText().toString();
-        final String uuid = etIbeaconUuid.getText().toString();
-        final String majorMin = etIbeaconMajorMin.getText().toString();
-        final String majorMax = etIbeaconMajorMax.getText().toString();
-        final String minorMin = etIbeaconMinorMin.getText().toString();
-        final String minorMax = etIbeaconMinorMax.getText().toString();
+        final String mac = mBind.etMacAddress.getText().toString();
+        final String name = mBind.etAdvName.getText().toString();
+        final String uuid = mBind.etIbeaconUuid.getText().toString();
+        final String majorMin = mBind.etIbeaconMajorMin.getText().toString();
+        final String majorMax = mBind.etIbeaconMajorMax.getText().toString();
+        final String minorMin = mBind.etIbeaconMinorMin.getText().toString();
+        final String minorMax = mBind.etIbeaconMinorMax.getText().toString();
 
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setFilterRssiA(filterRssi));
-        orderTasks.add(OrderTaskAssembler.setFilterMacA(filterMacEnable ? mac : "", cbMacAddress.isChecked()));
-        orderTasks.add(OrderTaskAssembler.setFilterNameA(filterNameEnable ? name : "", cbAdvName.isChecked()));
-        orderTasks.add(OrderTaskAssembler.setFilterUUIDA(filterUUIDEnable ? uuid : "", cbIbeaconUuid.isChecked()));
+        orderTasks.add(OrderTaskAssembler.setFilterMacA(filterMacEnable ? mac : "", mBind.cbMacAddress.isChecked()));
+        orderTasks.add(OrderTaskAssembler.setFilterNameA(filterNameEnable ? name : "", mBind.cbAdvName.isChecked()));
+        orderTasks.add(OrderTaskAssembler.setFilterUUIDA(filterUUIDEnable ? uuid : "", mBind.cbIbeaconUuid.isChecked()));
         orderTasks.add(OrderTaskAssembler.setFilterMajorRangeA(
                 filterMajorEnable ? 1 : 0,
                 filterMajorEnable ? Integer.parseInt(majorMin) : 0,
                 filterMajorEnable ? Integer.parseInt(majorMax) : 0,
-                cbIbeaconMajor.isChecked()));
+                mBind.cbIbeaconMajor.isChecked()));
         orderTasks.add(OrderTaskAssembler.setFilterMinorRangeA(
                 filterMinorEnable ? 1 : 0,
                 filterMinorEnable ? Integer.parseInt(minorMin) : 0,
                 filterMinorEnable ? Integer.parseInt(minorMax) : 0,
-                cbIbeaconMinor.isChecked()));
+                mBind.cbIbeaconMinor.isChecked()));
         orderTasks.add(OrderTaskAssembler.setFilterRawDataA(filterRawAdvDataEnable ? filterRawDatas : null
-                , cbRawAdvData.isChecked()));
+                , mBind.cbRawAdvData.isChecked()));
         orderTasks.add(OrderTaskAssembler.setFilterSwitchA(filterSwitchEnable ? 1 : 0));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
     private boolean isValid() {
-        final String mac = etMacAddress.getText().toString();
-        final String name = etAdvName.getText().toString();
-        final String uuid = etIbeaconUuid.getText().toString();
-        final String majorMin = etIbeaconMajorMin.getText().toString();
-        final String majorMax = etIbeaconMajorMax.getText().toString();
-        final String minorMin = etIbeaconMinorMin.getText().toString();
-        final String minorMax = etIbeaconMinorMax.getText().toString();
+        final String mac = mBind.etMacAddress.getText().toString();
+        final String name = mBind.etAdvName.getText().toString();
+        final String uuid = mBind.etIbeaconUuid.getText().toString();
+        final String majorMin = mBind.etIbeaconMajorMin.getText().toString();
+        final String majorMax = mBind.etIbeaconMajorMax.getText().toString();
+        final String minorMin = mBind.etIbeaconMinorMin.getText().toString();
+        final String minorMax = mBind.etIbeaconMinorMax.getText().toString();
         if (filterMacEnable) {
             if (TextUtils.isEmpty(mac))
                 return false;
@@ -610,12 +542,12 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
         filterRawDatas = new ArrayList<>();
         if (filterRawAdvDataEnable) {
             // 发送设置的过滤RawData
-            int count = llRawDataFilter.getChildCount();
+            int count = mBind.llRawDataFilter.getChildCount();
             if (count == 0)
                 return false;
 
             for (int i = 0; i < count; i++) {
-                View v = llRawDataFilter.getChildAt(i);
+                View v = mBind.llRawDataFilter.getChildAt(i);
                 EditText etDataType = v.findViewById(R.id.et_data_type);
                 EditText etMin = v.findViewById(R.id.et_min);
                 EditText etMax = v.findViewById(R.id.et_max);
@@ -672,8 +604,8 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         int rssi = progress - 127;
-        tvRssiFilterValue.setText(String.format("%ddBm", rssi));
-        tvRssiFilterTips.setText(getString(R.string.rssi_filter, rssi));
+        mBind.tvRssiFilterValue.setText(String.format("%ddBm", rssi));
+        mBind.tvRssiFilterTips.setText(getString(R.string.rssi_filter, rssi));
     }
 
     @Override

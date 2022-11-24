@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
@@ -20,8 +19,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.R;
-import com.moko.lw001.R2;
 import com.moko.lw001.adapter.TimePointAdapter;
+import com.moko.lw001.databinding.Lw001ActivityTimingModeBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -42,15 +41,10 @@ import java.util.List;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter.OnItemChildClickListener {
 
-    @BindView(R2.id.tv_timing_pos_strategy)
-    TextView tvTimingPosStrategy;
-    @BindView(R2.id.rv_time_point)
-    RecyclerView rvTimePoint;
+    private Lw001ActivityTimingModeBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -64,8 +58,8 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_timing_mode);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityTimingModeBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("WIFI");
         mValues.add("BLE");
@@ -86,15 +80,15 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
         mAdapter = new TimePointAdapter(mTimePoints);
         ItemDragAndSwipeCallback itemDragAndSwipeCallback = new ItemDragAndSwipeCallback(mAdapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemDragAndSwipeCallback);
-        itemTouchHelper.attachToRecyclerView(rvTimePoint);
+        itemTouchHelper.attachToRecyclerView(mBind.rvTimePoint);
 
         // 开启滑动删除
         mAdapter.enableSwipeItem();
         mAdapter.setOnItemSwipeListener(onItemSwipeListener);
         mAdapter.setOnItemChildClickListener(this);
         mAdapter.openLoadAnimation();
-        rvTimePoint.setLayoutManager(new LinearLayoutManager(this));
-        rvTimePoint.setAdapter(mAdapter);
+        mBind.rvTimePoint.setLayoutManager(new LinearLayoutManager(this));
+        mBind.rvTimePoint.setAdapter(mAdapter);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -221,7 +215,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
                                             } else if (strategy == 7) {
                                                 mShowSelected = 6;
                                             }
-                                            tvTimingPosStrategy.setText(mValues.get(mShowSelected));
+                                            mBind.tvTimingPosStrategy.setText(mValues.get(mShowSelected));
                                         }
                                         break;
                                     case KEY_TIME_MODE_REPORT_TIME_POINT:
@@ -363,7 +357,7 @@ public class TimingModeActivity extends BaseActivity implements BaseQuickAdapter
             } else if (value == 6) {
                 mSelected = 7;
             }
-            tvTimingPosStrategy.setText(mValues.get(value));
+            mBind.tvTimingPosStrategy.setText(mValues.get(value));
         });
         dialog.show(getSupportFragmentManager());
     }

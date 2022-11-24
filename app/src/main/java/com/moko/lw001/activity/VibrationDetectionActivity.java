@@ -9,16 +9,13 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.EditText;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
-import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityVibrationDetectionBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -34,25 +31,17 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class VibrationDetectionActivity extends BaseActivity {
 
-    @BindView(R2.id.cb_vibration_detection)
-    CheckBox cbVibrationDetection;
-    @BindView(R2.id.et_vibration_report_interval)
-    EditText etVibrationReportInterval;
-    @BindView(R2.id.et_vibration_timeout)
-    EditText etVibrationTimeout;
+   private Lw001ActivityVibrationDetectionBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_vibration_detection);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityVibrationDetectionBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -138,19 +127,19 @@ public class VibrationDetectionActivity extends BaseActivity {
                                     case KEY_VIBRATION_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbVibrationDetection.setChecked(enable == 1);
+                                            mBind.cbVibrationDetection.setChecked(enable == 1);
                                         }
                                         break;
                                     case KEY_VIBRATION_REPORT_INTERVAL:
                                         if (length > 0) {
                                             int interval = value[4] & 0xFF;
-                                            etVibrationReportInterval.setText(String.valueOf(interval));
+                                            mBind.etVibrationReportInterval.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_VIBRATION_TIMEOUT:
                                         if (length > 0) {
                                             int timeout = value[4] & 0xFF;
-                                            etVibrationTimeout.setText(String.valueOf(timeout));
+                                            mBind.etVibrationTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                 }
@@ -235,13 +224,13 @@ public class VibrationDetectionActivity extends BaseActivity {
     }
 
     private boolean isValid() {
-        final String intervalStr = etVibrationReportInterval.getText().toString();
+        final String intervalStr = mBind.etVibrationReportInterval.getText().toString();
         if (TextUtils.isEmpty(intervalStr))
             return false;
         final int interval = Integer.parseInt(intervalStr);
         if (interval < 3 || interval > 255)
             return false;
-        final String timeoutStr = etVibrationTimeout.getText().toString();
+        final String timeoutStr = mBind.etVibrationTimeout.getText().toString();
         if (TextUtils.isEmpty(timeoutStr))
             return false;
         final int timeout = Integer.parseInt(timeoutStr);
@@ -252,13 +241,13 @@ public class VibrationDetectionActivity extends BaseActivity {
     }
 
     private void saveParams() {
-        final String intervalStr = etVibrationReportInterval.getText().toString();
+        final String intervalStr = mBind.etVibrationReportInterval.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
-        final String timeoutStr = etVibrationTimeout.getText().toString();
+        final String timeoutStr = mBind.etVibrationTimeout.getText().toString();
         final int timeout = Integer.parseInt(timeoutStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setVibrationEnable(cbVibrationDetection.isChecked() ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.setVibrationEnable(mBind.cbVibrationDetection.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setVibrationReportInterval(interval));
         orderTasks.add(OrderTaskAssembler.setVibrationTimeout(timeout));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));

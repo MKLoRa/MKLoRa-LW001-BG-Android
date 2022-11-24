@@ -9,11 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -21,7 +17,8 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityBleSettingsBinding;
+import com.moko.lw001.databinding.Lw001ActivityMainBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
@@ -38,26 +35,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class BleSettingsActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
-    @BindView(R2.id.cb_beacon_mode)
-    CheckBox cbBeaconMode;
-    @BindView(R2.id.iv_connectable)
-    ImageView ivConnectable;
-    @BindView(R2.id.et_adv_interval)
-    EditText etAdvInterval;
-    @BindView(R2.id.cl_beacon_mode_open)
-    ConstraintLayout clBeaconModeOpen;
-    @BindView(R2.id.et_adv_timeout)
-    EditText etAdvTimeout;
-    @BindView(R2.id.cl_beacon_mode_close)
-    ConstraintLayout clBeaconModeClose;
-    @BindView(R2.id.tv_scan_type)
-    TextView tvScanType;
+    private Lw001ActivityBleSettingsBinding mBind;;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private ArrayList<String> mValues;
@@ -68,14 +48,14 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_ble_settings);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityBleSettingsBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         mValues = new ArrayList<>();
         mValues.add("1M PHY(BLE 4.x)");
         mValues.add("1M PHY(BLE 5)");
         mValues.add("1M PHY(BLE 4.x+BLE 5)");
         mValues.add("Coded PHY(BLE 5)");
-        cbBeaconMode.setOnCheckedChangeListener(this);
+        mBind.cbBeaconMode.setOnCheckedChangeListener(this);
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -165,13 +145,13 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                                     case KEY_BEACON_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
-                                            cbBeaconMode.setChecked(enable == 1);
-                                            if (cbBeaconMode.isChecked()) {
-                                                clBeaconModeOpen.setVisibility(View.VISIBLE);
-                                                clBeaconModeClose.setVisibility(View.GONE);
+                                            mBind.cbBeaconMode.setChecked(enable == 1);
+                                            if (mBind.cbBeaconMode.isChecked()) {
+                                                mBind.clBeaconModeOpen.setVisibility(View.VISIBLE);
+                                                mBind.clBeaconModeClose.setVisibility(View.GONE);
                                             } else {
-                                                clBeaconModeOpen.setVisibility(View.GONE);
-                                                clBeaconModeClose.setVisibility(View.VISIBLE);
+                                                mBind.clBeaconModeOpen.setVisibility(View.GONE);
+                                                mBind.clBeaconModeClose.setVisibility(View.VISIBLE);
                                             }
                                         }
                                         break;
@@ -179,19 +159,19 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mConnectableEnable = enable == 1;
-                                            ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                     case KEY_ADV_INTERVAL:
                                         if (length > 0) {
                                             int interval = value[4] & 0xFF;
-                                            etAdvInterval.setText(String.valueOf(interval));
+                                            mBind.etAdvInterval.setText(String.valueOf(interval));
                                         }
                                         break;
                                     case KEY_ADV_TIMEOUT:
                                         if (length > 0) {
                                             int timeout = value[4] & 0xFF;
-                                            etAdvTimeout.setText(String.valueOf(timeout));
+                                            mBind.etAdvTimeout.setText(String.valueOf(timeout));
                                         }
                                         break;
                                     case KEY_SCAN_TYPE:
@@ -207,7 +187,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                                             } else if (type == 3) {
                                                 mShowSelected = 2;
                                             }
-                                            tvScanType.setText(mValues.get(mShowSelected));
+                                            mBind.tvScanType.setText(mValues.get(mShowSelected));
                                         }
                                         break;
                                 }
@@ -296,7 +276,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
             } else if (value == 3) {
                 mSelected = 2;
             }
-            tvScanType.setText(mValues.get(value));
+            mBind.tvScanType.setText(mValues.get(value));
         });
         dialog.show(getSupportFragmentManager());
     }
@@ -313,8 +293,8 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
     }
 
     private boolean isValid() {
-        if (cbBeaconMode.isChecked()) {
-            final String intervalStr = etAdvInterval.getText().toString();
+        if (mBind.cbBeaconMode.isChecked()) {
+            final String intervalStr = mBind.etAdvInterval.getText().toString();
             if (TextUtils.isEmpty(intervalStr))
                 return false;
             final int interval = Integer.parseInt(intervalStr);
@@ -322,7 +302,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                 return false;
             }
         } else {
-            final String timeoutStr = etAdvTimeout.getText().toString();
+            final String timeoutStr = mBind.etAdvTimeout.getText().toString();
             if (TextUtils.isEmpty(timeoutStr))
                 return false;
             final int timeout = Integer.parseInt(timeoutStr);
@@ -336,14 +316,14 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
 
 
     private void saveParams() {
-        final String intervalStr = etAdvInterval.getText().toString();
-        final String timeoutStr = etAdvTimeout.getText().toString();
+        final String intervalStr = mBind.etAdvInterval.getText().toString();
+        final String timeoutStr = mBind.etAdvTimeout.getText().toString();
         final int interval = Integer.parseInt(intervalStr);
         final int timeout = Integer.parseInt(timeoutStr);
         savedParamsError = false;
         List<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setBeaconEnable(cbBeaconMode.isChecked() ? 1 : 0));
-        if (cbBeaconMode.isChecked()) {
+        orderTasks.add(OrderTaskAssembler.setBeaconEnable(mBind.cbBeaconMode.isChecked() ? 1 : 0));
+        if (mBind.cbBeaconMode.isChecked()) {
             orderTasks.add(OrderTaskAssembler.setConnectable(mConnectableEnable ? 1 : 0));
             orderTasks.add(OrderTaskAssembler.setAdvInterval(interval));
         } else {
@@ -356,11 +336,11 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (isChecked) {
-            clBeaconModeOpen.setVisibility(View.VISIBLE);
-            clBeaconModeClose.setVisibility(View.GONE);
+            mBind.clBeaconModeOpen.setVisibility(View.VISIBLE);
+            mBind.clBeaconModeClose.setVisibility(View.GONE);
         } else {
-            clBeaconModeOpen.setVisibility(View.GONE);
-            clBeaconModeClose.setVisibility(View.VISIBLE);
+            mBind.clBeaconModeOpen.setVisibility(View.GONE);
+            mBind.clBeaconModeClose.setVisibility(View.VISIBLE);
         }
     }
 
@@ -377,7 +357,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
             dialog.setMessage("Are you sure to make the device unconnectable？");
             dialog.setOnAlertConfirmListener(() -> {
                 mConnectableEnable = false;
-                ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
 
             });
             dialog.show(getSupportFragmentManager());
@@ -387,7 +367,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
             dialog.setMessage("Are you sure to make the device connectable？");
             dialog.setOnAlertConfirmListener(() -> {
                 mConnectableEnable = true;
-                ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
             });
             dialog.show(getSupportFragmentManager());
         }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -16,7 +15,7 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.R;
-import com.moko.lw001.R2;
+import com.moko.lw001.databinding.Lw001ActivityAuxiliaryOperationBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.utils.ToastUtils;
@@ -31,13 +30,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 public class AuxiliaryOperationActivity extends BaseActivity {
 
-    @BindView(R2.id.iv_tamper_alarm)
-    ImageView ivTamperAlarm;
+    private Lw001ActivityAuxiliaryOperationBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
     private boolean mTamperAlarmEnable;
@@ -45,8 +40,8 @@ public class AuxiliaryOperationActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.lw001_activity_auxiliary_operation);
-        ButterKnife.bind(this);
+        mBind = Lw001ActivityAuxiliaryOperationBinding.inflate(getLayoutInflater());
+        setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -123,7 +118,7 @@ public class AuxiliaryOperationActivity extends BaseActivity {
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mTamperAlarmEnable = enable == 1;
-                                            ivTamperAlarm.setImageResource(mTamperAlarmEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivTamperAlarm.setImageResource(mTamperAlarmEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                 }
