@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RadioGroup;
 
@@ -430,7 +429,14 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 dialog.show(getSupportFragmentManager());
             }
             if (resultCode == RESULT_FIRST_USER) {
-                showDisconnectDialog();
+                String mac = data.getStringExtra(AppConstants.EXTRA_KEY_DEVICE_MAC);
+                mBind.frameContainer.postDelayed(() -> {
+                    if (LoRaLW001MokoSupport.getInstance().isConnDevice(mac)) {
+                        LoRaLW001MokoSupport.getInstance().disConnectBle();
+                        return;
+                    }
+                    showDisconnectDialog();
+                }, 500);
             }
         }
     }
@@ -461,6 +467,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     public void onBack(View view) {
+        if (isWindowLocked())
+            return;
         back();
     }
 
@@ -478,17 +486,16 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     }
 
     private void back() {
-        LoRaLW001MokoSupport.getInstance().disConnectBle();
-//        mIsClose = false;
+        mBind.frameContainer.postDelayed(() -> {
+            LoRaLW001MokoSupport.getInstance().disConnectBle();
+        }, 500);
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            back();
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+        if (isWindowLocked())
+            return;
+        back();
     }
 
     @Override

@@ -14,7 +14,6 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
@@ -90,7 +89,9 @@ public class SystemInfoActivity extends BaseActivity {
         runOnUiThread(() -> {
             if (MokoConstants.ACTION_DISCONNECTED.equals(action)) {
                 if (!isUpgrade) {
-                    setResult(RESULT_FIRST_USER);
+                    Intent intent = new Intent();
+                    intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+                    setResult(RESULT_FIRST_USER, intent);
                     finish();
                 }
             }
@@ -322,7 +323,9 @@ public class SystemInfoActivity extends BaseActivity {
         if (!isFinishing() && mDFUDialog != null && mDFUDialog.isShowing()) {
             mDFUDialog.dismiss();
         }
-        setResult(RESULT_FIRST_USER);
+        Intent intent = new Intent();
+        intent.putExtra(AppConstants.EXTRA_KEY_DEVICE_MAC, mDeviceMac);
+        setResult(RESULT_FIRST_USER, intent);
         finish();
     }
 
@@ -347,7 +350,7 @@ public class SystemInfoActivity extends BaseActivity {
             XLog.w("onDeviceConnecting...");
             mDeviceConnectCount++;
             if (mDeviceConnectCount > 3) {
-                Toast.makeText(SystemInfoActivity.this, "Error:DFU Failed", Toast.LENGTH_SHORT).show();
+                ToastUtils.showToast(SystemInfoActivity.this, "Error:DFU Failed");
                 dismissDFUProgressDialog();
                 final LocalBroadcastManager manager = LocalBroadcastManager.getInstance(SystemInfoActivity.this);
                 final Intent abortAction = new Intent(DfuService.BROADCAST_ACTION);
@@ -418,17 +421,17 @@ public class SystemInfoActivity extends BaseActivity {
                 if (TextUtils.isEmpty(firmwareFilePath))
                     return;
                 final File firmwareFile = new File(firmwareFilePath);
-                if (firmwareFile.exists()) {
-                    final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
-                            .setDeviceName(mDeviceName)
-                            .setKeepBond(false)
-                            .setDisableNotification(true);
-                    starter.setZip(null, firmwareFilePath);
-                    starter.start(this, DfuService.class);
-                    showDFUProgressDialog("Waiting...");
-                } else {
-                    Toast.makeText(this, "file is not exists!", Toast.LENGTH_SHORT).show();
+                if (!firmwareFile.exists() || !firmwareFilePath.toLowerCase().endsWith("zip") || firmwareFile.length() == 0) {
+                    ToastUtils.showToast(this, "File error!");
+                    return;
                 }
+                final DfuServiceInitiator starter = new DfuServiceInitiator(mDeviceMac)
+                        .setDeviceName(mDeviceName)
+                        .setKeepBond(false)
+                        .setDisableNotification(true);
+                starter.setZip(null, firmwareFilePath);
+                starter.start(this, DfuService.class);
+                showDFUProgressDialog("Waiting...");
             }
         }
     }
