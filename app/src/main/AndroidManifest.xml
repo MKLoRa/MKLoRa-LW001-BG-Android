@@ -140,6 +140,10 @@
             android:name="com.moko.lw001.activity.PosGpsFixLActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.moko.lw001.activity.BatteryConsumeActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

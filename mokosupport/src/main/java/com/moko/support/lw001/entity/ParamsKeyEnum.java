@@ -43,6 +43,22 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_SELFTEST_STATUS(0x14),
     // 磁簧开关开关机方式
     KEY_ON_OFF_METHOD(0x15),
+    // 电池信息清除
+    KEY_BATTERY_RESET(0x16),
+    // 当前周期电量消耗
+    KEY_BATTERY_INFO(0x17),
+    // 上已周期电量
+    KEY_BATTERY_INFO_LAST(0x18),
+    // 总周期
+    KEY_BATTERY_INFO_ALL(0x19),
+    // 低电触发心跳开关
+    KEY_LOW_POWER_PAYLOAD_ENABLE(0x1A),
+    // 低电百分比
+    KEY_LOW_POWER_PERCENT(0x1B),
+    // 电池电压百分比
+    KEY_BATTERY_VOLTAGE(0x1C),
+    // 电池电压百分比
+    KEY_AUTO_POWER_ON_ENABLE(0x1D),
 
     // 定期模式定位策略
     KEY_PERIODIC_MODE_POS_STRATEGY(0x20),

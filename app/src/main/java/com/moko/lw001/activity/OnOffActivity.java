@@ -19,7 +19,7 @@ import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityOnOffSettingsBinding;
 import com.moko.lw001.dialog.AlertMessageDialog;
 import com.moko.lw001.dialog.BottomDialog;
-import com.moko.lw001.dialog.LoadingMessageDialog;
+import com.moko.lw001.utils.SPUtiles;
 import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
@@ -43,6 +43,7 @@ public class OnOffActivity extends BaseActivity {
     private ArrayList<String> mMethodValues;
     private int mMethodSelected;
     private boolean mMagnetEnable;
+    private boolean mAutoPowerOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class OnOffActivity extends BaseActivity {
         mBind = Lw001ActivityOnOffSettingsBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         int mFirmwareCode = getIntent().getIntExtra(AppConstants.EXTRA_KEY_FIRMWARE_CODE, 0);
+        int deviceType = SPUtiles.getIntValue(this, AppConstants.SP_KEY_DEVICE_TYPE, 0);
         mValues = new ArrayList<>();
         mValues.add("OFF");
         mValues.add("Revert to last mode");
@@ -67,6 +69,10 @@ public class OnOffActivity extends BaseActivity {
         if (mFirmwareCode >= 107) {
             mBind.clOnOffMethod.setVisibility(View.VISIBLE);
             orderTasks.add(OrderTaskAssembler.getOnOffMethod());
+        }
+        if (deviceType == 0x21) {
+            mBind.clAutoPowerOn.setVisibility(View.VISIBLE);
+            orderTasks.add(OrderTaskAssembler.getAutoPowerOn());
         }
         orderTasks.add(OrderTaskAssembler.getFirmwareVersion());
         orderTasks.add(OrderTaskAssembler.getReedSwitch());
@@ -120,6 +126,7 @@ public class OnOffActivity extends BaseActivity {
                                     case KEY_POWER_STATUS:
                                     case KEY_ON_OFF_METHOD:
                                     case KEY_REED_SWITCH:
+                                    case KEY_AUTO_POWER_ON_ENABLE:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -150,6 +157,13 @@ public class OnOffActivity extends BaseActivity {
                                             int enable = value[4] & 0xFF;
                                             mMagnetEnable = enable == 1;
                                             mBind.ivMagnet.setImageResource(mMagnetEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                        }
+                                        break;
+                                    case KEY_AUTO_POWER_ON_ENABLE:
+                                        if (length > 0) {
+                                            int enable = value[4] & 0xFF;
+                                            mAutoPowerOn = enable == 1;
+                                            mBind.ivAutoPowerOn.setImageResource(mAutoPowerOn ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
                                         }
                                         break;
                                     case KEY_POWER_STATUS:
@@ -239,6 +253,18 @@ public class OnOffActivity extends BaseActivity {
         ArrayList<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.setReedSwitch(mMagnetEnable ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.getReedSwitch());
+        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+    }
+
+    public void onAutoPowerOn(View view) {
+        if (isWindowLocked())
+            return;
+        mAutoPowerOn = !mAutoPowerOn;
+        savedParamsError = false;
+        showSyncingProgressDialog();
+        ArrayList<OrderTask> orderTasks = new ArrayList<>();
+        orderTasks.add(OrderTaskAssembler.setAutoPowerOn(mAutoPowerOn ? 1 : 0));
+        orderTasks.add(OrderTaskAssembler.getAutoPowerOn());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 

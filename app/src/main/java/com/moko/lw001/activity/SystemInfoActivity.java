@@ -15,9 +15,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
-import androidx.annotation.Nullable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import com.elvishew.xlog.XLog;
 import com.moko.ble.lib.MokoConstants;
 import com.moko.ble.lib.event.ConnectStatusEvent;
@@ -27,9 +24,9 @@ import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.lw001.AppConstants;
 import com.moko.lw001.databinding.Lw001ActivitySystemInfoBinding;
-import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.lw001.service.DfuService;
 import com.moko.lw001.utils.FileUtils;
+import com.moko.lw001.utils.SPUtiles;
 import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
@@ -45,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import no.nordicsemi.android.dfu.DfuProgressListener;
 import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
 import no.nordicsemi.android.dfu.DfuServiceInitiator;
@@ -58,6 +57,7 @@ public class SystemInfoActivity extends BaseActivity {
     private String mDeviceMac;
     private String mDeviceName;
     private int mFirmwareCode;
+    private int mDeviceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,8 @@ public class SystemInfoActivity extends BaseActivity {
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
         mReceiverTag = true;
+        mDeviceType = SPUtiles.getIntValue(this, AppConstants.SP_KEY_DEVICE_TYPE, 0);
+        mBind.tvBatteryConsume.setVisibility(mDeviceType == 0 ? View.GONE : View.VISIBLE);
         showSyncingProgressDialog();
         List<OrderTask> orderTasks = new ArrayList<>();
         orderTasks.add(OrderTaskAssembler.getAdvName());
@@ -229,6 +231,13 @@ public class SystemInfoActivity extends BaseActivity {
         if (isTriggerValid()) {
             startActivity(new Intent(this, SelfTestActivity.class));
         }
+    }
+
+    public void onBatteryConsumeInfo(View view) {
+        if (isWindowLocked())
+            return;
+        Intent intent = new Intent(this, BatteryConsumeActivity.class);
+        startActivity(intent);
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {

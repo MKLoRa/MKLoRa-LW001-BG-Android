@@ -139,6 +139,16 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
+    public void setAutoPowerOn(@IntRange(from = 0, to = 1) int status) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_AUTO_POWER_ON_ENABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) status
+        };
+    }
+
     public void setShutdownInfoReport(@IntRange(from = 0, to = 1) int onoff) {
         data = new byte[]{
                 (byte) 0xED,
@@ -166,6 +176,26 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) ParamsKeyEnum.KEY_LOW_POWER.getParamsKey(),
                 (byte) 0x01,
                 (byte) status
+        };
+    }
+
+    public void setLowPowerEnable(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD_ENABLE.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
+    public void setLowPowerPercent(@IntRange(from = 0, to = 4) int percent) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_LOW_POWER_PERCENT.getParamsKey(),
+                (byte) 0x01,
+                (byte) percent
         };
     }
 
@@ -1345,6 +1375,15 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0xED,
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_CLEAR_STORAGE_DATA.getParamsKey(),
+                (byte) 0x00
+        };
+    }
+
+    public void setBatteryReset() {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_BATTERY_RESET.getParamsKey(),
                 (byte) 0x00
         };
     }

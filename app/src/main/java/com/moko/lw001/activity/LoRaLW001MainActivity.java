@@ -74,6 +74,8 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
 
     public static String PATH_LOGCAT;
 
+    private int mGPSFixType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,8 +93,8 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
             // 如果SD卡不存在，就保存到本应用的目录下
             PATH_LOGCAT = getFilesDir().getAbsolutePath() + File.separator + (BuildConfig.IS_LIBRARY ? "MKLoRa" : "LW001");
         }
-        int gpsFixType = getIntent().getIntExtra("GPS_FIX_TYPE", 0);
-        SPUtiles.setIntValue(this, AppConstants.SP_KEY_GPS_FIX, gpsFixType);
+        mGPSFixType = getIntent().getIntExtra("GPS_FIX_TYPE", 0);
+        SPUtiles.setIntValue(this, AppConstants.SP_KEY_GPS_FIX, mGPSFixType);
         LoRaLW001MokoSupport.getInstance().init(getApplicationContext());
         mSavedPassword = SPUtiles.getStringValue(this, AppConstants.SP_KEY_SAVED_PASSWORD_LW001, "");
         beaconInfoHashMap = new ConcurrentHashMap<>();
@@ -168,6 +170,7 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
         AdvInfo beaconInfo = beaconInfoParseable.parseDeviceInfo(deviceInfo);
         if (beaconInfo == null)
             return;
+        if (mGPSFixType == 0 && beaconInfo.deviceType == 0x21) return;
         beaconInfoHashMap.put(beaconInfo.mac, beaconInfo);
     }
 
@@ -340,6 +343,7 @@ public class LoRaLW001MainActivity extends BaseActivity implements MokoScanDevic
                 mHandler.removeMessages(0);
                 mokoBleScanner.stopScanDevice();
             }
+            SPUtiles.setIntValue(this, AppConstants.SP_KEY_DEVICE_TYPE, advInfo.deviceType);
             // show password
             final PasswordDialog dialog = new PasswordDialog(LoRaLW001MainActivity.this);
             dialog.setData(mSavedPassword);

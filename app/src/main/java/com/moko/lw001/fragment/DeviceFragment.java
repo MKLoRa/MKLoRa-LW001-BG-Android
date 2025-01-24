@@ -8,10 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.moko.ble.lib.task.OrderTask;
+import com.moko.lw001.AppConstants;
 import com.moko.lw001.R;
 import com.moko.lw001.activity.DeviceInfoActivity;
 import com.moko.lw001.databinding.Lw001FragmentDeviceBinding;
 import com.moko.lw001.dialog.BottomDialog;
+import com.moko.lw001.utils.SPUtiles;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 
@@ -56,8 +58,16 @@ public class DeviceFragment extends Fragment {
             }
         }
         mLowPowerPrompts = new ArrayList<>();
-        mLowPowerPrompts.add("5%");
-        mLowPowerPrompts.add("10%");
+        if (activity.mDeviceType != 0x21) {
+            mLowPowerPrompts.add("5%");
+            mLowPowerPrompts.add("10%");
+        } else {
+            mLowPowerPrompts.add("10%");
+            mLowPowerPrompts.add("20%");
+            mLowPowerPrompts.add("30%");
+            mLowPowerPrompts.add("40%");
+            mLowPowerPrompts.add("50%");
+        }
         return mBind.getRoot();
     }
 
@@ -91,7 +101,7 @@ public class DeviceFragment extends Fragment {
             mSelectedLowPowerPrompt = 0;
         }
         mBind.tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
-        mBind.tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
+        mBind.tvLowPowerPromptTips.setText(activity.getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
         if ((lowPower & 2) == 2) {
             mLowPowerPayloadEnable = true;
             mBind.ivLowPowerPayload.setImageResource(R.drawable.lw001_ic_checked);
@@ -101,16 +111,34 @@ public class DeviceFragment extends Fragment {
         }
     }
 
+    public void setLowPowerEnable(int enable) {
+        mLowPowerPayloadEnable = enable == 1;
+        mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+    }
+
+    public void setLowPowerPercent(int percent) {
+        mSelectedLowPowerPrompt = percent;
+        mBind.tvLowPowerPrompt.setText(mLowPowerPrompts.get(mSelectedLowPowerPrompt));
+        mBind.tvLowPowerPromptTips.setText(activity.getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
+    }
+
     public void showLowPowerDialog() {
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mLowPowerPrompts, mSelectedLowPowerPrompt);
         dialog.setListener(value -> {
             mSelectedLowPowerPrompt = value;
             mBind.tvLowPowerPrompt.setText(mLowPowerPrompts.get(value));
-            mBind.tvLowPowerPromptTips.setText(getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(value)));
-            int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
+            mBind.tvLowPowerPromptTips.setText(activity.getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(value)));
             activity.showSyncingProgressDialog();
-            LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setLowPower(lowPower));
+            if (activity.mDeviceType != 0x21) {
+                int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
+                LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.setLowPower(lowPower));
+            } else {
+                ArrayList<OrderTask> orderTasks = new ArrayList<>();
+                orderTasks.add(OrderTaskAssembler.setLowPowerPercent(mSelectedLowPowerPrompt));
+                orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
+                LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+            }
         });
         dialog.show(activity.getSupportFragmentManager());
 
@@ -128,10 +156,17 @@ public class DeviceFragment extends Fragment {
     public void changeLowPowerPayload() {
         mLowPowerPayloadEnable = !mLowPowerPayloadEnable;
         activity.showSyncingProgressDialog();
-        int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
-        ArrayList<OrderTask> orderTasks = new ArrayList<>();
-        orderTasks.add(OrderTaskAssembler.setLowPower(lowPower));
-        orderTasks.add(OrderTaskAssembler.getLowPower());
-        LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        if (activity.mDeviceType != 0x21) {
+            int lowPower = mSelectedLowPowerPrompt | (mLowPowerPayloadEnable ? 2 : 0);
+            ArrayList<OrderTask> orderTasks = new ArrayList<>();
+            orderTasks.add(OrderTaskAssembler.setLowPower(lowPower));
+            orderTasks.add(OrderTaskAssembler.getLowPower());
+            LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        } else {
+            ArrayList<OrderTask> orderTasks = new ArrayList<>();
+            orderTasks.add(OrderTaskAssembler.setLowPowerEnable(mLowPowerPayloadEnable ? 1 : 0));
+            orderTasks.add(OrderTaskAssembler.getLowPowerEnable());
+            LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
+        }
     }
 }

@@ -69,6 +69,30 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getBatteryInfo() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_BATTERY_INFO);
+        return task;
+    }
+
+    public static OrderTask getBatteryInfoAll() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_BATTERY_INFO_ALL);
+        return task;
+    }
+
+    public static OrderTask getBatteryInfoLast() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_BATTERY_INFO_LAST);
+        return task;
+    }
+
+    public static OrderTask setBatteryReset() {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setBatteryReset();
+        return task;
+    }
+
     public static OrderTask getOnOffMethod() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_ON_OFF_METHOD);
@@ -105,6 +129,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getAutoPowerOn() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_AUTO_POWER_ON_ENABLE);
+        return task;
+    }
+
     public static OrderTask getShutdownInfoReport() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_SHUTDOWN_INFO_REPORT);
@@ -120,6 +150,18 @@ public class OrderTaskAssembler {
     public static OrderTask getLowPower() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_LOW_POWER);
+        return task;
+    }
+
+    public static OrderTask getLowPowerEnable() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PAYLOAD_ENABLE);
+        return task;
+    }
+
+    public static OrderTask getLowPowerPercent() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_LOW_POWER_PERCENT);
         return task;
     }
 
@@ -718,6 +760,12 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask setAutoPowerOn(@IntRange(from = 0, to = 1) int status) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setAutoPowerOn(status);
+        return task;
+    }
+
     public static OrderTask setShutdownInfoReport(@IntRange(from = 0, to = 1) int onoff) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setShutdownInfoReport(onoff);
@@ -735,6 +783,19 @@ public class OrderTaskAssembler {
         task.setLowPower(status);
         return task;
     }
+
+    public static OrderTask setLowPowerEnable(@IntRange(from = 0, to = 1) int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLowPowerEnable(enable);
+        return task;
+    }
+
+    public static OrderTask setLowPowerPercent(@IntRange(from = 0, to = 4) int percent) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setLowPowerPercent(percent);
+        return task;
+    }
+
 
     public static OrderTask setIndicatorLight(@IntRange(from = 0, to = 65535) int status) {
         ParamsWriteTask task = new ParamsWriteTask();

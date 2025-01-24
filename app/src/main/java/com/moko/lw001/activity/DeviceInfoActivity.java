@@ -67,6 +67,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
     private int mFirmwareCode;
     private int mGPSFixType;
 
+    public int mDeviceType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +95,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         mRegions.add("US915");
         mRegions.add("RU864");
         mGPSFixType = SPUtiles.getIntValue(this, AppConstants.SP_KEY_GPS_FIX, 0);
+        mDeviceType = SPUtiles.getIntValue(this, AppConstants.SP_KEY_DEVICE_TYPE, 0);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -228,6 +231,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                     case KEY_TIME_ZONE:
                                     case KEY_SHUTDOWN_INFO_REPORT:
                                     case KEY_LOW_POWER:
+                                    case KEY_LOW_POWER_PAYLOAD_ENABLE:
+                                    case KEY_LOW_POWER_PERCENT:
                                         if (result != 1) {
                                             savedParamsError = true;
                                         }
@@ -296,6 +301,18 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                                         if (length > 0) {
                                             int lowPower = value[4] & 0xFF;
                                             deviceFragment.setLowPower(lowPower);
+                                        }
+                                        break;
+                                    case KEY_LOW_POWER_PAYLOAD_ENABLE:
+                                        if (length > 0) {
+                                            int lowPower = value[4] & 0xFF;
+                                            deviceFragment.setLowPowerEnable(lowPower);
+                                        }
+                                        break;
+                                    case KEY_LOW_POWER_PERCENT:
+                                        if (length > 0) {
+                                            int percent = value[4] & 0xFF;
+                                            deviceFragment.setLowPowerPercent(percent);
                                         }
                                         break;
                                 }
@@ -511,7 +528,12 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         // device
         orderTasks.add(OrderTaskAssembler.getTimeZone());
         orderTasks.add(OrderTaskAssembler.getShutdownInfoReport());
-        orderTasks.add(OrderTaskAssembler.getLowPower());
+        if (mDeviceType != 0x21) {
+            orderTasks.add(OrderTaskAssembler.getLowPower());
+        } else {
+            orderTasks.add(OrderTaskAssembler.getLowPowerEnable());
+            orderTasks.add(OrderTaskAssembler.getLowPowerPercent());
+        }
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
