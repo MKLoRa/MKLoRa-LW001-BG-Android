@@ -10,7 +10,6 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.lw001.databinding.Lw001ActivitySelftestBinding;
-import com.moko.lw001.dialog.LoadingMessageDialog;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;

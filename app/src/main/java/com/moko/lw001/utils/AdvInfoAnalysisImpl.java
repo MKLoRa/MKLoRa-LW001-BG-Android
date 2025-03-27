@@ -17,10 +17,10 @@ import java.util.Map;
 import no.nordicsemi.android.support.v18.scanner.ScanRecord;
 import no.nordicsemi.android.support.v18.scanner.ScanResult;
 
-public class BeaconInfoParseableImpl implements DeviceInfoParseable<AdvInfo> {
+public class AdvInfoAnalysisImpl implements DeviceInfoParseable<AdvInfo> {
     private HashMap<String, AdvInfo> advInfoHashMap;
 
-    public BeaconInfoParseableImpl() {
+    public AdvInfoAnalysisImpl() {
         this.advInfoHashMap = new HashMap<>();
     }
 

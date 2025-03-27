@@ -24,17 +24,18 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
-import com.moko.lw001.AppConstants;
+import com.moko.lib.loraiot.IoTDMConstants;
+import com.moko.lib.loraiot.Urls;
+import com.moko.lib.loraiot.dialog.LoginDialog;
+import com.moko.lib.loraiot.dialog.LogoutDialog;
+import com.moko.lib.loraiot.entity.CommonResp;
+import com.moko.lib.loraiot.entity.LoginEntity;
+import com.moko.lib.loraiot.utils.IoTDMSPUtils;
+import com.moko.lib.loraui.dialog.BottomDialog;
+import com.moko.lib.loraui.utils.ToastUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityConnSettingBinding;
-import com.moko.lw001.dialog.BottomDialog;
-import com.moko.lw001.dialog.LoginDialog;
-import com.moko.lw001.dialog.LogoutDialog;
-import com.moko.lw001.net.Urls;
-import com.moko.lw001.net.entity.CommonResp;
-import com.moko.lw001.net.entity.LoginEntity;
 import com.moko.lw001.utils.SPUtiles;
-import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
@@ -488,8 +489,8 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             initDutyCycle();
             if (mSelectedPlatform == 0) return;
             mBind.tvDevEUI.setText(String.format("DevEUI:%s", mRemoteDevEUI.toUpperCase()));
-            mAccount = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_ACCOUNT, "");
-            mPassword = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_PASSWORD, "");
+            mAccount = SPUtiles.getStringValue(this, IoTDMConstants.SP_LOGIN_ACCOUNT, "");
+            mPassword = SPUtiles.getStringValue(this, IoTDMConstants.SP_LOGIN_PASSWORD, "");
             if (TextUtils.isEmpty(mAccount))
                 mBind.llAccount.setVisibility(View.GONE);
             else
@@ -800,7 +801,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         LogoutDialog dialog = new LogoutDialog();
         dialog.setOnLogoutClicked(() -> {
             mPassword = "";
-            SPUtiles.setStringValue(this, AppConstants.SP_LOGIN_PASSWORD, "");
+            SPUtiles.setStringValue(this, IoTDMConstants.SP_LOGIN_PASSWORD, "");
             mBind.llAccount.setVisibility(View.GONE);
         });
         dialog.show(getSupportFragmentManager());
@@ -815,9 +816,9 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
             }
         }
         // 登录
-        mAccount = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_ACCOUNT, "");
-        mPassword = SPUtiles.getStringValue(this, AppConstants.SP_LOGIN_PASSWORD, "");
-        int env = SPUtiles.getIntValue(this, AppConstants.SP_LOGIN_ENV, 0);
+        mAccount = SPUtiles.getStringValue(this, IoTDMConstants.SP_LOGIN_ACCOUNT, "");
+        mPassword = SPUtiles.getStringValue(this, IoTDMConstants.SP_LOGIN_PASSWORD, "");
+        int env = SPUtiles.getIntValue(this, IoTDMConstants.SP_LOGIN_ENV, 0);
         if (TextUtils.isEmpty(mAccount) || TextUtils.isEmpty(mPassword)) {
             LoginDialog dialog = new LoginDialog();
             dialog.setOnLoginClicked(this::login);
@@ -981,9 +982,9 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
                             return;
                         }
                         mAccount = account;
-                        SPUtiles.setStringValue(LoRaConnSettingActivity.this, AppConstants.SP_LOGIN_ACCOUNT, account);
-                        SPUtiles.setStringValue(LoRaConnSettingActivity.this, AppConstants.SP_LOGIN_PASSWORD, password);
-                        SPUtiles.setIntValue(LoRaConnSettingActivity.this, AppConstants.SP_LOGIN_ENV, envValue);
+                        IoTDMSPUtils.setStringValue(LoRaConnSettingActivity.this, IoTDMConstants.SP_LOGIN_ACCOUNT, account);
+                        IoTDMSPUtils.setStringValue(LoRaConnSettingActivity.this, IoTDMConstants.SP_LOGIN_PASSWORD, password);
+                        IoTDMSPUtils.setIntValue(LoRaConnSettingActivity.this, IoTDMConstants.SP_LOGIN_ENV, envValue);
                         // add header
                         String accessToken = commonResp.data.get("access_token").getAsString();
                         HttpHeaders headers = new HttpHeaders();

@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lw001_grey_ebebeb"
+    android:background="@color/grey_ebebeb"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw001_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:drawableLeft="@drawable/lw001_ic_back"
+            android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:text=""
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Battery Consumption Information"
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -49,7 +49,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -58,7 +58,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text="Current Cycle Battery Information:"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -77,7 +77,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -86,7 +86,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -95,7 +95,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -104,7 +104,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -113,7 +113,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -122,7 +122,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -131,7 +131,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -140,7 +140,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -149,7 +149,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -158,7 +158,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -167,14 +167,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Battery Reset"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/tv_battery_reset"
@@ -185,14 +185,14 @@
                     android:id="@+id/tv_battery_reset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
                     android:clickable="true"
                     android:gravity="center"
                     android:minWidth="70dp"
                     android:onClick="onBatteryReset"
                     android:padding="12dp"
                     android:text="Reset"
-                    android:textColor="@color/lw001_white_ffffff"
+                    android:textColor="@color/white_ffffff"
                     android:textSize="15sp"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -203,7 +203,7 @@
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:text="@string/battery_reset_tips"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="12sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
@@ -214,7 +214,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -223,7 +223,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text="All Cycles Battery Information:"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -233,7 +233,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -242,7 +242,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -251,7 +251,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -260,7 +260,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -269,7 +269,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -278,7 +278,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -287,7 +287,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -296,7 +296,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -305,7 +305,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -314,7 +314,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -323,7 +323,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
             </LinearLayout>
 
@@ -331,7 +331,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -340,7 +340,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text="Last Cycles Battery Information:"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -350,7 +350,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -359,7 +359,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -368,7 +368,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -377,7 +377,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -386,7 +386,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -395,7 +395,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -404,7 +404,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -413,7 +413,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -422,7 +422,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -431,7 +431,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
 
                 <TextView
@@ -440,7 +440,7 @@
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
                     android:text=""
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="13sp" />
             </LinearLayout>
         </LinearLayout>

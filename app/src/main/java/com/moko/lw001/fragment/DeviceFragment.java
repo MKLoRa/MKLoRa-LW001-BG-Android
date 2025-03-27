@@ -8,12 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.moko.ble.lib.task.OrderTask;
-import com.moko.lw001.AppConstants;
+import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lw001.R;
 import com.moko.lw001.activity.DeviceInfoActivity;
 import com.moko.lw001.databinding.Lw001FragmentDeviceBinding;
-import com.moko.lw001.dialog.BottomDialog;
-import com.moko.lw001.utils.SPUtiles;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 
@@ -91,7 +89,7 @@ public class DeviceFragment extends Fragment {
 
     public void setShutdownPayload(int enable) {
         mShutdownPayloadEnable = enable == 1;
-        mBind.ivShutdownPayload.setImageResource(mShutdownPayloadEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivShutdownPayload.setImageResource(mShutdownPayloadEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     public void setLowPower(int lowPower) {
@@ -104,16 +102,16 @@ public class DeviceFragment extends Fragment {
         mBind.tvLowPowerPromptTips.setText(activity.getString(R.string.low_power_prompt_tips, mLowPowerPrompts.get(mSelectedLowPowerPrompt)));
         if ((lowPower & 2) == 2) {
             mLowPowerPayloadEnable = true;
-            mBind.ivLowPowerPayload.setImageResource(R.drawable.lw001_ic_checked);
+            mBind.ivLowPowerPayload.setImageResource(R.drawable.ic_checked);
         } else {
             mLowPowerPayloadEnable = false;
-            mBind.ivLowPowerPayload.setImageResource(R.drawable.lw001_ic_unchecked);
+            mBind.ivLowPowerPayload.setImageResource(R.drawable.ic_unchecked);
         }
     }
 
     public void setLowPowerEnable(int enable) {
         mLowPowerPayloadEnable = enable == 1;
-        mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivLowPowerPayload.setImageResource(mLowPowerPayloadEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     public void setLowPowerPercent(int percent) {

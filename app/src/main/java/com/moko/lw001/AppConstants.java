@@ -17,10 +17,6 @@ public class AppConstants {
     public static final String SP_KEY_SAVED_PASSWORD_LW001 = "SP_KEY_SAVED_PASSWORD_LW001";
     public static final String SP_KEY_GPS_FIX = "SP_KEY_GPS_FIX";
     public static final String SP_KEY_DEVICE_TYPE = "SP_KEY_DEVICE_TYPE";
-    public static final String SP_URL = "SP_URL";
-    public static final String SP_LOGIN_ACCOUNT = "SP_LOGIN_ACCOUNT";
-    public static final String SP_LOGIN_PASSWORD = "SP_LOGIN_PASSWORD";
-    public static final String SP_LOGIN_ENV = "SP_LOGIN_ENV";
     // extra_key
     // 设备列表\
     public static final String EXTRA_KEY_DEVICE_PARAM = "EXTRA_KEY_DEVICE_PARAM";

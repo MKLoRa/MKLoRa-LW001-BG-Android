@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lw001_white_ffffff"
+    android:background="@color/white_ffffff"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw001_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:drawableLeft="@drawable/lw001_ic_back"
+            android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:text=""
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="FILTER Condition A"
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -44,7 +44,7 @@
             android:onClick="onSave"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw001_ic_save" />
+            android:src="@drawable/ic_save" />
 
     </RelativeLayout>
 
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RSSI Filter"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/sb_rssi_filter"
@@ -76,14 +76,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:text="(-127dBm~0dBm)"
-                android:textColor="@color/lw001_grey_b3b3b3"
+                android:textColor="@color/grey_b3b3b3"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toTopOf="@id/sb_rssi_filter"
                 app:layout_constraintLeft_toRightOf="@id/rssi_1m" />
 
             <SeekBar
                 android:id="@+id/sb_rssi_filter"
-                style="@style/LW001CustomSeekbarStyle"
+                style="@style/CustomSeekbarStyle"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="30dp"
@@ -103,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:text="-127dBm"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/sb_rssi_filter"
@@ -116,13 +116,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/rssi_filter"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/sb_rssi_filter" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -136,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter by MAC Address"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -151,7 +151,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/mac_address"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/mac_address" />
@@ -173,8 +173,8 @@
                 android:digits="0123456789abcdefABCDEF"
                 android:hint="1~6 Bytes"
                 android:maxLength="12"
-                android:textColor="@color/lw001_black_333333"
-                android:textColorHint="@color/lw001_grey_ebebeb"
+                android:textColor="@color/black_333333"
+                android:textColorHint="@color/grey_ebebeb"
                 android:textSize="15sp"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -182,7 +182,7 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_mac_address" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter by ADV Name"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -210,7 +210,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/adv_name"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/adv_name" />
@@ -231,8 +231,8 @@
                 android:layout_marginTop="20dp"
                 android:hint="1~29 Characters"
                 android:maxLength="29"
-                android:textColor="@color/lw001_black_333333"
-                android:textColorHint="@color/lw001_grey_ebebeb"
+                android:textColor="@color/black_333333"
+                android:textColorHint="@color/grey_ebebeb"
                 android:textSize="15sp"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -240,7 +240,7 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_adv_name" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -253,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter by iBeacon Proximity UUID"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -268,7 +268,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/ibeacon_uuid"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/ibeacon_uuid" />
@@ -290,8 +290,8 @@
                 android:digits="0123456789abcdefABCDEF"
                 android:hint="1~16 Bytes"
                 android:maxLength="32"
-                android:textColor="@color/lw001_black_333333"
-                android:textColorHint="@color/lw001_grey_ebebeb"
+                android:textColor="@color/black_333333"
+                android:textColorHint="@color/grey_ebebeb"
                 android:textSize="15sp"
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -299,7 +299,7 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_uuid" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -312,7 +312,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter by iBeacon Major"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -327,7 +327,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/ibeacon_major"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/ibeacon_major" />
@@ -359,7 +359,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="From"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 
                 <EditText
@@ -372,15 +372,15 @@
                     android:hint="0~65535"
                     android:inputType="number"
                     android:maxLength="5"
-                    android:textColor="@color/lw001_black_333333"
-                    android:textColorHint="@color/lw001_grey_ebebeb"
+                    android:textColor="@color/black_333333"
+                    android:textColorHint="@color/grey_ebebeb"
                     android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="To"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 
                 <EditText
@@ -392,14 +392,14 @@
                     android:hint="0~65535"
                     android:inputType="number"
                     android:maxLength="5"
-                    android:textColor="@color/lw001_black_333333"
-                    android:textColorHint="@color/lw001_grey_ebebeb"
+                    android:textColor="@color/black_333333"
+                    android:textColorHint="@color/grey_ebebeb"
                     android:textSize="15sp" />
 
             </LinearLayout>
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -412,7 +412,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter by iBeacon Minor"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -427,7 +427,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/ibeacon_minor"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/ibeacon_minor" />
@@ -457,7 +457,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="From"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 
                 <EditText
@@ -470,15 +470,15 @@
                     android:hint="0~65535"
                     android:inputType="number"
                     android:maxLength="5"
-                    android:textColor="@color/lw001_black_333333"
-                    android:textColorHint="@color/lw001_grey_ebebeb"
+                    android:textColor="@color/black_333333"
+                    android:textColorHint="@color/grey_ebebeb"
                     android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="To"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 
                 <EditText
@@ -490,15 +490,15 @@
                     android:hint="0~65535"
                     android:inputType="number"
                     android:maxLength="5"
-                    android:textColor="@color/lw001_black_333333"
-                    android:textColorHint="@color/lw001_grey_ebebeb"
+                    android:textColor="@color/black_333333"
+                    android:textColorHint="@color/grey_ebebeb"
                     android:textSize="15sp" />
 
             </LinearLayout>
 
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -511,7 +511,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter by Raw ADV Data"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -526,7 +526,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/raw_adv_data"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/raw_adv_data" />
@@ -539,7 +539,7 @@
                 android:onClick="onRawDataDel"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:src="@drawable/lw001_ic_del"
+                android:src="@drawable/ic_del"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/iv_raw_adv_data"
                 app:layout_constraintRight_toLeftOf="@id/iv_raw_adv_data"
@@ -553,7 +553,7 @@
                 android:onClick="onRawDataAdd"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
-                android:src="@drawable/lw001_ic_add"
+                android:src="@drawable/ic_add"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/iv_raw_adv_data"
                 app:layout_constraintRight_toLeftOf="@id/iv_raw_data_del"
@@ -581,7 +581,7 @@
 
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -595,7 +595,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:text="Filter Condition A"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -610,7 +610,7 @@
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintBottom_toBottomOf="@id/tv_condition"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/tv_condition" />
@@ -621,13 +621,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/condition_tips"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_condition" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"

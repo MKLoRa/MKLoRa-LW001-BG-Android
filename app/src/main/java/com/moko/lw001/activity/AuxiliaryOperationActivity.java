@@ -14,11 +14,10 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.utils.ToastUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityAuxiliaryOperationBinding;
-import com.moko.lw001.dialog.AlertMessageDialog;
-import com.moko.lw001.dialog.LoadingMessageDialog;
-import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
@@ -118,7 +117,7 @@ public class AuxiliaryOperationActivity extends BaseActivity {
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mTamperAlarmEnable = enable == 1;
-                                            mBind.ivTamperAlarm.setImageResource(mTamperAlarmEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivTamperAlarm.setImageResource(mTamperAlarmEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         }
                                         break;
                                 }

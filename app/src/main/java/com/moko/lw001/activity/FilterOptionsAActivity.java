@@ -20,11 +20,10 @@ import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
 import com.moko.ble.lib.utils.MokoUtils;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.utils.ToastUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityFilterBinding;
-import com.moko.lw001.dialog.AlertMessageDialog;
-import com.moko.lw001.dialog.LoadingMessageDialog;
-import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.DataTypeEnum;
@@ -164,7 +163,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length == 1) {
                                             final int enable = value[4] & 0xFF;
                                             filterSwitchEnable = enable == 1;
-                                            mBind.ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivCondition.setImageResource(filterSwitchEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         }
                                         break;
                                     case KEY_FILTER_RSSI_A:
@@ -180,7 +179,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMacEnable = enable > 0;
-                                            mBind.ivMacAddress.setImageResource(filterMacEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivMacAddress.setImageResource(filterMacEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.etMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbMacAddress.setChecked(enable > 1);
@@ -195,7 +194,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterNameEnable = enable > 0;
-                                            mBind.ivAdvName.setImageResource(filterNameEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivAdvName.setImageResource(filterNameEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.etAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbAdvName.setChecked(enable > 1);
@@ -210,7 +209,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterUUIDEnable = enable > 0;
-                                            mBind.ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.etIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbIbeaconUuid.setChecked(enable > 1);
@@ -225,7 +224,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMajorEnable = enable > 0;
-                                            mBind.ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.llIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbIbeaconMajor.setChecked(enable > 1);
@@ -243,7 +242,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterMinorEnable = enable > 0;
-                                            mBind.ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.llIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
                                             mBind.cbIbeaconMinor.setChecked(enable > 1);
@@ -261,7 +260,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
                                         if (length > 0) {
                                             final int enable = value[4] & 0xFF;
                                             filterRawAdvDataEnable = enable > 0;
-                                            mBind.ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                             mBind.llRawDataFilter.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
                                             mBind.ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
                                             mBind.ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
@@ -361,42 +360,42 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
 
     public void onMacAddress(View view) {
         filterMacEnable = !filterMacEnable;
-        mBind.ivMacAddress.setImageResource(filterMacEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivMacAddress.setImageResource(filterMacEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.etMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
         mBind.cbMacAddress.setVisibility(filterMacEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onAdvName(View view) {
         filterNameEnable = !filterNameEnable;
-        mBind.ivAdvName.setImageResource(filterNameEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivAdvName.setImageResource(filterNameEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.etAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
         mBind.cbAdvName.setVisibility(filterNameEnable ? View.VISIBLE : View.GONE);
     }
 
     public void oniBeaconUUID(View view) {
         filterUUIDEnable = !filterUUIDEnable;
-        mBind.ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivIbeaconUuid.setImageResource(filterUUIDEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.etIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
         mBind.cbIbeaconUuid.setVisibility(filterUUIDEnable ? View.VISIBLE : View.GONE);
     }
 
     public void oniBeaconMajor(View view) {
         filterMajorEnable = !filterMajorEnable;
-        mBind.ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivIbeaconMajor.setImageResource(filterMajorEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.llIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
         mBind.cbIbeaconMajor.setVisibility(filterMajorEnable ? View.VISIBLE : View.GONE);
     }
 
     public void oniBeaconMinor(View view) {
         filterMinorEnable = !filterMinorEnable;
-        mBind.ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivIbeaconMinor.setImageResource(filterMinorEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.llIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
         mBind.cbIbeaconMinor.setVisibility(filterMinorEnable ? View.VISIBLE : View.GONE);
     }
 
     public void onRawAdvData(View view) {
         filterRawAdvDataEnable = !filterRawAdvDataEnable;
-        mBind.ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivRawAdvData.setImageResource(filterRawAdvDataEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
         mBind.llRawDataFilter.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
         mBind.ivRawDataAdd.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
         mBind.ivRawDataDel.setVisibility(filterRawAdvDataEnable ? View.VISIBLE : View.GONE);
@@ -437,7 +436,7 @@ public class FilterOptionsAActivity extends BaseActivity implements SeekBar.OnSe
 
     public void onCondition(View view) {
         filterSwitchEnable = !filterSwitchEnable;
-        mBind.ivCondition.setImageResource(filterSwitchEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivCondition.setImageResource(filterSwitchEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
 

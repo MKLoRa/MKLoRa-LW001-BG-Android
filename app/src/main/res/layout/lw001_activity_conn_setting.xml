@@ -2,26 +2,26 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lw001_grey_f2f2f2"
+    android:background="@color/grey_f2f2f2"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw001_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:drawableLeft="@drawable/lw001_ic_back"
+            android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:onClick="back"
             android:paddingLeft="16dp"
             android:text=""
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/connection_setting"
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
             android:onClick="onSave"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw001_ic_save" />
+            android:src="@drawable/ic_save" />
 
     </RelativeLayout>
 
@@ -62,7 +62,7 @@
                 android:id="@+id/llModemParams"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:visibility="visible">
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="LoRaWAN Mode"
-                        android:textColor="@color/lw001_black_333333"
+                        android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -86,18 +86,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                        android:background="@drawable/shape_radius_blue_btn_bg"
                         android:clickable="true"
                         android:onClick="selectMode"
                         android:padding="12dp"
                         android:text="ABP"
-                        android:textColor="@color/lw001_white_ffffff"
+                        android:textColor="@color/white_ffffff"
                         android:textSize="15sp" />
 
                 </RelativeLayout>
 
                 <View
-                    style="@style/lw001_divider_line"
+                    style="@style/divider_line"
                     android:layout_marginTop="10dp" />
 
                 <RelativeLayout
@@ -113,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="DevEUI"
-                        android:textColor="@color/lw001_black_333333"
+                        android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="AppEUI"
-                        android:textColor="@color/lw001_black_333333"
+                        android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -182,7 +182,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="AppKey"
-                                android:textColor="@color/lw001_black_333333"
+                                android:textColor="@color/black_333333"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -220,7 +220,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="DevAddr"
-                                android:textColor="@color/lw001_black_333333"
+                                android:textColor="@color/black_333333"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -249,7 +249,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="AppSKey"
-                                android:textColor="@color/lw001_black_333333"
+                                android:textColor="@color/black_333333"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -276,7 +276,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="NwkSKey"
-                                android:textColor="@color/lw001_black_333333"
+                                android:textColor="@color/black_333333"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -300,12 +300,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_centerVertical="true"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="DevEUI: "
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:visibility="gone" />
@@ -315,7 +315,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:padding="10dp">
 
                 <TextView
@@ -323,7 +323,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="Region/Subnet"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -332,12 +332,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
                     android:clickable="true"
                     android:onClick="selectRegion"
                     android:padding="10dp"
                     android:text="EU868"
-                    android:textColor="@color/lw001_white_ffffff"
+                    android:textColor="@color/white_ffffff"
                     android:textSize="15sp" />
 
             </RelativeLayout>
@@ -347,7 +347,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:padding="10dp"
                 android:visibility="gone">
 
@@ -356,7 +356,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="Region/Subnet"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -365,12 +365,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
                     android:clickable="true"
                     android:onClick="selectServerRegion"
                     android:padding="10dp"
                     android:text="EU868"
-                    android:textColor="@color/lw001_white_ffffff"
+                    android:textColor="@color/white_ffffff"
                     android:textSize="15sp" />
 
             </RelativeLayout>
@@ -380,7 +380,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:padding="10dp">
 
                 <TextView
@@ -388,7 +388,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="Message Type"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -397,12 +397,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
                     android:clickable="true"
                     android:onClick="selectMessageType"
                     android:padding="12dp"
                     android:text="Unconfirmed"
-                    android:textColor="@color/lw001_white_ffffff"
+                    android:textColor="@color/white_ffffff"
                     android:textSize="15sp" />
             </RelativeLayout>
 
@@ -410,7 +410,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:padding="10dp">
 
                 <TextView
@@ -418,7 +418,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/tvServerPlatform"
                     android:text="LoRaWAN Server Platform"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -427,12 +427,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                    android:background="@drawable/shape_radius_blue_btn_bg"
                     android:clickable="true"
                     android:onClick="selectServerPlatform"
                     android:padding="10dp"
                     android:text="Third Party NS"
-                    android:textColor="@color/lw001_white_ffffff"
+                    android:textColor="@color/white_ffffff"
                     android:textSize="15sp" />
 
                 <LinearLayout
@@ -451,7 +451,7 @@
                         android:layout_centerVertical="true"
                         android:layout_weight="1.0"
                         android:text="Account:"
-                        android:textColor="@color/lw001_black_333333"
+                        android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -463,7 +463,7 @@
                         android:clickable="true"
                         android:onClick="onLogout"
                         android:text="Logout"
-                        android:textColor="@color/lw001_blue_2f84d0"
+                        android:textColor="@color/blue_2f84d0"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -476,7 +476,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:background="@color/lw001_white_ffffff"
+                android:background="@color/white_ffffff"
                 android:orientation="vertical"
                 android:padding="10dp"
                 android:visibility="gone">
@@ -485,7 +485,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gateway EUI(Gateway ID)"
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -507,7 +507,7 @@
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:text="*The server address, up port and down port vaule can be found in &quot;MOKO IoT DM Guide&quot; document."
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
 
                 <TextView
@@ -517,7 +517,7 @@
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:text="*Only UDP Packet forwarder protocol is available for gateway quick registration."
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
             </LinearLayout>
 
@@ -532,11 +532,11 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:button="@null"
-                    android:drawableRight="@drawable/lw001_selector_cb_btn"
+                    android:drawableRight="@drawable/selector_cb_btn"
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:text="Advanced Setting(Optional)"
-                    android:textColor="@color/lw001_blue_2f84d0"
+                    android:textColor="@color/blue_2f84d0"
                     android:textSize="18sp" />
 
                 <TextView
@@ -546,7 +546,7 @@
                     android:paddingTop="6dp"
                     android:paddingBottom="6dp"
                     android:text="Note:Please do not modify advanced settings unless necessary."
-                    android:textColor="@color/lw001_black_333333"
+                    android:textColor="@color/black_333333"
                     android:textSize="15sp" />
             </RelativeLayout>
 
@@ -561,7 +561,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/lw001_white_ffffff"
+                    android:background="@color/white_ffffff"
                     android:orientation="vertical">
 
                     <RelativeLayout
@@ -580,7 +580,7 @@
                             android:layout_alignBottom="@id/tv_ch_1"
                             android:gravity="center_vertical"
                             android:text="CH"
-                            android:textColor="@color/lw001_black_333333"
+                            android:textColor="@color/black_333333"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -590,12 +590,12 @@
                             android:layout_height="40dp"
                             android:layout_marginRight="10dp"
                             android:layout_toLeftOf="@id/tv_ch_2"
-                            android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                            android:background="@drawable/shape_radius_blue_btn_bg"
                             android:clickable="true"
                             android:gravity="center"
                             android:onClick="selectCh1"
                             android:text=""
-                            android:textColor="@color/lw001_white_ffffff"
+                            android:textColor="@color/white_ffffff"
                             android:textSize="15sp" />
 
                         <TextView
@@ -603,12 +603,12 @@
                             android:layout_width="90dp"
                             android:layout_height="40dp"
                             android:layout_alignParentRight="true"
-                            android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                            android:background="@drawable/shape_radius_blue_btn_bg"
                             android:clickable="true"
                             android:gravity="center"
                             android:onClick="selectCh2"
                             android:text=""
-                            android:textColor="@color/lw001_white_ffffff"
+                            android:textColor="@color/white_ffffff"
                             android:textSize="15sp" />
 
                         <TextView
@@ -619,11 +619,11 @@
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
                             android:text="*It is only used for US915,AU915,CN470"
-                            android:textColor="@color/lw001_black_333333"
+                            android:textColor="@color/black_333333"
                             android:textSize="15sp" />
 
                         <View
-                            style="@style/lw001_divider_line"
+                            style="@style/divider_line"
                             android:layout_below="@id/tv_ch_tips"
                             android:layout_marginTop="10dp" />
                     </RelativeLayout>
@@ -641,11 +641,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="40dp"
                             android:button="@null"
-                            android:drawableRight="@drawable/lw001_selector_cb_btn"
+                            android:drawableRight="@drawable/selector_cb_btn"
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
                             android:text="Duty-cycle"
-                            android:textColor="@color/lw001_black_333333"
+                            android:textColor="@color/black_333333"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -655,11 +655,11 @@
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
                             android:text="*It is only used for EU868,CN779,EU433 and RU864.\nOff: The uplink report interval will not be limit by region freqency.\nOn:The uplink report interval will be limit by region freqency."
-                            android:textColor="@color/lw001_black_333333"
+                            android:textColor="@color/black_333333"
                             android:textSize="15sp" />
 
                         <View
-                            style="@style/lw001_divider_line"
+                            style="@style/divider_line"
                             android:layout_marginTop="10dp" />
                     </LinearLayout>
 
@@ -675,7 +675,7 @@
                             android:layout_height="match_parent"
                             android:layout_alignBaseline="@id/tv_dr"
                             android:text="DR For Join"
-                            android:textColor="@color/lw001_black_333333"
+                            android:textColor="@color/black_333333"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -684,12 +684,12 @@
                             android:layout_width="90dp"
                             android:layout_height="40dp"
                             android:layout_alignParentRight="true"
-                            android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                            android:background="@drawable/shape_radius_blue_btn_bg"
                             android:clickable="true"
                             android:gravity="center"
                             android:onClick="selectDrForJoin"
                             android:text=""
-                            android:textColor="@color/lw001_white_ffffff"
+                            android:textColor="@color/white_ffffff"
                             android:textSize="15sp" />
 
                         <TextView
@@ -699,7 +699,7 @@
                             android:paddingTop="6dp"
                             android:paddingBottom="6dp"
                             android:text="*It is only used for CN470, CN779, EU433, EU868,KR920, IN865, RU864"
-                            android:textColor="@color/lw001_black_333333"
+                            android:textColor="@color/black_333333"
                             android:textSize="15sp" />
                     </RelativeLayout>
 
@@ -710,7 +710,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@color/lw001_white_ffffff"
+                    android:background="@color/white_ffffff"
                     android:orientation="vertical"
                     android:padding="10dp">
 
@@ -720,12 +720,12 @@
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
                         android:text="Uplink Strategy"
-                        android:textColor="@color/lw001_black_333333"
+                        android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <View
-                        style="@style/lw001_divider_line"
+                        style="@style/divider_line"
                         android:layout_marginTop="10dp" />
 
 
@@ -735,11 +735,11 @@
                         android:layout_height="40dp"
                         android:layout_marginTop="10dp"
                         android:button="@null"
-                        android:drawableRight="@drawable/lw001_selector_cb_btn"
+                        android:drawableRight="@drawable/selector_cb_btn"
                         android:paddingTop="6dp"
                         android:paddingBottom="6dp"
                         android:text="ADR"
-                        android:textColor="@color/lw001_black_333333"
+                        android:textColor="@color/black_333333"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -751,7 +751,7 @@
                         android:visibility="gone">
 
                         <View
-                            style="@style/lw001_divider_line"
+                            style="@style/divider_line"
                             android:layout_marginTop="10dp" />
 
                         <RelativeLayout
@@ -764,7 +764,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="Transmissions"
-                                android:textColor="@color/lw001_black_333333"
+                                android:textColor="@color/black_333333"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -773,17 +773,17 @@
                                 android:layout_width="90dp"
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
-                                android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                                android:background="@drawable/shape_radius_blue_btn_bg"
                                 android:clickable="true"
                                 android:gravity="center"
                                 android:onClick="selectTransmissions"
                                 android:text=""
-                                android:textColor="@color/lw001_white_ffffff"
+                                android:textColor="@color/white_ffffff"
                                 android:textSize="15sp" />
                         </RelativeLayout>
 
                         <View
-                            style="@style/lw001_divider_line"
+                            style="@style/divider_line"
                             android:layout_marginTop="10dp" />
 
                         <RelativeLayout
@@ -798,7 +798,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:text="DR For Payload"
-                                android:textColor="@color/lw001_black_333333"
+                                android:textColor="@color/black_333333"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -808,12 +808,12 @@
                                 android:layout_height="40dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_toLeftOf="@id/tv_dr_2"
-                                android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                                android:background="@drawable/shape_radius_blue_btn_bg"
                                 android:clickable="true"
                                 android:gravity="center"
                                 android:onClick="selectDr1"
                                 android:text=""
-                                android:textColor="@color/lw001_white_ffffff"
+                                android:textColor="@color/white_ffffff"
                                 android:textSize="15sp" />
 
                             <TextView
@@ -821,12 +821,12 @@
                                 android:layout_width="90dp"
                                 android:layout_height="40dp"
                                 android:layout_alignParentRight="true"
-                                android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                                android:background="@drawable/shape_radius_blue_btn_bg"
                                 android:clickable="true"
                                 android:gravity="center"
                                 android:onClick="selectDr2"
                                 android:text=""
-                                android:textColor="@color/lw001_white_ffffff"
+                                android:textColor="@color/white_ffffff"
                                 android:textSize="15sp" />
                         </RelativeLayout>
                     </LinearLayout>

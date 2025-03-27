@@ -3,6 +3,7 @@ package com.moko.lw001.dialog;
 import android.content.Context;
 import android.widget.SeekBar;
 
+import com.moko.lib.loraui.dialog.BaseDialog;
 import com.moko.lw001.databinding.Lw001DialogSensitivityBinding;
 
 public class TriggerSensitivityDialog extends BaseDialog<Lw001DialogSensitivityBinding> implements SeekBar.OnSeekBarChangeListener {

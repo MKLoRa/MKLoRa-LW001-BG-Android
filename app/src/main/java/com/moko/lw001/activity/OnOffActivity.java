@@ -14,13 +14,13 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
+import com.moko.lib.loraui.utils.ToastUtils;
 import com.moko.lw001.AppConstants;
 import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityOnOffSettingsBinding;
-import com.moko.lw001.dialog.AlertMessageDialog;
-import com.moko.lw001.dialog.BottomDialog;
 import com.moko.lw001.utils.SPUtiles;
-import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
@@ -156,14 +156,14 @@ public class OnOffActivity extends BaseActivity {
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mMagnetEnable = enable == 1;
-                                            mBind.ivMagnet.setImageResource(mMagnetEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivMagnet.setImageResource(mMagnetEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         }
                                         break;
                                     case KEY_AUTO_POWER_ON_ENABLE:
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mAutoPowerOn = enable == 1;
-                                            mBind.ivAutoPowerOn.setImageResource(mAutoPowerOn ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivAutoPowerOn.setImageResource(mAutoPowerOn ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         }
                                         break;
                                     case KEY_POWER_STATUS:

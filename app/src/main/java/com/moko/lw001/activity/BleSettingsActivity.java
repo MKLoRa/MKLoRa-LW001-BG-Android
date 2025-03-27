@@ -16,13 +16,11 @@ import com.moko.ble.lib.event.ConnectStatusEvent;
 import com.moko.ble.lib.event.OrderTaskResponseEvent;
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.ble.lib.task.OrderTaskResponse;
+import com.moko.lib.loraui.dialog.AlertMessageDialog;
+import com.moko.lib.loraui.dialog.BottomDialog;
+import com.moko.lib.loraui.utils.ToastUtils;
 import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityBleSettingsBinding;
-import com.moko.lw001.databinding.Lw001ActivityMainBinding;
-import com.moko.lw001.dialog.AlertMessageDialog;
-import com.moko.lw001.dialog.BottomDialog;
-import com.moko.lw001.dialog.LoadingMessageDialog;
-import com.moko.lw001.utils.ToastUtils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
@@ -159,7 +157,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
                                         if (length > 0) {
                                             int enable = value[4] & 0xFF;
                                             mConnectableEnable = enable == 1;
-                                            mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                                            mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
                                         }
                                         break;
                                     case KEY_ADV_INTERVAL:
@@ -343,7 +341,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
             dialog.setMessage("Are you sure to make the device unconnectable？");
             dialog.setOnAlertConfirmListener(() -> {
                 mConnectableEnable = false;
-                mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
 
             });
             dialog.show(getSupportFragmentManager());
@@ -353,7 +351,7 @@ public class BleSettingsActivity extends BaseActivity implements CompoundButton.
             dialog.setMessage("Are you sure to make the device connectable？");
             dialog.setOnAlertConfirmListener(() -> {
                 mConnectableEnable = true;
-                mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+                mBind.ivConnectable.setImageResource(mConnectableEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
             });
             dialog.show(getSupportFragmentManager());
         }

@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lw001_white_ffffff"
+    android:background="@color/white_ffffff"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:background="@color/lw001_blue_2f84d0">
+        android:background="@color/blue_2f84d0">
 
         <TextView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:drawableLeft="@drawable/lw001_ic_back"
+            android:drawableLeft="@drawable/ic_back"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
             android:onClick="onBack"
             android:paddingLeft="16dp"
             android:text=""
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="On/off Settings"
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -43,7 +43,7 @@
             android:onClick="onSave"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
-            android:src="@drawable/lw001_ic_save"
+            android:src="@drawable/ic_save"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -51,7 +51,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/lw001_white_ffffff"
+        android:background="@color/white_ffffff"
         android:padding="10dp">
 
 
@@ -69,14 +69,14 @@
                 android:id="@+id/tv_on_off_method"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+                android:background="@drawable/shape_radius_blue_btn_bg"
                 android:clickable="true"
                 android:gravity="center"
                 android:minWidth="70dp"
                 android:onClick="selectOnOffMethod"
                 android:padding="12dp"
                 android:text="Multiple approaches"
-                android:textColor="@color/lw001_white_ffffff"
+                android:textColor="@color/white_ffffff"
                 android:textSize="15sp"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -85,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ON/Off Method"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/tv_on_off_method"
@@ -93,7 +93,7 @@
                 app:layout_constraintTop_toTopOf="@id/tv_on_off_method" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -106,7 +106,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:text="Off By Magnet"
-            android:textColor="@color/lw001_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/iv_magnet"
@@ -120,12 +120,12 @@
             android:clickable="true"
             android:onClick="onMagnet"
             android:padding="6dp"
-            android:src="@drawable/lw001_ic_unchecked"
+            android:src="@drawable/ic_unchecked"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_on_off_method" />
 
         <View
-            style="@style/lw001_divider_line"
+            style="@style/divider_line"
             android:layout_width="0dp"
             android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Default  Mode"
-            android:textColor="@color/lw001_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tv_default_mode"
@@ -149,14 +149,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/lw001_shape_radius_blue_btn_bg"
+            android:background="@drawable/shape_radius_blue_btn_bg"
             android:clickable="true"
             android:gravity="center"
             android:minWidth="70dp"
             android:onClick="selectDefaultMode"
             android:padding="12dp"
             android:text="OFF"
-            android:textColor="@color/lw001_white_ffffff"
+            android:textColor="@color/white_ffffff"
             android:textSize="15sp"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_magnet" />
@@ -166,14 +166,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="*Default Operating mode after the device is repowered"
-            android:textColor="@color/lw001_black_333333"
+            android:textColor="@color/black_333333"
             android:textSize="12sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_default_mode" />
 
         <View
-            style="@style/lw001_divider_line"
+            style="@style/divider_line"
             android:layout_width="0dp"
             android:layout_marginTop="10dp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -197,7 +197,7 @@
                 android:clickable="true"
                 android:onClick="onAutoPowerOn"
                 android:padding="6dp"
-                android:src="@drawable/lw001_ic_unchecked"
+                android:src="@drawable/ic_unchecked"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -205,7 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Auto Power On"
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@id/iv_auto_power_on"
@@ -217,14 +217,14 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="*When the battery run out, the device will be turned on when the device is in charged."
-                android:textColor="@color/lw001_black_333333"
+                android:textColor="@color/black_333333"
                 android:textSize="12sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_auto_power_on" />
 
             <View
-                style="@style/lw001_divider_line"
+                style="@style/divider_line"
                 android:layout_width="0dp"
                 android:layout_marginTop="10dp"
                 app:layout_constraintLeft_toLeftOf="parent"

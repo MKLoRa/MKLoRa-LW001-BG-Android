@@ -43,7 +43,7 @@ public class PositionFragment extends Fragment {
 
     public void setOfflineFix(int enable) {
         mOfflineFixEnable = enable == 1;
-        mBind.ivOfflineFix.setImageResource(mOfflineFixEnable ? R.drawable.lw001_ic_checked : R.drawable.lw001_ic_unchecked);
+        mBind.ivOfflineFix.setImageResource(mOfflineFixEnable ? R.drawable.ic_checked : R.drawable.ic_unchecked);
     }
 
     public void changeOfflineFix() {
