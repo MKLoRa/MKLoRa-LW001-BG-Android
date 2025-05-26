@@ -94,10 +94,10 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
     if (!isLibrary.toBoolean()) {
         implementation project(path: ':mokosupport')
-        implementation 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.6'
+        implementation 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.7'
         implementation 'com.github.MOKO-Android-Base-Library:MKLoRaUILib:1.0.10'
     } else {
-        compileOnly 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.6'
+        compileOnly 'com.github.MOKO-Android-Base-Library:MKLoRaIoTLib:1.0.7'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKBleLib:1.0.1'
         compileOnly 'com.github.MOKO-Android-Base-Library:MKLoRaUILib:1.0.10'
         implementation files('libs/mokoSupport.jar')
