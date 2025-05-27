@@ -129,13 +129,13 @@ final class MokoBleConfig extends MokoBleManager {
     }
 
     public void enableDisconnectedNotify() {
-        setIndicationCallback(disconnectedCharacteristic).with((device, data) -> {
+        setNotificationCallback(disconnectedCharacteristic).with((device, data) -> {
             final byte[] value = data.getValue();
             XLog.e("onDataReceived");
             XLog.e("device to app : " + MokoUtils.bytesToHexString(value));
             mMokoResponseCallback.onCharacteristicChanged(disconnectedCharacteristic, value);
         });
-        enableIndications(disconnectedCharacteristic).enqueue();
+        enableNotifications(disconnectedCharacteristic).enqueue();
     }
 
     public void disableDisconnectedNotify() {
