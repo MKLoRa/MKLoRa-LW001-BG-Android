@@ -13,8 +13,6 @@ import com.moko.ble.lib.utils.MokoUtils;
 import com.moko.support.lw001.entity.OrderCHAR;
 import com.moko.support.lw001.entity.OrderServices;
 
-import java.util.UUID;
-
 import androidx.annotation.NonNull;
 
 final class MokoBleConfig extends MokoBleManager {

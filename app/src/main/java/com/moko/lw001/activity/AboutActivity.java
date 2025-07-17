@@ -8,7 +8,6 @@ import android.view.View;
 import com.moko.lw001.BuildConfig;
 import com.moko.lw001.R;
 import com.moko.lw001.databinding.Lw001ActivityAboutBinding;
-import com.moko.lw001.databinding.Lw001ActivityMainBinding;
 import com.moko.lw001.utils.Utils;
 
 
