@@ -207,6 +207,10 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_READ_STORAGE_DATA(0xA0),
     KEY_CLEAR_STORAGE_DATA(0xA1),
     KEY_SYNC_ENABLE(0xA2),
+
+    KEY_OUTDOOR_BLE_REPORT_INTERVAL(0xC0),
+    // 室外GPS定位上报间隔
+    KEY_OUTDOOR_GPS_REPORT_INTERVAL(0xC1),
     ;
 
     private int paramsKey;

@@ -803,7 +803,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setPeriodicPosStrategy(@IntRange(from = 1, to = 7) int strategy) {
+    public static OrderTask setPeriodicPosStrategy(@IntRange(from = 1, to = 8) int strategy) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setPeriodicPosStrategy(strategy);
         return task;
@@ -1351,6 +1351,30 @@ public class OrderTaskAssembler {
     public static OrderTask clearStorageData() {
         ParamsWriteTask task = new ParamsWriteTask();
         task.clearStorageData();
+        return task;
+    }
+
+    public static OrderTask getOutdoorBleReportInterval() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_OUTDOOR_BLE_REPORT_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask getOutdoorGpsReportInterval() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_OUTDOOR_GPS_REPORT_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask setOutdoorBleReportInterval(@IntRange(from = 1, to = 100) int interval) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setOutdoorBleReportInterval(interval);
+        return task;
+    }
+
+    public static OrderTask setOutdoorGpsReportInterval(@IntRange(from = 1, to = 14400) int interval) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setOutdoorGpsReportInterval(interval);
         return task;
     }
 

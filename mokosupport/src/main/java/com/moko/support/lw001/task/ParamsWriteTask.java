@@ -211,7 +211,7 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setPeriodicPosStrategy(@IntRange(from = 1, to = 7) int strategy) {
+    public void setPeriodicPosStrategy(@IntRange(from = 1, to = 8) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -1385,6 +1385,29 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) 0x01,
                 (byte) ParamsKeyEnum.KEY_BATTERY_RESET.getParamsKey(),
                 (byte) 0x00
+        };
+    }
+
+    public void setOutdoorBleReportInterval(@IntRange(from = 1, to = 100) int interval) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_OUTDOOR_BLE_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x01,
+                (byte) interval,
+        };
+
+    }
+
+    public void setOutdoorGpsReportInterval(@IntRange(from = 1, to = 14400) int interval) {
+        byte[] intervalBytes = MokoUtils.toByteArray(interval, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_OUTDOOR_GPS_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x02,
+                intervalBytes[0],
+                intervalBytes[1],
         };
     }
 }

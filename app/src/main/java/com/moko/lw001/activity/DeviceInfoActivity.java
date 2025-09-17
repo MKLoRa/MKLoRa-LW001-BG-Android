@@ -486,6 +486,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             }
         }
     }
+    public void onBleAndGPS(View view) {
+        if (isWindowLocked()) return;
+        Intent intent = new Intent(this, PosBleAndGpsActivity.class);
+        startActivity(intent);
+    }
 
     private void back() {
         mBind.frameContainer.postDelayed(() -> {
