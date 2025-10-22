@@ -143,6 +143,8 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity android:name=".activity.PosBleAndGpsActivity"/>
+        <activity android:name=".activity.TimeSegmentedModeActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"

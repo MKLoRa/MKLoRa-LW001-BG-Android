@@ -88,6 +88,9 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_MOTION_MODE_END_POS_STRATEGY(0x2C),
     // 下行请求定位策略
     KEY_DOWN_LINK_POS_STRATEGY(0x2D),
+    KEY_TIME_PERIODIC_MODE_POS_STRATEGY(0x2E),
+    // 定时定期模式时间段
+    KEY_TIME_PERIODIC_MODE_REPORT_TIME_POINT(0x2F),
 
     // WIFI定位次数
     KEY_WIFI_POS_NUMBER(0x30),
