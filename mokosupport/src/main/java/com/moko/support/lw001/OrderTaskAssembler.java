@@ -1,5 +1,7 @@
 package com.moko.support.lw001;
 
+import androidx.annotation.IntRange;
+
 import com.moko.ble.lib.task.OrderTask;
 import com.moko.support.lw001.entity.ParamsKeyEnum;
 import com.moko.support.lw001.task.GetFirmwareRevisionTask;
@@ -12,13 +14,13 @@ import com.moko.support.lw001.task.ParamsWriteTask;
 import com.moko.support.lw001.task.SetPasswordTask;
 
 import java.util.ArrayList;
-
-import androidx.annotation.IntRange;
+import java.util.List;
 
 public class OrderTaskAssembler {
     ///////////////////////////////////////////////////////////////////////////
     // READ
-    ///////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////
 
     public static OrderTask getManufacturer() {
         GetManufacturerNameTask getManufacturerTask = new GetManufacturerNameTask();
@@ -253,6 +255,18 @@ public class OrderTaskAssembler {
     public static OrderTask getDownLinkPosStrategy() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_DOWN_LINK_POS_STRATEGY);
+        return task;
+    }
+
+    public static OrderTask getTimePeriodicPosStrategy() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TIME_PERIODIC_MODE_POS_STRATEGY);
+        return task;
+    }
+
+    public static OrderTask getTimePeriodicPosReportPoints() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_TIME_PERIODIC_MODE_REPORT_TIME_POINT);
         return task;
     }
 
@@ -693,7 +707,8 @@ public class OrderTaskAssembler {
 
     ///////////////////////////////////////////////////////////////////////////
     // WIRTE
-    ///////////////////////////////////////////////////////////////////////////
+
+    /// ////////////////////////////////////////////////////////////////////////
     public static OrderTask setPassword(String password) {
         SetPasswordTask task = new SetPasswordTask();
         task.setData(password);
@@ -730,7 +745,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setWorkMode(@IntRange(from = 0, to = 4) int workMode) {
+    public static OrderTask setWorkMode(@IntRange(from = 0, to = 5) int workMode) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setWorkMode(workMode);
         return task;
@@ -803,7 +818,7 @@ public class OrderTaskAssembler {
         return task;
     }
 
-    public static OrderTask setPeriodicPosStrategy(@IntRange(from = 1, to = 7) int strategy) {
+    public static OrderTask setPeriodicPosStrategy(@IntRange(from = 1, to = 8) int strategy) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setPeriodicPosStrategy(strategy);
         return task;
@@ -1354,4 +1369,39 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getOutdoorBleReportInterval() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_OUTDOOR_BLE_REPORT_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask getOutdoorGpsReportInterval() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_OUTDOOR_GPS_REPORT_INTERVAL);
+        return task;
+    }
+
+    public static OrderTask setOutdoorBleReportInterval(@IntRange(from = 1, to = 100) int interval) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setOutdoorBleReportInterval(interval);
+        return task;
+    }
+
+    public static OrderTask setOutdoorGpsReportInterval(@IntRange(from = 1, to = 14400) int interval) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setOutdoorGpsReportInterval(interval);
+        return task;
+    }
+
+    public static OrderTask setTimePeriodicPosStrategy(@IntRange(from = 1, to = 8) int strategy) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTimePeriodicPosStrategy(strategy);
+        return task;
+    }
+
+    public static OrderTask setTimePeriodicPosReportPoints(List<String> timePoints) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setTimePeriodicPosReportPoints(timePoints);
+        return task;
+    }
 }

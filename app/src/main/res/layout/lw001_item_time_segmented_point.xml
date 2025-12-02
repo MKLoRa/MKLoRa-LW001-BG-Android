@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <TextView
+        android:id="@+id/tv_point_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time Period 1"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/tv_point_start_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/shape_radius_blue_btn_bg"
+        android:gravity="center"
+        android:minWidth="70dp"
+        android:padding="10dp"
+        android:text="00"
+        android:textColor="@color/white_ffffff"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_point_name" />
+
+    <TextView
+        android:id="@+id/tv_point_start_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/shape_radius_blue_btn_bg"
+        android:gravity="center"
+        android:minWidth="70dp"
+        android:padding="10dp"
+        android:text="00"
+        android:textColor="@color/white_ffffff"
+        android:textSize="15sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_point_start_hour"
+        app:layout_constraintLeft_toRightOf="@id/tv_point_start_hour" />
+
+
+    <TextView
+        android:id="@+id/tv_point_to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="to"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_point_start_hour"
+        app:layout_constraintLeft_toRightOf="@id/tv_point_start_min"
+        app:layout_constraintRight_toLeftOf="@id/tv_point_end_hour" />
+
+    <TextView
+        android:id="@+id/tv_point_end_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/shape_radius_blue_btn_bg"
+        android:gravity="center"
+        android:minWidth="70dp"
+        android:padding="10dp"
+        android:text="00"
+        android:textColor="@color/white_ffffff"
+        android:textSize="15sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_point_start_hour"
+        app:layout_constraintRight_toLeftOf="@id/tv_point_end_min" />
+
+    <TextView
+        android:id="@+id/tv_point_end_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/shape_radius_blue_btn_bg"
+        android:gravity="center"
+        android:minWidth="70dp"
+        android:padding="10dp"
+        android:text="00"
+        android:textColor="@color/white_ffffff"
+        android:textSize="15sp"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_point_end_hour"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_report_interval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Report Interval 1"
+        android:textColor="@color/black_333333"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/et_report_interval"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_report_interval" />
+
+    <EditText
+        android:id="@+id/et_report_interval"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:hint="30~86400"
+        android:inputType="number"
+        android:maxLength="5"
+        android:textColor="@color/black_333333"
+        android:textColorHint="@color/grey_ebebeb"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_point_start_hour"
+        app:layout_constraintWidth_percent="0.35" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

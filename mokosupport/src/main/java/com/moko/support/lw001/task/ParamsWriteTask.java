@@ -9,6 +9,7 @@ import com.moko.support.lw001.entity.ParamsKeyEnum;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import androidx.annotation.IntRange;
 
@@ -85,7 +86,7 @@ public class ParamsWriteTask extends OrderTask {
         }
     }
 
-    public void setWorkMode(@IntRange(from = 0, to = 4) int workMode) {
+    public void setWorkMode(@IntRange(from = 0, to = 5) int workMode) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -211,7 +212,7 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
-    public void setPeriodicPosStrategy(@IntRange(from = 1, to = 7) int strategy) {
+    public void setPeriodicPosStrategy(@IntRange(from = 1, to = 8) int strategy) {
         data = new byte[]{
                 (byte) 0xED,
                 (byte) 0x01,
@@ -1386,5 +1387,72 @@ public class ParamsWriteTask extends OrderTask {
                 (byte) ParamsKeyEnum.KEY_BATTERY_RESET.getParamsKey(),
                 (byte) 0x00
         };
+    }
+
+    public void setOutdoorBleReportInterval(@IntRange(from = 1, to = 100) int interval) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_OUTDOOR_BLE_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x01,
+                (byte) interval,
+        };
+
+    }
+
+    public void setOutdoorGpsReportInterval(@IntRange(from = 1, to = 14400) int interval) {
+        byte[] intervalBytes = MokoUtils.toByteArray(interval, 2);
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_OUTDOOR_GPS_REPORT_INTERVAL.getParamsKey(),
+                (byte) 0x02,
+                intervalBytes[0],
+                intervalBytes[1],
+        };
+    }
+
+    public void setTimePeriodicPosStrategy(@IntRange(from = 1, to = 8) int strategy) {
+        response.responseValue = data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_TIME_PERIODIC_MODE_POS_STRATEGY.getParamsKey(),
+                (byte) 0x01,
+                (byte) strategy,
+        };
+    }
+
+    public void setTimePeriodicPosReportPoints(List<String> timePoints) {
+        if (null == timePoints || timePoints.isEmpty()) {
+            data = new byte[4];
+            data[0] = (byte) 0xED;
+            data[1] = (byte) 0x01;
+            data[2] = (byte) ParamsKeyEnum.KEY_TIME_PERIODIC_MODE_REPORT_TIME_POINT.getParamsKey();
+            data[3] = 0;
+        } else {
+            int size = timePoints.size();
+            int length = size * 8;
+            data = new byte[4 + length];
+            data[0] = (byte) 0xED;
+            data[1] = (byte) 0x01;
+            data[2] = (byte) ParamsKeyEnum.KEY_TIME_PERIODIC_MODE_REPORT_TIME_POINT.getParamsKey();
+            data[3] = (byte) length;
+            for (int i = 0; i < timePoints.size(); i++) {
+                String str = timePoints.get(i);
+                byte[] startBytes = MokoUtils.toByteArray(Integer.parseInt(str.substring(0, 4), 16), 2);
+                byte[] endBytes = MokoUtils.toByteArray(Integer.parseInt(str.substring(4, 8), 16), 2);
+                byte[] intervalBytes = MokoUtils.toByteArray(Integer.parseInt(str.substring(8, 16), 16), 4);
+                //5 6 13 14
+                data[4 + i * 8] = startBytes[0];
+                data[5 + i * 8] = startBytes[1];
+                data[6 + i * 8] = endBytes[0];
+                data[7 + i * 8] = endBytes[1];
+                data[8 + i * 8] = intervalBytes[0];
+                data[9 + i * 8] = intervalBytes[1];
+                data[10 + i * 8] = intervalBytes[2];
+                data[11 + i * 8] = intervalBytes[3];
+            }
+        }
+        response.responseValue = data;
     }
 }

@@ -47,6 +47,7 @@ public class DeviceModeActivity extends BaseActivity {
         mValues.add("Timing Mode");
         mValues.add("Periodic Mode");
         mValues.add("Motion Mode");
+        mValues.add("Time-Segmented Mode");
         EventBus.getDefault().register(this);
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
@@ -55,6 +56,10 @@ public class DeviceModeActivity extends BaseActivity {
         mReceiverTag = true;
         showSyncingProgressDialog();
         LoRaLW001MokoSupport.getInstance().sendOrder(OrderTaskAssembler.getWorkMode());
+        mBind.tvSegmentMode.setOnClickListener(v -> {
+            if (isWindowLocked()) return;
+            startActivity(new Intent(this, TimeSegmentedModeActivity.class));
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING, priority = 200)
@@ -131,6 +136,8 @@ public class DeviceModeActivity extends BaseActivity {
                                                 mShowSelected = 1;
                                             } else if (mode == 4) {
                                                 mShowSelected = 3;
+                                            } else if (mode == 5) {
+                                                mShowSelected = 4;
                                             }
                                             mBind.tvDeviceMode.setText(mValues.get(mShowSelected));
                                         }
@@ -192,8 +199,7 @@ public class DeviceModeActivity extends BaseActivity {
     }
 
     public void selectDeviceMode(View view) {
-        if (isWindowLocked())
-            return;
+        if (isWindowLocked()) return;
         BottomDialog dialog = new BottomDialog();
         dialog.setDatas(mValues, mShowSelected);
         dialog.setListener(value -> {
@@ -206,6 +212,8 @@ public class DeviceModeActivity extends BaseActivity {
                 mSelected = 2;
             } else if (value == 3) {
                 mSelected = 4;
+            }else if (value == 4){
+                mSelected = 5;
             }
             mBind.tvDeviceMode.setText(mValues.get(value));
             savedParamsError = false;
