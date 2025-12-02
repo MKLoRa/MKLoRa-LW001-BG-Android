@@ -15,7 +15,7 @@ android {
         versionName "1.1.4"
 
         def formatDate = new Date().format("yyyyMMddHHmm")
-        setProperty("archivesBaseName", "LW001_JU226_${versionName}_${formatDate}")
+        setProperty("archivesBaseName", "LW001_${versionName}_${formatDate}")
     }
 
     buildTypes {
@@ -66,7 +66,7 @@ android {
                 // 修改aar名称
                 variant.outputs.all { output ->
                     def formatDate = new Date().format("yyyyMMddHHmm")
-                    outputFileName = "LW001_JU226_${android.defaultConfig.versionName}_${formatDate}.aar"
+                    outputFileName = "LW001_${android.defaultConfig.versionName}_${formatDate}.aar"
                 }
                 // 复制aar到指定目录
                 variant.assemble.doLast {
