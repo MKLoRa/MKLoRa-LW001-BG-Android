@@ -95,9 +95,7 @@ public class AuxiliaryOperationActivity extends BaseActivity {
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_TAMPER_ALARM:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(AuxiliaryOperationActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

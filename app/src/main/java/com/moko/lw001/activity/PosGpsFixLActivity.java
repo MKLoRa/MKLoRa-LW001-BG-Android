@@ -108,14 +108,10 @@ public class PosGpsFixLActivity extends BaseActivity {
                                     case KEY_GPS_COARSE_TIMEOUT:
                                     case KEY_GPS_PDOP_LIMIT:
                                     case KEY_GPS_TIME_BUDGET:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         break;
                                     case KEY_GPS_EXTREME_MODE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(PosGpsFixLActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

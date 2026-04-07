@@ -98,14 +98,10 @@ public class PosWifiFixActivity extends BaseActivity {
                                 int result = value[4] & 0xFF;
                                 switch (configKeyEnum) {
                                     case KEY_WIFI_POS_NUMBER:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         break;
                                     case KEY_WIFI_POS_BSSID_NUMBER:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(PosWifiFixActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

@@ -180,14 +180,10 @@ public class AdvInfoActivity extends BaseActivity implements OnSeekBarChangeList
                                     case KEY_ADV_MAJOR:
                                     case KEY_ADV_MINOR:
                                     case KEY_ADV_RSSI:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         break;
                                     case KEY_ADV_TX_POWER:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(AdvInfoActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

@@ -127,9 +127,7 @@ public class OnOffActivity extends BaseActivity {
                                     case KEY_ON_OFF_METHOD:
                                     case KEY_REED_SWITCH:
                                     case KEY_AUTO_POWER_ON_ENABLE:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(OnOffActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {

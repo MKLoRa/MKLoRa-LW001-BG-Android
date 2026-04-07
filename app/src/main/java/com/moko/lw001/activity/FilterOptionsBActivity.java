@@ -136,14 +136,10 @@ public class FilterOptionsBActivity extends BaseActivity implements SeekBar.OnSe
                                     case KEY_FILTER_MAJOR_RANGE_B:
                                     case KEY_FILTER_MINOR_RANGE_B:
                                     case KEY_FILTER_ADV_RAW_DATA_B:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         break;
                                     case KEY_FILTER_SWITCH_B:
-                                        if (result != 1) {
-                                            savedParamsError = true;
-                                        }
+                                        savedParamsError |= result != 1;
                                         if (savedParamsError) {
                                             ToastUtils.showToast(FilterOptionsBActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
