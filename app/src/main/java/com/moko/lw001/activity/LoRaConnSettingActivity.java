@@ -1035,7 +1035,7 @@ public class LoRaConnSettingActivity extends BaseActivity implements CompoundBut
         object.addProperty("joinEui", mRemoteAPPEUI);
         object.addProperty("nwkKey", mRemoteAPPKEY);
         object.addProperty("devProfilesSearch", mDeviceProfileSearch);
-        OkGo.<String>post(Urls.syncGatewayApi(getApplicationContext()))
+        OkGo.<String>post(Urls.syncLoRaDeviceApi(getApplicationContext()))
                 .upJson(object.toString())
                 .execute(new StringCallback() {
 

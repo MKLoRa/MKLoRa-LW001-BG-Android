@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white_ffffff"
@@ -163,7 +164,8 @@
                 android:text="Whitelist"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/et_mac_address"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:visibility="visible" />
 
             <EditText
                 android:id="@+id/et_mac_address"
@@ -179,7 +181,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_mac_address" />
+                app:layout_constraintTop_toBottomOf="@id/iv_mac_address"
+                tools:visibility="visible" />
 
             <View
                 style="@style/divider_line"
@@ -222,7 +225,8 @@
                 android:text="Whitelist"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/et_adv_name"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:visibility="visible" />
 
             <EditText
                 android:id="@+id/et_adv_name"
@@ -237,7 +241,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_adv_name" />
+                app:layout_constraintTop_toBottomOf="@id/iv_adv_name"
+                tools:visibility="visible" />
 
             <View
                 style="@style/divider_line"
@@ -280,7 +285,8 @@
                 android:text="Whitelist"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/et_ibeacon_uuid"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:visibility="visible" />
 
             <EditText
                 android:id="@+id/et_ibeacon_uuid"
@@ -296,7 +302,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_uuid" />
+                app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_uuid"
+                tools:visibility="visible" />
 
             <View
                 style="@style/divider_line"
@@ -339,7 +346,8 @@
                 android:text="Whitelist"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/ll_ibeacon_major"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/ll_ibeacon_major"
@@ -353,7 +361,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_major">
+                app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_major"
+                tools:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -439,7 +448,8 @@
                 android:text="Whitelist"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/ll_ibeacon_minor"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/ll_ibeacon_minor"
@@ -451,7 +461,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_minor">
+                app:layout_constraintTop_toBottomOf="@id/iv_ibeacon_minor"
+                tools:visibility="visible">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -543,7 +554,8 @@
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/iv_raw_adv_data"
                 app:layout_constraintRight_toLeftOf="@id/iv_raw_adv_data"
-                app:layout_constraintTop_toTopOf="@id/iv_raw_adv_data" />
+                app:layout_constraintTop_toTopOf="@id/iv_raw_adv_data"
+                tools:visibility="visible" />
 
             <ImageView
                 android:id="@+id/iv_raw_data_add"
@@ -557,7 +569,8 @@
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/iv_raw_adv_data"
                 app:layout_constraintRight_toLeftOf="@id/iv_raw_data_del"
-                app:layout_constraintTop_toTopOf="@id/iv_raw_adv_data" />
+                app:layout_constraintTop_toTopOf="@id/iv_raw_adv_data"
+                tools:visibility="visible" />
 
             <CheckBox
                 android:id="@+id/cb_raw_adv_data"
@@ -566,7 +579,8 @@
                 android:text="Whitelist"
                 android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@id/ll_raw_data_filter"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                tools:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/ll_raw_data_filter"
@@ -577,7 +591,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="@id/raw_adv_data"
                 app:layout_constraintRight_toRightOf="@id/iv_raw_adv_data"
-                app:layout_constraintTop_toBottomOf="@id/iv_raw_adv_data" />
+                app:layout_constraintTop_toBottomOf="@id/iv_raw_adv_data"
+                tools:visibility="visible" />
 
 
             <View
