@@ -250,65 +250,6 @@
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/cb_extreme_mode" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_fix_mechanism"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_ffffff"
-                android:padding="10dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_extreme_mode">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="GPS Fix Mechanism"
-                    android:textColor="@color/black_333333"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_gps_fix_mechanism"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/tv_gps_fix_mechanism"
-                    app:layout_constraintTop_toTopOf="@id/tv_gps_fix_mechanism" />
-
-                <TextView
-                    android:id="@+id/tv_gps_fix_mechanism"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/shape_radius_blue_btn_bg"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:minWidth="150dp"
-                    android:onClick="onGPSFixMechanism"
-                    android:padding="10dp"
-                    android:text="Time Priority"
-                    android:textColor="@color/white_ffffff"
-                    android:textSize="15sp"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <CheckBox
-                android:id="@+id/cbAltitudeReport"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white_ffffff"
-                android:button="@null"
-                android:drawableRight="@drawable/selector_cb_btn"
-                android:padding="10dp"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:text="Altitude Data Report"
-                android:textColor="@color/black_333333"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/cl_fix_mechanism" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

@@ -21,6 +21,7 @@ import com.moko.lib.loraui.dialog.BottomDialog;
 import com.moko.lib.loraui.utils.ToastUtils;
 import com.moko.lw001.BuildConfig;
 import com.moko.lw001.databinding.Lw001ActivityPosGpsLBinding;
+import com.moko.lw001.databinding.Lw001ActivityPosGpsLOldBinding;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
@@ -34,23 +35,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PosGpsFixLActivity extends BaseActivity {
+public class PosGpsFixLOldActivity extends BaseActivity {
 
-    private Lw001ActivityPosGpsLBinding mBind;
-    private ArrayList<String> mGPSFixMechanismValues;
-    private int mGPSFixMechanismSelected;
+    private Lw001ActivityPosGpsLOldBinding mBind;
     private boolean mReceiverTag = false;
     private boolean savedParamsError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBind = Lw001ActivityPosGpsLBinding.inflate(getLayoutInflater());
+        mBind = Lw001ActivityPosGpsLOldBinding.inflate(getLayoutInflater());
         setContentView(mBind.getRoot());
         EventBus.getDefault().register(this);
-        mGPSFixMechanismValues = new ArrayList<>();
-        mGPSFixMechanismValues.add("Time Priority");
-        mGPSFixMechanismValues.add("Accuracy Priority");
         // 注册广播接收器
         IntentFilter filter = new IntentFilter();
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -65,8 +61,6 @@ public class PosGpsFixLActivity extends BaseActivity {
         orderTasks.add(OrderTaskAssembler.getGPSPDOPLimit());
         orderTasks.add(OrderTaskAssembler.getGPSTimeBudget());
         orderTasks.add(OrderTaskAssembler.getGPSExtremeMode());
-        orderTasks.add(OrderTaskAssembler.getGPSFixMechanism());
-        orderTasks.add(OrderTaskAssembler.getGPSAltitudeReport());
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }
 
@@ -116,14 +110,12 @@ public class PosGpsFixLActivity extends BaseActivity {
                                     case KEY_GPS_COARSE_TIMEOUT:
                                     case KEY_GPS_PDOP_LIMIT:
                                     case KEY_GPS_TIME_BUDGET:
-                                    case KEY_GPS_FIX_MECHANISM:
-                                    case KEY_GPS_ALTITUDE_REPORT:
                                         savedParamsError |= result != 1;
                                         break;
                                     case KEY_GPS_EXTREME_MODE:
                                         savedParamsError |= result != 1;
                                         if (savedParamsError) {
-                                            ToastUtils.showToast(PosGpsFixLActivity.this, "Opps！Save failed. Please check the input characters and try again.");
+                                            ToastUtils.showToast(PosGpsFixLOldActivity.this, "Opps！Save failed. Please check the input characters and try again.");
                                         } else {
                                             AlertMessageDialog dialog = new AlertMessageDialog();
                                             dialog.setMessage("Saved Successfully！");
@@ -163,19 +155,6 @@ public class PosGpsFixLActivity extends BaseActivity {
                                             mBind.cbExtremeMode.setChecked(enable == 1);
                                         }
                                         break;
-                                    case KEY_GPS_FIX_MECHANISM:
-                                        if (length > 0) {
-                                            int mechanism = value[4] & 0xFF;
-                                            mGPSFixMechanismSelected = mechanism;
-                                            mBind.tvGpsFixMechanism.setText(mGPSFixMechanismValues.get(mechanism));
-                                        }
-                                        break;
-                                    case KEY_GPS_ALTITUDE_REPORT:
-                                        if (length > 0) {
-                                            int enable = value[4] & 0xFF;
-                                            mBind.cbAltitudeReport.setChecked(enable == 1);
-                                        }
-                                        break;
                                 }
                             }
                         }
@@ -183,18 +162,6 @@ public class PosGpsFixLActivity extends BaseActivity {
                 }
             }
         });
-    }
-
-    public void onGPSFixMechanism(View view) {
-        if (isWindowLocked())
-            return;
-        BottomDialog dialog = new BottomDialog();
-        dialog.setDatas(mGPSFixMechanismValues, mGPSFixMechanismSelected);
-        dialog.setListener(value -> {
-            mGPSFixMechanismSelected = value;
-            mBind.tvGpsFixMechanism.setText(mGPSFixMechanismValues.get(value));
-        });
-        dialog.show(getSupportFragmentManager());
     }
 
     public void onSave(View view) {
@@ -247,8 +214,6 @@ public class PosGpsFixLActivity extends BaseActivity {
         orderTasks.add(OrderTaskAssembler.setGPSCoarseTimeout(coarseTimeout));
         orderTasks.add(OrderTaskAssembler.setGPSPDOPLimit(pdopLimit));
         orderTasks.add(OrderTaskAssembler.setGPSTimeBudget(timeBudget));
-        orderTasks.add(OrderTaskAssembler.setGPSFixMechanism(mGPSFixMechanismSelected));
-        orderTasks.add(OrderTaskAssembler.setGPSAltitudeReport(mBind.cbAltitudeReport.isChecked() ? 1 : 0));
         orderTasks.add(OrderTaskAssembler.setGPSExtremeMode(mBind.cbExtremeMode.isChecked() ? 1 : 0));
         LoRaLW001MokoSupport.getInstance().sendOrder(orderTasks.toArray(new OrderTask[]{}));
     }

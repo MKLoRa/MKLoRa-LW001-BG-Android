@@ -160,6 +160,10 @@ public enum ParamsKeyEnum implements Serializable {
     KEY_GPS_AIDING_TIMEOUT(0x52),
     // GPS上传数据类型
     KEY_GPS_EXTREME_MODE(0x53),
+    // GPS定位结束机制
+    KEY_GPS_FIX_MECHANISM(0x54),
+    // 上报海拔高度开关
+    KEY_GPS_ALTITUDE_REPORT(0x55),
 
     // lora
     KEY_LORA_REGION(0x60),

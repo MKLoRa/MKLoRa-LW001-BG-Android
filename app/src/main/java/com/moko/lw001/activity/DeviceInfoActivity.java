@@ -30,6 +30,7 @@ import com.moko.lw001.fragment.GeneralFragment;
 import com.moko.lw001.fragment.LoRaFragment;
 import com.moko.lw001.fragment.PositionFragment;
 import com.moko.lw001.utils.SPUtiles;
+import com.moko.lw001.utils.Utils;
 import com.moko.support.lw001.LoRaLW001MokoSupport;
 import com.moko.support.lw001.OrderTaskAssembler;
 import com.moko.support.lw001.entity.OrderCHAR;
@@ -64,6 +65,8 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
 
     private boolean savedParamsError;
     private int mFirmwareCode;
+
+    public String mVersion;
     private int mGPSFixType;
 
     public int mDeviceType;
@@ -200,9 +203,9 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
                 byte[] value = response.responseValue;
                 switch (orderCHAR) {
                     case CHAR_FIRMWARE_REVISION:
-                        String firmwareVersion = new String(value);
+                        mVersion = new String(value);
                         // 1.0.7及以上才有日志和PCBA测试功能
-                        String firmwareCodeStr = firmwareVersion.replaceAll("V", "").replaceAll("\\.", "");
+                        String firmwareCodeStr = mVersion.replaceAll("V", "").replaceAll("\\.", "");
                         mFirmwareCode = Integer.parseInt(firmwareCodeStr);
                         break;
                     case CHAR_PARAMS:
@@ -484,6 +487,7 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
             }
         }
     }
+
     public void onBleAndGPS(View view) {
         if (isWindowLocked()) return;
         Intent intent = new Intent(this, PosBleAndGpsActivity.class);
@@ -636,8 +640,11 @@ public class DeviceInfoActivity extends BaseActivity implements RadioGroup.OnChe
         Intent intent;
         if (mGPSFixType == 0)
             intent = new Intent(this, PosGpsFixActivity.class);
-        else
-            intent = new Intent(this, PosGpsFixLActivity.class);
+        else {
+            intent = new Intent(this, PosGpsFixLOldActivity.class);
+            if (Utils.isNewFunction(mVersion, "V2.0.16"))
+                intent = new Intent(this, PosGpsFixLActivity.class);
+        }
         startActivity(intent);
     }
 

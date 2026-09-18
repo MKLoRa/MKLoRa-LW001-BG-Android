@@ -12,7 +12,7 @@ Cross-platform reference (same protocol): [MKLoRa-LW001-BG-Flutter](https://gith
 |------|-------------|
 | Android Studio | 3.6+ (8.x recommended) |
 | minSdk | 28 |
-| compileSdk | 35 |
+| compileSdk | 36 |
 | Device | Physical device required (emulators do not support BLE) |
 
 ---
@@ -568,4 +568,4 @@ Scan page (LoRaLW001MainActivity)
 | Date | Version | Notes |
 |------|---------|-------|
 | 2021.03.11 | mokosupport 1.0 | Initial release |
-| — | mokosupport 4.0 | compileSdk 35, minSdk 28 |
+| — | mokosupport 4.0 | compileSdk 36, minSdk 28 |

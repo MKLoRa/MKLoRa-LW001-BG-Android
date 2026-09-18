@@ -927,6 +927,26 @@ public class ParamsWriteTask extends OrderTask {
         };
     }
 
+    public void setGPSFixMechanism(@IntRange(from = 0, to = 1) int mode) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_GPS_FIX_MECHANISM.getParamsKey(),
+                (byte) 0x01,
+                (byte) mode
+        };
+    }
+
+    public void setGPSAltitudeReport(@IntRange(from = 0, to = 1) int enable) {
+        data = new byte[]{
+                (byte) 0xED,
+                (byte) 0x01,
+                (byte) ParamsKeyEnum.KEY_GPS_ALTITUDE_REPORT.getParamsKey(),
+                (byte) 0x01,
+                (byte) enable
+        };
+    }
+
     public void setLoraRegion(@IntRange(from = 0, to = 9) int region) {
         data = new byte[]{
                 (byte) 0xED,

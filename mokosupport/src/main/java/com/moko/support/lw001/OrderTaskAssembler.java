@@ -475,6 +475,18 @@ public class OrderTaskAssembler {
         return task;
     }
 
+    public static OrderTask getGPSFixMechanism() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_GPS_FIX_MECHANISM);
+        return task;
+    }
+
+    public static OrderTask getGPSAltitudeReport() {
+        ParamsReadTask task = new ParamsReadTask();
+        task.setData(ParamsKeyEnum.KEY_GPS_ALTITUDE_REPORT);
+        return task;
+    }
+
     public static OrderTask getLoraRegion() {
         ParamsReadTask task = new ParamsReadTask();
         task.setData(ParamsKeyEnum.KEY_LORA_REGION);
@@ -1117,6 +1129,18 @@ public class OrderTaskAssembler {
     public static OrderTask setGPSExtremeMode(@IntRange(from = 0, to = 1) int mode) {
         ParamsWriteTask task = new ParamsWriteTask();
         task.setGPSExtremeMode(mode);
+        return task;
+    }
+
+    public static OrderTask setGPSFixMechanism(@IntRange(from = 0, to = 1) int mode) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setGPSFixMechanism(mode);
+        return task;
+    }
+
+    public static OrderTask setGPSAltitudeReport(@IntRange(from = 0, to = 1) int enable) {
+        ParamsWriteTask task = new ParamsWriteTask();
+        task.setGPSAltitudeReport(enable);
         return task;
     }
 
